@@ -324,6 +324,18 @@ function requirementsChecklist() {
   return out.join("\n");
 }
 
+// The dashboard embeds the WBS data on one line starting with "const DATA = "; keep it in sync.
+function dashboard() {
+  const path = "docs/planning/project_wbs_dashboard.html";
+  const html = readFileSync(join(ROOT, path), "utf8");
+  const lines = html.split("\n");
+  const i = lines.findIndex((l) => l.startsWith("const DATA = "));
+  if (i < 0) throw new Error(`${path}: no "const DATA = " line`);
+  lines[i] = `const DATA = ${JSON.stringify(D).replace(/<\//g, "<\\/")};`;
+  return lines.join("\n");
+}
+
+write("docs/planning/project_wbs_dashboard.html", dashboard());
 write(".github/CODEOWNERS", codeowners());
 write(".github/issues/manifest.json", JSON.stringify(manifest(), null, 2) + "\n");
 write("TEAM_TASKS.md", teamTasks());

@@ -265,5 +265,8 @@ Member D's total includes the 6 h already spent on 1.1.1 and the 1 h for task 7.
 | The API (C) needs PDF routing inside src/api/, which could collide with D's integration work. | C owns all of src/api/ including routes/reports.py. D owns only scripts/, docker/ and the root deployment files. |
 | The slide deck originally depended on report sections that are finished in the last block, which left no time for slides. | 8.2.1 now depends on EDA, test evaluation and timeline evaluation (ready by Wed afternoon). Usability numbers are added in the final block. |
 | Initial scaffold creates __init__.py stubs in every member's folder. | Scaffold exception: after the single scaffold commit by D, each path belongs only to its owner (CODEOWNERS enforces this). |
+| The course brief requires Deployment Files, but Docker was only an optional stretch inside 7.1.1. | New task 7.1.2 (Member D, 1 h, Wed afternoon) owns docker/ and docker-compose.yml; 7.2.1 now depends on it. |
+| The team works in Google Colab; command-line training scripts were too complex. | Data tasks run in notebooks/01_Data.ipynb (A) and model tasks in notebooks/02_Model.ipynb (B). A hands the dataset to B as yolo_dataset.zip in Drive. src/inference/detect_video.py stays because the API imports it. |
+| Branch naming requested at repository setup differs from the plan. | Branches are feature/member-<a|b|c|d>-<wbs-id>-<slug>; each task's original name is kept as planBranch. |
 
 Risks, assumptions and cut list: see `docs/planning/WBS_VALIDATION.md`.
