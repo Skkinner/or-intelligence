@@ -86,7 +86,7 @@ for (const l of manifest.labels) gh(["label", "create", l.name, "--repo", full, 
 console.log(`labels: ${manifest.labels.length} ensured`);
 
 // 4. Milestones ---------------------------------------------------------------------------------
-const msExisting = json(gh(["api", `repos/${full}/milestones?state=all&per_page=100`])) ?? [];
+const msExisting = json(gh(["api", `repos/${full}/milestones?state=all&per_page=100`], { allowFail: DRY })) ?? [];
 for (const m of manifest.milestones) {
   if (msExisting.some((x) => x.title === m.title)) continue;
   gh(["api", "-X", "POST", `repos/${full}/milestones`, "-f", `title=${m.title}`, "-f", `due_on=${new Date(m.due_on).toISOString()}`,
@@ -95,7 +95,7 @@ for (const m of manifest.milestones) {
 console.log(`milestones: ${manifest.milestones.length} ensured`);
 
 // 5. Issues -------------------------------------------------------------------------------------
-const listed = json(gh(["issue", "list", "--repo", full, "--state", "all", "--limit", "500", "--json", "number,title,body"])) ?? [];
+const listed = json(gh(["issue", "list", "--repo", full, "--state", "all", "--limit", "500", "--json", "number,title,body"], { allowFail: DRY })) ?? [];
 const numbers = {};
 const created = [];
 for (const is of manifest.issues) {
