@@ -1,5 +1,5 @@
-# Owner: Member D (WBS 7.1.2). Builds the web app and serves it with Vite preview (proxies /api to the api service).
-# TODO(D, 7.1.2): verify; optionally replace the runtime stage with nginx.
+# Owner: Member C (WBS 7.1.2). Builds the web app and serves it with Vite preview (proxies /api to the api service).
+# TODO(C, 7.1.2): verify; optionally replace the runtime stage with nginx.
 FROM node:20-alpine
 WORKDIR /repo
 COPY contracts/ contracts/

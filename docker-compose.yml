@@ -1,4 +1,4 @@
-# Owner: Member D (WBS 7.1.2). Alternative to scripts/run_local.*:  docker compose up --build  ->  http://localhost:8080
+# Owner: Member C (WBS 7.1.2). Alternative to scripts/run_local.*:  docker compose up --build  ->  http://localhost:8080
 services:
   api:
     build:

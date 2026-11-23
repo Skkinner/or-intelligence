@@ -10,7 +10,7 @@ A web-based surgical video review platform. A reviewer uploads a recorded laparo
 ## Changes made at repository setup
 
 - Branch names follow feature/member-<a|b|c|d>-<wbs-id>-<slug>, as requested at repository setup. The plan's original names are kept in planBranch.
-- Task 7.1.2 added: the course brief requires Deployment Files, so Docker moved from an optional stretch inside 7.1.1 to its own task (Member D, 1 h, Wed afternoon). 7.2.1 now also depends on 7.1.2.
+- Task 7.1.2 added: the course brief requires Deployment Files, so Docker moved from an optional stretch inside 7.1.1 to its own task (1 h, Wed afternoon). It is owned by Member C, who builds the API, to keep Member D within the ±20% workload limit. 7.2.1 now depends on it.
 - src/common/contracts.py (read-only contract helpers) added under Member D, who owns contracts/.
 - The scaffold, contract drafts and synthetic fixtures were pre-created at setup. Tasks 1.2.1 and 1.2.2 stay open until their remaining acceptance criteria are met (branch protection check, member test PRs, contract sign-off, sample_video.mp4).
 - Data and model work happens in two Colab notebooks that follow the WBS owners: notebooks/01_Data.ipynb (Member A: 2.1.1, 2.2.1, 2.2.2, 2.4.1) and notebooks/02_Model.ipynb (Member B: 3.1.1, 3.1.2, 3.2.1, 3.3.2). A hands the ready dataset to B as MyDrive/or-intelligence/data/yolo_dataset.zip. The command-line starter scripts for these tasks were removed; src/inference/detect_video.py (3.3.1) stays because the app imports it.
@@ -179,7 +179,7 @@ A web-based surgical video review platform. A reviewer uploads a recorded laparo
 | WBS | Task | Owner | When | h | Priority | Depends on | Status |
 |---|---|---|---|---|---|---|---|
 | 7.1.1 ⚠ | One-command local run & integration | Member D | Wed 25 Nov Morning → Wed 25 Nov Afternoon | 3 | High | 4.2.2, 4.3.1, 3.3.2, 5.1.3, 5.2.1, 5.2.2, 5.2.3 | Not Started |
-| 7.1.2 | Deployment files: Dockerfiles & docker-compose *(added at setup)* | Member D | Wed 25 Nov Afternoon | 1 | High | 7.1.1 | Not Started |
+| 7.1.2 | Deployment files: Dockerfiles & docker-compose *(added at setup)* | Member C | Wed 25 Nov Afternoon | 1 | High | 7.1.1 | Not Started |
 
 **7.2 Release**
 
@@ -229,8 +229,10 @@ A web-based surgical video review platform. A reviewer uploads a recorded laparo
 | 7.1.1 One-command local run & integration | Member D | 3.3.2 Model card & weights release | Member B |
 | 7.1.1 One-command local run & integration | Member D | 5.2.2 Analytics dashboard page | Member A |
 | 7.1.1 One-command local run & integration | Member D | 5.2.3 Arabic localisation & RTL styling | Member A |
+| 7.1.2 Deployment files: Dockerfiles & docker-compose | Member C | 7.1.1 One-command local run & integration | Member D |
 | 7.2.1 Release candidate v1.0.0 & demo freeze | Member D | 4.1.3 Timeline evaluation vs ground truth | Member C |
 | 7.2.1 Release candidate v1.0.0 & demo freeze | Member D | 3.2.1 Held-out test evaluation report | Member B |
+| 7.2.1 Release candidate v1.0.0 & demo freeze | Member D | 7.1.2 Deployment files: Dockerfiles & docker-compose | Member C |
 | 8.1.4 Final report assembly & README | Member D | 8.1.1 Report section: Data | Member A |
 | 8.1.4 Final report assembly & README | Member D | 8.1.2 Report section: Model | Member B |
 | 8.1.4 Final report assembly & README | Member D | 8.1.3 Report section: Timeline & System | Member C |
@@ -245,10 +247,10 @@ A web-based surgical video review platform. A reviewer uploads a recorded laparo
 |---|---|---|---|
 | Member A | Data Engineer & UX Research | 10 | 23 |
 | Member B | ML Engineer | 8 | 24 |
-| Member C | Backend & Timeline Engineer | 8 | 25 |
-| Member D | Frontend Lead & Integration Owner | 12 | 31 |
+| Member C | Backend & Timeline Engineer | 9 | 26 |
+| Member D | Frontend Lead & Integration Owner | 11 | 30 |
 
-Member D's total includes the 6 h already spent on 1.1.1 and the 1 h for task 7.1.2 added at setup.
+Member D's total includes the 6 h already spent on 1.1.1. Task 7.1.2 (added at setup) is Member C's.
 
 ## Conflicts resolved while planning
 
@@ -265,7 +267,7 @@ Member D's total includes the 6 h already spent on 1.1.1 and the 1 h for task 7.
 | The API (C) needs PDF routing inside src/api/, which could collide with D's integration work. | C owns all of src/api/ including routes/reports.py. D owns only scripts/, docker/ and the root deployment files. |
 | The slide deck originally depended on report sections that are finished in the last block, which left no time for slides. | 8.2.1 now depends on EDA, test evaluation and timeline evaluation (ready by Wed afternoon). Usability numbers are added in the final block. |
 | Initial scaffold creates __init__.py stubs in every member's folder. | Scaffold exception: after the single scaffold commit by D, each path belongs only to its owner (CODEOWNERS enforces this). |
-| The course brief requires Deployment Files, but Docker was only an optional stretch inside 7.1.1. | New task 7.1.2 (Member D, 1 h, Wed afternoon) owns docker/ and docker-compose.yml; 7.2.1 now depends on it. |
+| The course brief requires Deployment Files, but Docker was only an optional stretch inside 7.1.1. | New task 7.1.2 (Member C, 1 h, Wed afternoon) owns docker/ and docker-compose.yml; 7.2.1 now depends on it. Given to C rather than D to keep D's workload within ±20% of the mean. |
 | The team works in Google Colab; command-line training scripts were too complex. | Data tasks run in notebooks/01_Data.ipynb (A) and model tasks in notebooks/02_Model.ipynb (B). A hands the dataset to B as yolo_dataset.zip in Drive. src/inference/detect_video.py stays because the API imports it. |
 | Branch naming requested at repository setup differs from the plan. | Branches are feature/member-<a|b|c|d>-<wbs-id>-<slug>; each task's original name is kept as planBranch. |
 

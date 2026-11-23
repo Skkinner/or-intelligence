@@ -13,11 +13,11 @@
 | ☐ | P3 | Data stage of the pipeline | 1.3.1, 2.1.1, 2.2.1, 2.2.2, 2.3.1, 2.4.1 | Member A | D1 |
 | ☐ | P4 | Train or fine-tune a CV model | 3.1.1, 3.1.2 | Member B | D2 |
 | ☐ | P5 | Evaluate the solution | 3.2.1, 4.1.3, 6.1.1, 6.2.1, 6.3.1 | Member B, Member C, Member A, Member D | D2, D4, D7 |
-| ☐ | P6 | Deploy the CV solution | 7.1.1, 7.1.2 | Member D | D8 |
+| ☐ | P6 | Deploy the CV solution | 7.1.1, 7.1.2 | Member D, Member C | D8 |
 | ☐ | P7 | Present a working live demo | 7.2.1, 8.2.2 | Member D, Member C | D8, D9 |
 | ☐ | P8 | Deliverable: Presentation | 8.2.1 | Member B | D9 |
 | ☐ | P9 | Deliverable: Code Repository (GitHub) | 1.2.1, 7.2.1, 8.1.4 | Member D | this repository, tag v1.0.0 |
-| ☐ | P10 | Deliverable: Deployment Files | 7.1.1, 7.1.2 | Member D | scripts/, docker/, docker-compose.yml |
+| ☐ | P10 | Deliverable: Deployment Files | 7.1.1, 7.1.2 | Member D, Member C | scripts/, docker/, docker-compose.yml |
 | ☐ | P11 | Deliverable: Demo | 7.2.1, 8.2.2 | Member D, Member C | D9 demo video + live demo |
 
 ## Project requirements & success measures
@@ -53,14 +53,14 @@
 | D5 | Backend API + PDF report generator (EN/AR) | 4.2.1 (C), 4.2.2 (C), 4.3.1 (C) |
 | D6 | Web app: review workspace, notes, library search, analytics, Arabic/RTL | 5.1.1 (D), 5.1.2 (D), 5.1.3 (D), 5.2.1 (D), 5.2.2 (A), 5.2.3 (A) |
 | D7 | Usability study results (manual scrubbing vs timeline) | 6.2.1 (A) |
-| D8 | Integrated release candidate (v1.0.0) + deployment files | 7.1.1 (D), 7.1.2 (D), 7.2.1 (D) |
+| D8 | Integrated release candidate (v1.0.0) + deployment files | 7.1.1 (D), 7.1.2 (C), 7.2.1 (D) |
 | D9 | Final report, README, slide deck, demo video | 8.1.4 (D), 8.2.1 (B), 8.2.2 (C) |
 
 ## Submission (Wed 25 Nov 23:59, milestone M7)
 
 - [ ] Presentation: `docs/slides/` (8.2.1, Member B)
 - [ ] Code repository: GitHub link, tag `v1.0.0` on `main` (7.2.1, Member D)
-- [ ] Deployment files: `scripts/run_local.*`, `docker/`, `docker-compose.yml` (7.1.1, 7.1.2, Member D)
+- [ ] Deployment files: `scripts/run_local.*`, `docker/`, `docker-compose.yml` (7.1.1 Member D, 7.1.2 Member C)
 - [ ] Demo: live demo from the tagged build + backup video linked in `docs/demo/README.md` (7.2.1 D, 8.2.2 C)
 - [ ] Final report PDF built from `docs/report/` (8.1.4, Member D)
 

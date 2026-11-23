@@ -356,7 +356,7 @@
         "src/inference/ (call it, never edit it)",
         "web/",
         "contracts/ (propose changes by PR)",
-        "docker/ and docker-compose.yml"
+        "scripts/ (run scripts belong to D)"
       ]
     },
     {
@@ -1781,15 +1781,15 @@
     {
       "id": "7.1.2",
       "wp": "7.1",
-      "owner": "D",
+      "owner": "C",
       "name": "Deployment files: Dockerfiles & docker-compose",
-      "desc": "Added during repository setup: the course brief (docs/planning/Unit7_Project_brief.pdf) lists \"Deployment Files\" as a mandatory deliverable, while the WBS only had Docker as an optional stretch inside 7.1.1. Finish the starter Dockerfiles so the integrated app (API + web) also starts with `docker compose up`.",
+      "desc": "Added during repository setup: the course brief (docs/planning/Unit7_Project_brief.pdf) lists \"Deployment Files\" as a mandatory deliverable, while the WBS only had Docker as an optional stretch inside 7.1.1. Member C builds the API, so C finishes the starter Dockerfiles so the integrated app (API + web) also starts with `docker compose up`.",
       "steps": [
         "Complete docker/Dockerfile.api (python:3.11-slim, requirements/ml.txt + api.txt; mount models/weights/ or fetch weights at start-up).",
         "Complete docker/Dockerfile.web (Node build stage, then serve the built app; /api proxied to the api service).",
         "Complete docker-compose.yml (api on :8000, web on :8080, storage/ and models/weights/ as volumes, INFERENCE_MODE env).",
-        "Verify `docker compose up --build` serves http://localhost:8080 and processes the fixture video; record the result in docs/integration/INTEGRATION_LOG.md.",
-        "Document both start options (run script and Docker) in README.md (8.1.4)."
+        "Verify `docker compose up --build` on a clean clone serves http://localhost:8080 and processes the fixture video; post the result in the PR so D can log it in docs/integration/INTEGRATION_LOG.md.",
+        "Send D the two start commands (run script and Docker) for README.md (8.1.4)."
       ],
       "inputs": [
         "scripts/run_local.* (7.1.1)",
@@ -1818,7 +1818,7 @@
       "status": "Not Started",
       "start": 6,
       "end": 6,
-      "branch": "feature/member-d-7.1.2-docker",
+      "branch": "feature/member-c-7.1.2-docker",
       "planBranch": null,
       "addedBySetup": true
     },
@@ -2173,9 +2173,9 @@
       "rule": "CI and CODEOWNERS changes by D only."
     },
     {
-      "path": "scripts/, docker/, docker-compose.yml",
+      "path": "scripts/",
       "owner": "D",
-      "rule": "C requests API runtime/start-up changes by issue; D implements."
+      "rule": "C requests API run-script changes by issue; D implements. docker/ and docker-compose.yml belong to C (7.1.2)."
     },
     {
       "path": "src/inference/",
@@ -2230,7 +2230,7 @@
     },
     {
       "issue": "The course brief requires Deployment Files, but Docker was only an optional stretch inside 7.1.1.",
-      "fix": "New task 7.1.2 (Member D, 1 h, Wed afternoon) owns docker/ and docker-compose.yml; 7.2.1 now depends on it."
+      "fix": "New task 7.1.2 (Member C, 1 h, Wed afternoon) owns docker/ and docker-compose.yml; 7.2.1 now depends on it. Given to C rather than D to keep D's workload within ±20% of the mean."
     },
     {
       "issue": "The team works in Google Colab; command-line training scripts were too complex.",
@@ -2331,7 +2331,7 @@
       ]
     }
   ],
-  "repoTree": "or-intelligence/\n├── .github/                  D  CODEOWNERS, ci.yml, PR/issue templates, team.json, issues/\n├── contracts/                D  classes.json, *.schema.json, openapi.yaml, CHANGELOG.md\n├── configs/\n│   └── timeline.yaml         C\n├── requirements/\n│   ├── base.txt              D\n│   ├── data.txt              A\n│   ├── ml.txt                B\n│   └── api.txt               C\n├── notebooks/   (Google Colab)\n│   ├── 01_Data.ipynb         A  2.1.1 · 2.2.1 · 2.2.2 · 2.4.1  → Drive: data/yolo_dataset.zip\n│   └── 02_Model.ipynb        B  3.1.1 · 3.1.2 · 3.2.1 · 3.3.2  → Drive: weights/best.pt\n├── data/            (gitignored)  A  processed/presence/\n│   └── splits/splits.json    A  (tracked, copied from Drive)\n├── models/weights/  (gitignored)  B  best.pt copied from Drive / GitHub Release\n├── src/\n│   ├── common/               D  contract helpers (read-only)\n│   ├── data/                 A  presence_labels, extract_frames (2.3.1)\n│   ├── models/               B  benchmark (6.1.1)\n│   ├── inference/            B  detect_video (3.3.1, used by the API), fetch_weights\n│   ├── timeline/             C  smoothing, builder, evaluate\n│   ├── api/                  C  main, db, jobs, routes/{videos,notes,search,analytics,reports}\n│   └── reports/              C  pdf_report, strings, fonts/\n├── web/                      D  package.json, vite.config.ts\n│   └── src/\n│       ├── app/ api/         D\n│       ├── components/       D  Timeline/, VideoPlayer/, NotesPanel/\n│       ├── pages/            D  Upload/, Review/, Library/\n│       │   └── Analytics/    A\n│       ├── i18n/             D  index.ts, en.json   ·  A  ar.json, parity.test.ts\n│       └── styles/rtl.css    A\n├── tests/\n│   ├── fixtures/ contracts/  D\n│   ├── unit/inference/       B\n│   ├── unit/timeline/ api/ reports/  C\n│   └── e2e/                  D\n├── scripts/                  D  run_local.ps1, run_local.sh, github/\n├── docs/\n│   ├── problem/              D  (1.1.1, done)\n│   ├── data/ usability/      A\n│   ├── model/ slides/        B\n│   ├── timeline/ demo/       C\n│   ├── integration/          D\n│   ├── planning/             D  this dashboard, wbs_data.json, course brief\n│   └── report/  00_intro D · 01_data A · 02_model B · 03_system C · 04 + main D\n├── README.md  CHANGELOG.md   D\n└── docker/ docker-compose.yml  D  (7.1.2, required deployment files)",
+  "repoTree": "or-intelligence/\n├── .github/                  D  CODEOWNERS, ci.yml, PR/issue templates, team.json, issues/\n├── contracts/                D  classes.json, *.schema.json, openapi.yaml, CHANGELOG.md\n├── configs/\n│   └── timeline.yaml         C\n├── requirements/\n│   ├── base.txt              D\n│   ├── data.txt              A\n│   ├── ml.txt                B\n│   └── api.txt               C\n├── notebooks/   (Google Colab)\n│   ├── 01_Data.ipynb         A  2.1.1 · 2.2.1 · 2.2.2 · 2.4.1  → Drive: data/yolo_dataset.zip\n│   └── 02_Model.ipynb        B  3.1.1 · 3.1.2 · 3.2.1 · 3.3.2  → Drive: weights/best.pt\n├── data/            (gitignored)  A  processed/presence/\n│   └── splits/splits.json    A  (tracked, copied from Drive)\n├── models/weights/  (gitignored)  B  best.pt copied from Drive / GitHub Release\n├── src/\n│   ├── common/               D  contract helpers (read-only)\n│   ├── data/                 A  presence_labels, extract_frames (2.3.1)\n│   ├── models/               B  benchmark (6.1.1)\n│   ├── inference/            B  detect_video (3.3.1, used by the API), fetch_weights\n│   ├── timeline/             C  smoothing, builder, evaluate\n│   ├── api/                  C  main, db, jobs, routes/{videos,notes,search,analytics,reports}\n│   └── reports/              C  pdf_report, strings, fonts/\n├── web/                      D  package.json, vite.config.ts\n│   └── src/\n│       ├── app/ api/         D\n│       ├── components/       D  Timeline/, VideoPlayer/, NotesPanel/\n│       ├── pages/            D  Upload/, Review/, Library/\n│       │   └── Analytics/    A\n│       ├── i18n/             D  index.ts, en.json   ·  A  ar.json, parity.test.ts\n│       └── styles/rtl.css    A\n├── tests/\n│   ├── fixtures/ contracts/  D\n│   ├── unit/inference/       B\n│   ├── unit/timeline/ api/ reports/  C\n│   └── e2e/                  D\n├── scripts/                  D  run_local.ps1, run_local.sh, github/\n├── docs/\n│   ├── problem/              D  (1.1.1, done)\n│   ├── data/ usability/      A\n│   ├── model/ slides/        B\n│   ├── timeline/ demo/       C\n│   ├── integration/          D\n│   ├── planning/             D  this dashboard, wbs_data.json, course brief\n│   └── report/  00_intro D · 01_data A · 02_model B · 03_system C · 04 + main D\n├── README.md  CHANGELOG.md   D\n└── docker/ docker-compose.yml  C  (7.1.2, required deployment files)",
   "gitFlow": "<ul class=\"clean small\">\n<li><b>main</b>: release only. D merges <code>develop → main</code> at the release candidate (Wed 20:00) and tags <code>v1.0.0</code>.</li>\n<li><b>develop</b>: integration branch. PRs only, 1 approval + green CI. D merges at merge windows: <b>Mon 23:00, Tue 13:00, Tue 21:00, Wed 12:00, Wed 18:00</b>.</li>\n<li><b>Branch protection</b>: not active yet. GitHub only allows it on a private repo with GitHub Pro (free with the Student Developer Pack) or a public repo; until then the team follows the PR rule by agreement.</li>\n<li><b>Feature branches</b>: one per WBS task, <code>feature/member-&lt;a|b|c|d&gt;-&lt;wbs-id&gt;-&lt;slug&gt;</code>, e.g. <code>feature/member-c-4.1.1-smoothing</code>. Branch from the latest develop and rebase before opening the PR.</li>\n<li><b>PR rules</b>: title <code>[WBS 4.1.1] Temporal smoothing</code>, body <code>Closes #&lt;issue&gt;</code>; touches only the owner's paths (CODEOWNERS); includes tests and acceptance evidence; under ~400 changed lines where possible.</li>\n<li><b>Notebooks</b>: <code>01_Data.ipynb</code> (A) and <code>02_Model.ipynb</code> (B) run in Google Colab and exchange files through the shared Drive folder <code>MyDrive/or-intelligence/</code>. Commit notebook changes like code (only your own notebook).</li>\n<li><b>Contracts</b>: any change to <code>contracts/</code> is its own PR, approved by D and every consumer, and logged in <code>contracts/CHANGELOG.md</code>.</li>\n<li><b>Conflicts</b>: the integration owner (D) resolves merge conflicts on develop. Nobody edits another member's files to make their own PR pass; open an issue for the owner instead.</li>\n<li><b>Never commit</b> data/, frames, videos or *.pt weights. They live in the shared Google Drive folder (or a GitHub Release).</li>\n</ul>",
   "requirements": [
     {
@@ -2714,7 +2714,7 @@
   ],
   "setupNotes": [
     "Branch names follow feature/member-<a|b|c|d>-<wbs-id>-<slug>, as requested at repository setup. The plan's original names are kept in planBranch.",
-    "Task 7.1.2 added: the course brief requires Deployment Files, so Docker moved from an optional stretch inside 7.1.1 to its own task (Member D, 1 h, Wed afternoon). 7.2.1 now also depends on 7.1.2.",
+    "Task 7.1.2 added: the course brief requires Deployment Files, so Docker moved from an optional stretch inside 7.1.1 to its own task (1 h, Wed afternoon). It is owned by Member C, who builds the API, to keep Member D within the ±20% workload limit. 7.2.1 now depends on it.",
     "src/common/contracts.py (read-only contract helpers) added under Member D, who owns contracts/.",
     "The scaffold, contract drafts and synthetic fixtures were pre-created at setup. Tasks 1.2.1 and 1.2.2 stay open until their remaining acceptance criteria are met (branch protection check, member test PRs, contract sign-off, sample_video.mp4).",
     "Data and model work happens in two Colab notebooks that follow the WBS owners: notebooks/01_Data.ipynb (Member A: 2.1.1, 2.2.1, 2.2.2, 2.4.1) and notebooks/02_Model.ipynb (Member B: 3.1.1, 3.1.2, 3.2.1, 3.3.2). A hands the ready dataset to B as MyDrive/or-intelligence/data/yolo_dataset.zip. The command-line starter scripts for these tasks were removed; src/inference/detect_video.py (3.3.1) stays because the app imports it."
@@ -2818,7 +2818,7 @@
     ],
     [
       ".dockerignore",
-      "D"
+      "C"
     ],
     [
       "data/splits/",

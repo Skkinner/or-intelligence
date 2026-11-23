@@ -1,4 +1,4 @@
-# Integration log (Owner: Member D, WBS 7.1.1 / 7.1.2)
+# Integration log (Owner: Member D, WBS 7.1.1)
 
 One entry per merge window (Mon 23:00, Tue 13:00, Tue 21:00, Wed 12:00, Wed 18:00).
 
@@ -12,5 +12,5 @@ TODO(D, 7.1.1): video, processing time, timeline OK?, PDF OK?
 
 ## Docker
 
-TODO(D, 7.1.2): `docker compose up --build` result on a clean clone.
+TODO(D): log the `docker compose up --build` result that Member C reports in the 7.1.2 PR.
 

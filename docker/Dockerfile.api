@@ -1,5 +1,5 @@
-# Owner: Member D (WBS 7.1.2). API + inference image.
-# TODO(D, 7.1.2): verify on a clean clone; decide whether weights are mounted (default) or fetched at start-up.
+# Owner: Member C (WBS 7.1.2). API + inference image.
+# TODO(C, 7.1.2): verify on a clean clone; decide whether weights are mounted (default) or fetched at start-up.
 FROM python:3.11-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg libgl1 libglib2.0-0 \

@@ -103,7 +103,8 @@ The issue closes automatically through `Closes #<n>`.
 | `web/package.json` | D | Member A requests new npm packages with a PR touching only `package.json` + lockfile |
 | `requirements/base.txt` | D | Add packages only to your own `requirements/{data,ml,api}.txt` |
 | `.github/` | D | CI and CODEOWNERS changes by D only (`node scripts/github/generate.mjs`) |
-| `scripts/`, `docker/`, `docker-compose.yml` | D | Member C requests API start-up changes by issue; D implements |
+| `scripts/` | D | Member C requests API run-script changes by issue; D implements |
+| `docker/`, `docker-compose.yml` | C | Deployment files (7.1.2); D requests changes by issue |
 | `src/inference/` | B | Member C imports `detect_video()`; signature changes need a contract PR first |
 | `src/timeline/evaluate.py` | C | Member B calls it read-only for the benchmark |
 

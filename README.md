@@ -38,8 +38,8 @@ data: src/data (A) ──► YOLO dataset (C2) ──► src/models (B) ──�
 |---|---|---|---|
 | Member A | Data Engineer & UX Research | `notebooks/01_Data.ipynb`, `src/data/` (presence labels), `docs/data/`, `docs/usability/`, Analytics page, `ar.json`, `rtl.css` | 10 |
 | Member B | ML Engineer | `notebooks/02_Model.ipynb`, `src/inference/`, `src/models/benchmark.py`, `docs/model/`, `docs/slides/` | 8 |
-| Member C | Backend & Timeline Engineer | `src/timeline/`, `src/api/`, `src/reports/`, `configs/timeline.yaml`, `docs/timeline/`, `docs/demo/` | 8 |
-| Member D | Frontend Lead & Integration Owner | `contracts/`, `tests/fixtures/`, `web/` (except A's files), `scripts/`, `docker/`, `.github/`, root docs | 12 |
+| Member C | Backend & Timeline Engineer | `src/timeline/`, `src/api/`, `src/reports/`, `configs/timeline.yaml`, `docker/`, `docs/timeline/`, `docs/demo/` | 9 |
+| Member D | Frontend Lead & Integration Owner | `contracts/`, `tests/fixtures/`, `web/` (except A's files), `scripts/`, `.github/`, root docs | 11 |
 
 Names are placeholders until the team fills in `.github/team.json`. Full list per member: **[TEAM_TASKS.md](TEAM_TASKS.md)**.
 
@@ -127,7 +127,7 @@ or-intelligence/
 ├── tests/              fixtures/ contracts/ e2e/ (D) · unit/<area>/ (owner of the area)
 ├── notebooks/          A 01_Data.ipynb · B 02_Model.ipynb (Colab)
 ├── scripts/            D   run_local.*, github/ (generate + setup)
-├── docker/ docker-compose.yml   D
+├── docker/ docker-compose.yml   C   deployment files (7.1.2)
 └── docs/               problem · data · usability · model · slides · timeline · demo · integration · report · planning
 ```
 

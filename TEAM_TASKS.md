@@ -12,8 +12,8 @@ Every task is a GitHub Issue titled `[WBS x.y.z] …` with the label `member:<a|
 |---|---|---|---|---|---|
 | Member A | Data Engineer & UX Research | 10 | 23 | `feature/member-a-` | label `member:a` |
 | Member B | ML Engineer | 8 | 24 | `feature/member-b-` | label `member:b` |
-| Member C | Backend & Timeline Engineer | 8 | 25 | `feature/member-c-` | label `member:c` |
-| Member D | Frontend Lead & Integration Owner | 12 | 31 | `feature/member-d-` | label `member:d` |
+| Member C | Backend & Timeline Engineer | 9 | 26 | `feature/member-c-` | label `member:c` |
+| Member D | Frontend Lead & Integration Owner | 11 | 30 | `feature/member-d-` | label `member:d` |
 
 Work blocks: **1** Mon 23 Nov Evening (18:00–23:00) · **2** Tue 24 Nov Morning (09:00–13:00) · **3** Tue 24 Nov Afternoon (14:00–18:00) · **4** Tue 24 Nov Evening (19:00–23:00) · **5** Wed 25 Nov Morning (09:00–13:00) · **6** Wed 25 Nov Afternoon (14:00–18:00) · **7** Wed 25 Nov Evening (19:00–23:59)
 
@@ -421,7 +421,7 @@ Completion checklist:
 
 Owns everything between detections and the browser: temporal smoothing, interval building and statistics, timeline evaluation, the FastAPI service, notes/search/analytics endpoints and the PDF report.
 
-**Load:** 8 tasks · 25 h
+**Load:** 9 tasks · 26 h
 
 ### Start here
 
@@ -434,6 +434,8 @@ git switch -c feature/member-c-4.1.1-smoothing
 ### Your files (edit only these)
 
 - `configs/timeline.yaml`
+- `docker-compose.yml`
+- `docker/`
 - `docs/demo/`
 - `docs/report/03_system.md`
 - `docs/timeline/`
@@ -461,13 +463,14 @@ git switch -c feature/member-c-4.1.1-smoothing
 - src/inference/ (call it, never edit it)
 - web/
 - contracts/ (propose changes by PR)
-- docker/ and docker-compose.yml
+- scripts/ (run scripts belong to D)
 
 ### You receive
 
 - **1.2.2** Interface contracts & shared test fixtures from Member D (Mon 23 Nov Evening)
 - **2.3.1** Timeline ground truth from Cholec80 presence labels from Member A (Tue 24 Nov Morning → Tue 24 Nov Afternoon)
 - **3.3.1** Video inference module (detections.jsonl) from Member B (Mon 23 Nov Evening → Tue 24 Nov Afternoon)
+- **7.1.1** One-command local run & integration from Member D (Wed 25 Nov Morning → Wed 25 Nov Afternoon)
 - **7.2.1** Release candidate v1.0.0 & demo freeze from Member D (Wed 25 Nov Evening)
 
 ### Your tasks
@@ -480,6 +483,7 @@ git switch -c feature/member-c-4.1.1-smoothing
 | 4.2.1 ⚠ | FastAPI service & background processing jobs | Mon 23 Nov Evening → Tue 24 Nov Afternoon | 5 | High | `feature/member-c-4.2.1-api` | 1.2.2 |
 | 4.2.2 | Notes, search & analytics endpoints | Tue 24 Nov Evening | 3 | Medium | `feature/member-c-4.2.2-notes-search` | 4.2.1 |
 | 4.3.1 | PDF report generator (English & Arabic) | Tue 24 Nov Evening → Wed 25 Nov Morning | 4 | Medium | `feature/member-c-4.3.1-pdf` | 4.1.2, 4.2.2 |
+| 7.1.2 | Deployment files: Dockerfiles & docker-compose | Wed 25 Nov Afternoon | 1 | High | `feature/member-c-7.1.2-docker` | 7.1.1 |
 | 8.1.3 | Report section: Timeline & System | Wed 25 Nov Afternoon | 2 | Medium | `feature/member-c-8.1.3-report-system` | 4.1.3, 4.3.1 |
 | 8.2.2 | Demo video | Wed 25 Nov Evening | 2 | Medium | `feature/member-c-8.2.2-demo` | 7.2.1 |
 
@@ -572,6 +576,22 @@ Completion checklist:
 
 Hand-off: tag Member D in the PR (needed for 7.1.1).
 
+#### 7.1.2 Deployment files: Dockerfiles & docker-compose
+
+Added during repository setup: the course brief (docs/planning/Unit7_Project_brief.pdf) lists "Deployment Files" as a mandatory deliverable, while the WBS only had Docker as an optional stretch inside 7.1.1. Member C builds the API, so C finishes the starter Dockerfiles so the integrated app (API + web) also starts with `docker compose up`.
+
+**Files:** `docker/`, `docker-compose.yml`  
+**Deliverables:** docker/Dockerfile.api; docker/Dockerfile.web; docker-compose.yml  
+**Inputs:** scripts/run_local.* (7.1.1); requirements/*.txt; web/
+
+Completion checklist:
+- [ ] `docker compose up --build` on a clean clone serves the app on http://localhost:8080.
+- [ ] A video uploaded in the container stack reaches status done.
+- [ ] No secrets or weights baked into the images.
+- [ ] PR merged into `develop`; issue closed
+
+Hand-off: tag Member D in the PR (needed for 7.2.1).
+
 #### 8.1.3 Report section: Timeline & System
 
 Chapter on smoothing method, timeline evaluation, system architecture, API and PDF reporting.
@@ -606,7 +626,7 @@ Completion checklist:
 
 Team lead and integration owner. Owns the repo scaffold, interface contracts and fixtures, the web review workspace and library, the one-command local run, smoke tests, merging to develop/main and final report assembly.
 
-**Load:** 12 tasks · 31 h
+**Load:** 11 tasks · 30 h
 
 ### Start here
 
@@ -623,8 +643,6 @@ git switch -c feature/member-d-1.2.1-scaffold
 - `CHANGELOG.md`
 - `README.md`
 - `contracts/`
-- `docker-compose.yml`
-- `docker/`
 - `docs/integration/`
 - `docs/problem/`
 - `docs/report/00_intro.md`
@@ -665,6 +683,7 @@ git switch -c feature/member-d-1.2.1-scaffold
 - **5.2.3** Arabic localisation & RTL styling from Member A (Wed 25 Nov Morning)
 - **4.1.3** Timeline evaluation vs ground truth from Member C (Wed 25 Nov Morning → Wed 25 Nov Afternoon)
 - **3.2.1** Held-out test evaluation report from Member B (Wed 25 Nov Morning)
+- **7.1.2** Deployment files: Dockerfiles & docker-compose from Member C (Wed 25 Nov Afternoon)
 - **8.1.1** Report section: Data from Member A (Wed 25 Nov Evening)
 - **8.1.2** Report section: Model from Member B (Wed 25 Nov Afternoon)
 - **8.1.3** Report section: Timeline & System from Member C (Wed 25 Nov Afternoon)
@@ -683,7 +702,6 @@ git switch -c feature/member-d-1.2.1-scaffold
 | 5.2.1 | Library search page | Wed 25 Nov Morning | 2 | Medium | `feature/member-d-5.2.1-library` | 5.1.1 |
 | 6.3.1 | End-to-end smoke tests (5 use cases) | Wed 25 Nov Afternoon | 2 | High | `feature/member-d-6.3.1-e2e` | 7.1.1 |
 | 7.1.1 ⚠ | One-command local run & integration | Wed 25 Nov Morning → Wed 25 Nov Afternoon | 3 | High | `feature/member-d-7.1.1-compose` | 4.2.2, 4.3.1, 3.3.2, 5.1.3, 5.2.1, 5.2.2, 5.2.3 |
-| 7.1.2 | Deployment files: Dockerfiles & docker-compose | Wed 25 Nov Afternoon | 1 | High | `feature/member-d-7.1.2-docker` | 7.1.1 |
 | 7.2.1 ⚠ | Release candidate v1.0.0 & demo freeze | Wed 25 Nov Evening | 1 | High | `feature/member-d-7.2.1-release` | 6.3.1, 4.1.3, 3.2.1, 7.1.2 |
 | 8.1.4 | Final report assembly & README | Wed 25 Nov Evening | 3 | High | `feature/member-d-8.1.4-report` | 8.1.1, 8.1.2, 8.1.3, 6.1.1 |
 
@@ -817,21 +835,7 @@ Completion checklist:
 - [ ] develop CI green by Wed 18:00.
 - [ ] PR merged into `develop`; issue closed
 
-Hand-off: tag Member A in the PR (needed for 6.2.1).
-
-#### 7.1.2 Deployment files: Dockerfiles & docker-compose
-
-Added during repository setup: the course brief (docs/planning/Unit7_Project_brief.pdf) lists "Deployment Files" as a mandatory deliverable, while the WBS only had Docker as an optional stretch inside 7.1.1. Finish the starter Dockerfiles so the integrated app (API + web) also starts with `docker compose up`.
-
-**Files:** `docker/`, `docker-compose.yml`  
-**Deliverables:** docker/Dockerfile.api; docker/Dockerfile.web; docker-compose.yml  
-**Inputs:** scripts/run_local.* (7.1.1); requirements/*.txt; web/
-
-Completion checklist:
-- [ ] `docker compose up --build` on a clean clone serves the app on http://localhost:8080.
-- [ ] A video uploaded in the container stack reaches status done.
-- [ ] No secrets or weights baked into the images.
-- [ ] PR merged into `develop`; issue closed
+Hand-off: tag Member A, Member C in the PR (needed for 6.2.1, 7.1.2).
 
 #### 7.2.1 Release candidate v1.0.0 & demo freeze
 
