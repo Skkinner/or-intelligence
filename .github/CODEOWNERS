@@ -43,6 +43,7 @@
 # /configs/train.yaml                        Member B (github username not set)
 # /data/README.md                            Member D (github username not set)
 # /notebooks/eda.ipynb                       Member A (github username not set)
+# /notebooks/OR_Intelligence_Model.ipynb     Member B (github username not set)
 # /requirements/api.txt                      Member C (github username not set)
 # /requirements/base.txt                     Member D (github username not set)
 # /requirements/data.txt                     Member A (github username not set)
