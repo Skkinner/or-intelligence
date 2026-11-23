@@ -1,0 +1,8 @@
+# Owner: Member B (WBS 3.1.2). Copy this file per experiment; change ONE thing (chosen from docs/data/EDA.md).
+# Run: python -m src.models.tune configs/experiments/exp01_template.yaml
+name: exp01_imgsz832        # TODO(B, 3.1.2): rename to describe the single change
+imgsz: 832
+# Alternative single changes (pick from EDA):
+# hsv_v: 0.5
+# degrees: 5.0
+# mosaic: 1.0

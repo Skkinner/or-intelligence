@@ -1,0 +1,2846 @@
+{
+  "project": {
+    "name": "OR Intelligence",
+    "tagline": "Laparoscopic instrument detection → clickable instrument timeline for surgical education",
+    "description": "A web-based surgical video review platform. A reviewer uploads a recorded laparoscopic cholecystectomy; a fine-tuned YOLO detector locates 6 instruments (grasper, bipolar, hook, scissors, clipper, irrigator) in sampled frames; temporal smoothing removes flicker; the result is a colour-coded instrument timeline where clicking a bar jumps the video to that moment. Sessions export as a PDF report with timestamped instructor notes (English / Arabic).",
+    "course": "Computer Vision Final Project",
+    "deadline": "2026-11-25T23:59:00",
+    "deadlineLabel": "Wednesday 25 Nov 2026, 23:59",
+    "slots": [
+      {
+        "id": 1,
+        "day": "Mon 23 Nov",
+        "part": "Evening",
+        "hours": "18:00–23:00",
+        "iso": "2026-11-23T18:00:00"
+      },
+      {
+        "id": 2,
+        "day": "Tue 24 Nov",
+        "part": "Morning",
+        "hours": "09:00–13:00",
+        "iso": "2026-11-24T09:00:00"
+      },
+      {
+        "id": 3,
+        "day": "Tue 24 Nov",
+        "part": "Afternoon",
+        "hours": "14:00–18:00",
+        "iso": "2026-11-24T14:00:00"
+      },
+      {
+        "id": 4,
+        "day": "Tue 24 Nov",
+        "part": "Evening",
+        "hours": "19:00–23:00",
+        "iso": "2026-11-24T19:00:00"
+      },
+      {
+        "id": 5,
+        "day": "Wed 25 Nov",
+        "part": "Morning",
+        "hours": "09:00–13:00",
+        "iso": "2026-11-25T09:00:00"
+      },
+      {
+        "id": 6,
+        "day": "Wed 25 Nov",
+        "part": "Afternoon",
+        "hours": "14:00–18:00",
+        "iso": "2026-11-25T14:00:00"
+      },
+      {
+        "id": 7,
+        "day": "Wed 25 Nov",
+        "part": "Evening",
+        "hours": "19:00–23:59",
+        "iso": "2026-11-25T19:00:00"
+      }
+    ],
+    "objectives": [
+      "Detect the 6 main laparoscopic instruments per frame with a fine-tuned YOLO model.",
+      "Convert per-frame detections into a smoothed instrument-usage timeline (intervals + per-case statistics).",
+      "Deliver a web app: upload → timeline → jump-to-moment → timestamped notes → PDF report.",
+      "Support the 5 use cases: self-review, instructor feedback, searchable library, case-conference clip finding, training analytics.",
+      "Measure success with mAP@0.5 + per-class P/R, timeline agreement with ground-truth presence labels, and a time-to-find usability test."
+    ],
+    "deliverables": [
+      {
+        "id": "D1",
+        "name": "Labelled YOLO dataset + video-level split + EDA report",
+        "tasks": [
+          "2.2.1",
+          "2.2.2",
+          "2.4.1"
+        ]
+      },
+      {
+        "id": "D2",
+        "name": "Trained YOLO weights + evaluation report (mAP@0.5, per-class P/R) + model card",
+        "tasks": [
+          "3.1.2",
+          "3.2.1",
+          "3.3.2"
+        ]
+      },
+      {
+        "id": "D3",
+        "name": "Video inference module (detections.jsonl contract)",
+        "tasks": [
+          "3.3.1"
+        ]
+      },
+      {
+        "id": "D4",
+        "name": "Timeline engine (smoothing, intervals, statistics) + timeline evaluation",
+        "tasks": [
+          "4.1.1",
+          "4.1.2",
+          "4.1.3"
+        ]
+      },
+      {
+        "id": "D5",
+        "name": "Backend API + PDF report generator (EN/AR)",
+        "tasks": [
+          "4.2.1",
+          "4.2.2",
+          "4.3.1"
+        ]
+      },
+      {
+        "id": "D6",
+        "name": "Web app: review workspace, notes, library search, analytics, Arabic/RTL",
+        "tasks": [
+          "5.1.1",
+          "5.1.2",
+          "5.1.3",
+          "5.2.1",
+          "5.2.2",
+          "5.2.3"
+        ]
+      },
+      {
+        "id": "D7",
+        "name": "Usability study results (manual scrubbing vs timeline)",
+        "tasks": [
+          "6.2.1"
+        ]
+      },
+      {
+        "id": "D8",
+        "name": "Integrated, containerised release candidate (v1.0.0)",
+        "tasks": [
+          "7.1.1",
+          "7.2.1"
+        ]
+      },
+      {
+        "id": "D9",
+        "name": "Final report, README, slide deck, demo video",
+        "tasks": [
+          "8.1.4",
+          "8.2.1",
+          "8.2.2"
+        ]
+      }
+    ],
+    "requirements": [
+      {
+        "id": "R1",
+        "text": "Detect 6 instruments per frame (grasper, bipolar, hook, scissors, clipper, irrigator)",
+        "source": "Project objective",
+        "tasks": [
+          "2.2.1",
+          "3.1.1",
+          "3.1.2"
+        ]
+      },
+      {
+        "id": "R2",
+        "text": "Model metrics: mAP@0.5 and per-instrument precision/recall on a video-level held-out test set",
+        "source": "Success measures",
+        "tasks": [
+          "2.2.2",
+          "3.2.1"
+        ]
+      },
+      {
+        "id": "R3",
+        "text": "Temporal smoothing to remove flicker",
+        "source": "Proposed solution",
+        "tasks": [
+          "4.1.1"
+        ]
+      },
+      {
+        "id": "R4",
+        "text": "Colour-coded instrument timeline (e.g. hook 03:10–09:45)",
+        "source": "Proposed solution",
+        "tasks": [
+          "4.1.2",
+          "5.1.2"
+        ]
+      },
+      {
+        "id": "R5",
+        "text": "Timeline agreement with ground-truth presence labels",
+        "source": "Success measures",
+        "tasks": [
+          "2.3.1",
+          "4.1.3"
+        ]
+      },
+      {
+        "id": "R6",
+        "text": "Upload a recorded video and process it",
+        "source": "Proposed solution",
+        "tasks": [
+          "3.3.1",
+          "4.2.1",
+          "5.1.1"
+        ]
+      },
+      {
+        "id": "R7",
+        "text": "Click a timeline bar to jump the video to that moment",
+        "source": "Use case 1, 4",
+        "tasks": [
+          "5.1.2"
+        ]
+      },
+      {
+        "id": "R8",
+        "text": "Timestamped instructor notes",
+        "source": "Use case 2",
+        "tasks": [
+          "4.2.2",
+          "5.1.3"
+        ]
+      },
+      {
+        "id": "R9",
+        "text": "PDF report export including instructor notes",
+        "source": "Use case 2",
+        "tasks": [
+          "4.3.1"
+        ]
+      },
+      {
+        "id": "R10",
+        "text": "Searchable library indexed by instrument (\"show all clipping segments\")",
+        "source": "Use case 3",
+        "tasks": [
+          "4.2.2",
+          "5.2.1"
+        ]
+      },
+      {
+        "id": "R11",
+        "text": "Find unusual tool patterns / clips quickly (long irrigation, repeated switches)",
+        "source": "Use case 4",
+        "tasks": [
+          "4.1.2",
+          "5.1.2"
+        ]
+      },
+      {
+        "id": "R12",
+        "text": "Per-case statistics: time per instrument, total time, tool switches; compare across cases",
+        "source": "Use case 5",
+        "tasks": [
+          "4.1.2",
+          "4.2.2",
+          "5.2.2"
+        ]
+      },
+      {
+        "id": "R13",
+        "text": "Arabic-language interface and reports",
+        "source": "Gap in existing tools / business model",
+        "tasks": [
+          "4.3.1",
+          "5.2.3"
+        ]
+      },
+      {
+        "id": "R14",
+        "text": "Usability test: time to find a moment, scrubbing vs timeline",
+        "source": "Success measures",
+        "tasks": [
+          "6.2.1"
+        ]
+      },
+      {
+        "id": "R15",
+        "text": "Public research data only; non-commercial licence; educational, not diagnostic",
+        "source": "Scope & limits / note",
+        "tasks": [
+          "1.3.1",
+          "3.3.2",
+          "8.1.4"
+        ]
+      },
+      {
+        "id": "R16",
+        "text": "Problem definition, use cases and business model documented",
+        "source": "Project page",
+        "tasks": [
+          "1.1.1"
+        ]
+      },
+      {
+        "id": "R17",
+        "text": "Final project report and presentation",
+        "source": "Final project delivery",
+        "tasks": [
+          "8.1.4",
+          "8.2.1",
+          "8.2.2"
+        ]
+      }
+    ],
+    "assumptions": [
+      "Team of 4 (Members A–D). Real names are not yet known: they are editable in the dashboard and stored locally.",
+      "No code exists yet; every task except 1.1.1 (problem & use-case page, which exists) starts as Not Started.",
+      "Hard deadline: Wednesday 25 Nov 2026, 23:59. Work starts Monday 23 Nov evening, which gives 7 working blocks of about 4–5 h. Each member's load is about 25 h, so this is an MVP plan: one baseline model plus 1–2 tuning runs, a small usability test, and a one-command local run instead of a hardened deployment.",
+      "Bounding-box training data comes from m2cai16-tool-locations (public, VOC-format boxes). Timeline ground truth uses Cholec80 tool-presence labels (1 fps) if the team already has access. A new Cholec80 access request will likely not be approved before Wednesday, so the fallback is presence labels from the m2cai16-tool videos that are held out from detection training (task 1.3.1 decides on Monday evening).",
+      "Stack: Python 3.11, Ultralytics YOLO (v8/11), FastAPI + SQLite, React + Vite + TypeScript, ReportLab for PDF. A free GPU (Kaggle or Colab) is used for training; training runs in the background while members build other modules.",
+      "Daily sync: 10-minute stand-up at 09:00 Tue and Wed, plus a 21:00 merge window each evening run by Member D."
+    ]
+  },
+  "members": [
+    {
+      "id": "A",
+      "defaultName": "Member A",
+      "role": "Data Engineer & UX Research",
+      "color": "#2563eb",
+      "branchPrefix": "a/",
+      "summary": "Owns all data: acquisition, licences, YOLO-format conversion, the video-level split and the timeline ground truth. Later owns the analytics page, Arabic localisation and the usability study.",
+      "notTouch": [
+        "src/models/",
+        "src/inference/",
+        "src/timeline/",
+        "src/api/",
+        "src/reports/",
+        "contracts/ (propose changes by PR to Member D)",
+        "web/src/ except the Analytics page, ar.json and rtl.css"
+      ]
+    },
+    {
+      "id": "B",
+      "defaultName": "Member B",
+      "role": "ML Engineer",
+      "color": "#7c3aed",
+      "branchPrefix": "b/",
+      "summary": "Owns the detector: training, tuning, evaluation, the video inference module that produces detections.jsonl, the model card, the performance benchmark and the slide deck.",
+      "notTouch": [
+        "src/data/ and data/ (read-only consumer)",
+        "src/timeline/",
+        "src/api/",
+        "src/reports/",
+        "web/",
+        "contracts/ (propose changes by PR)"
+      ]
+    },
+    {
+      "id": "C",
+      "defaultName": "Member C",
+      "role": "Backend & Timeline Engineer",
+      "color": "#0891b2",
+      "branchPrefix": "c/",
+      "summary": "Owns everything between detections and the browser: temporal smoothing, interval building and statistics, timeline evaluation, the FastAPI service, notes/search/analytics endpoints and the PDF report.",
+      "notTouch": [
+        "src/data/",
+        "src/models/",
+        "src/inference/ (call it, never edit it)",
+        "web/",
+        "contracts/ (propose changes by PR)",
+        "docker/ and docker-compose.yml"
+      ]
+    },
+    {
+      "id": "D",
+      "defaultName": "Member D",
+      "role": "Frontend Lead & Integration Owner",
+      "color": "#ea580c",
+      "branchPrefix": "d/",
+      "summary": "Team lead and integration owner. Owns the repo scaffold, interface contracts and fixtures, the web review workspace and library, the one-command local run, smoke tests, merging to develop/main and final report assembly.",
+      "notTouch": [
+        "src/ (all Python modules belong to A, B, C)",
+        "web/src/pages/Analytics/, web/src/i18n/ar.json, web/src/styles/rtl.css (Member A)",
+        "Other members' report sections in docs/report/"
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "id": "1",
+      "name": "Planning & Requirements"
+    },
+    {
+      "id": "2",
+      "name": "Data Collection & Preparation"
+    },
+    {
+      "id": "3",
+      "name": "Model Development"
+    },
+    {
+      "id": "4",
+      "name": "Timeline Engine & Backend"
+    },
+    {
+      "id": "5",
+      "name": "Web Application"
+    },
+    {
+      "id": "6",
+      "name": "Testing & Validation"
+    },
+    {
+      "id": "7",
+      "name": "Integration"
+    },
+    {
+      "id": "8",
+      "name": "Documentation & Final Delivery"
+    }
+  ],
+  "workPackages": [
+    {
+      "id": "1.1",
+      "phase": "1",
+      "name": "Problem definition"
+    },
+    {
+      "id": "1.2",
+      "phase": "1",
+      "name": "Project infrastructure & contracts"
+    },
+    {
+      "id": "1.3",
+      "phase": "1",
+      "name": "Data governance"
+    },
+    {
+      "id": "2.1",
+      "phase": "2",
+      "name": "Data acquisition"
+    },
+    {
+      "id": "2.2",
+      "phase": "2",
+      "name": "Detection dataset"
+    },
+    {
+      "id": "2.3",
+      "phase": "2",
+      "name": "Timeline ground truth"
+    },
+    {
+      "id": "2.4",
+      "phase": "2",
+      "name": "Exploratory data analysis"
+    },
+    {
+      "id": "3.1",
+      "phase": "3",
+      "name": "Detector training"
+    },
+    {
+      "id": "3.2",
+      "phase": "3",
+      "name": "Detector evaluation"
+    },
+    {
+      "id": "3.3",
+      "phase": "3",
+      "name": "Video inference & release"
+    },
+    {
+      "id": "4.1",
+      "phase": "4",
+      "name": "Timeline engine"
+    },
+    {
+      "id": "4.2",
+      "phase": "4",
+      "name": "Backend API"
+    },
+    {
+      "id": "4.3",
+      "phase": "4",
+      "name": "Reporting"
+    },
+    {
+      "id": "5.1",
+      "phase": "5",
+      "name": "Review workspace"
+    },
+    {
+      "id": "5.2",
+      "phase": "5",
+      "name": "Library, analytics & localisation"
+    },
+    {
+      "id": "6.1",
+      "phase": "6",
+      "name": "Performance validation"
+    },
+    {
+      "id": "6.2",
+      "phase": "6",
+      "name": "Usability validation"
+    },
+    {
+      "id": "6.3",
+      "phase": "6",
+      "name": "End-to-end validation"
+    },
+    {
+      "id": "7.1",
+      "phase": "7",
+      "name": "Deployment"
+    },
+    {
+      "id": "7.2",
+      "phase": "7",
+      "name": "Release"
+    },
+    {
+      "id": "8.1",
+      "phase": "8",
+      "name": "Final report"
+    },
+    {
+      "id": "8.2",
+      "phase": "8",
+      "name": "Presentation"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1.1.1",
+      "wp": "1.1",
+      "owner": "D",
+      "name": "Problem statement, use cases & business model page",
+      "desc": "Bilingual (EN/AR) page defining the problem, objective, success measures, proposed solution, top-5 use cases and business model. This already exists as or_intelligence_problem_usecases.html.",
+      "steps": [
+        "Write problem statement and scope limits.",
+        "Define the 6-instrument objective and 3 success measures.",
+        "Describe 5 use cases with users, scenario and value.",
+        "Add business model and indicative pricing.",
+        "Publish bilingual page with EN/AR toggle."
+      ],
+      "inputs": [
+        "Course brief",
+        "Domain research on laparoscopic training"
+      ],
+      "outputs": [
+        "docs/problem/or_intelligence_problem_usecases.html"
+      ],
+      "files": [
+        "docs/problem/"
+      ],
+      "deps": [],
+      "accept": [
+        "Page states problem, objective, success measures, 5 use cases and business model in EN and AR.",
+        "Page committed under docs/problem/."
+      ],
+      "priority": "High",
+      "hours": 6,
+      "status": "Completed",
+      "start": 1,
+      "end": 1,
+      "branch": "feature/member-d-1.1.1-problem-page",
+      "planBranch": "d/1.1.1-problem-page"
+    },
+    {
+      "id": "1.2.1",
+      "wp": "1.2",
+      "owner": "D",
+      "name": "Repository scaffold, branch protection & CI skeleton",
+      "desc": "Create the GitHub repository with the agreed folder tree, empty package stubs for every owner, CODEOWNERS that encodes file ownership, protected main/develop branches and a CI workflow that runs lint + tests.",
+      "steps": [
+        "Create repo or-intelligence; add .gitignore (data/, runs/, models/weights/*.pt, node_modules/, .env).",
+        "Create the folder tree from PROJECT_STRUCTURE.md with __init__.py stubs in src/data, src/models, src/inference, src/timeline, src/api, src/reports (scaffold exception: after this single commit each path belongs only to its owner).",
+        "Create requirements/base.txt and empty owner files requirements/{data,ml,api}.txt (same scaffold exception); pyproject.toml with ruff + pytest config.",
+        "Write .github/CODEOWNERS mapping each path to its owner (copy the File Ownership Matrix).",
+        "Create branch develop; protect main and develop: PR required, 1 approval, CI must pass, no force-push.",
+        "Add .github/workflows/ci.yml: ruff, pytest tests/unit, and `npm ci && npm run build` in web/.",
+        "Add PR template (.github/pull_request_template.md) with WBS ID, scope, tests, screenshots checklist.",
+        "Invite A, B, C; confirm each can open a PR from their prefix branch."
+      ],
+      "inputs": [
+        "PROJECT_STRUCTURE.md"
+      ],
+      "outputs": [
+        "GitHub repo with develop + main",
+        ".github/CODEOWNERS",
+        ".github/workflows/ci.yml",
+        "PR template"
+      ],
+      "files": [
+        ".github/",
+        ".gitignore",
+        "pyproject.toml",
+        "requirements/base.txt"
+      ],
+      "deps": [],
+      "accept": [
+        "A test PR from each member triggers CI and requests the correct CODEOWNER review.",
+        "Direct push to main/develop is rejected.",
+        "CI passes on the empty scaffold."
+      ],
+      "priority": "High",
+      "hours": 1,
+      "status": "Not Started",
+      "start": 1,
+      "end": 1,
+      "branch": "feature/member-d-1.2.1-scaffold",
+      "planBranch": "d/1.2.1-scaffold"
+    },
+    {
+      "id": "1.2.2",
+      "wp": "1.2",
+      "owner": "D",
+      "name": "Interface contracts & shared test fixtures",
+      "desc": "Freeze the data contracts (class map, detections, timeline, HTTP API) and ship small fixture files so every member can build and test their module in parallel without waiting for upstream work.",
+      "steps": [
+        "Write contracts/classes.json (6 classes, ids 0–5, UI colours).",
+        "Write contracts/detections.schema.json and contracts/timeline.schema.json (JSON Schema draft 2020-12) matching the Contracts section.",
+        "Write contracts/openapi.yaml for all endpoints in contract C6, including error responses.",
+        "Create tests/fixtures/sample_detections.jsonl (≈600 frames, 2 min at 5 fps, with deliberate flicker) and tests/fixtures/sample_timeline.json (valid against schema).",
+        "Create tests/fixtures/sample_video.mp4 (≤10 MB, 2 min; synthetic or a public demo clip permitted by licence).",
+        "Add tests/contracts/test_schemas.py validating fixtures against schemas (jsonschema).",
+        "Hold a 30-min contract review with A, B, C; record sign-off in contracts/CHANGELOG.md. Any later change = PR to contracts/ approved by D + affected owners."
+      ],
+      "inputs": [
+        "Project page (instrument list)",
+        "PROJECT_STRUCTURE.md"
+      ],
+      "outputs": [
+        "contracts/classes.json",
+        "contracts/detections.schema.json",
+        "contracts/timeline.schema.json",
+        "contracts/openapi.yaml",
+        "tests/fixtures/*",
+        "contracts/CHANGELOG.md"
+      ],
+      "files": [
+        "contracts/",
+        "tests/fixtures/",
+        "tests/contracts/"
+      ],
+      "deps": [
+        "1.2.1"
+      ],
+      "accept": [
+        "Fixtures validate against schemas in CI.",
+        "A, B and C have signed off in contracts/CHANGELOG.md.",
+        "openapi.yaml lints with no errors (e.g. `npx @redocly/cli lint`)."
+      ],
+      "priority": "High",
+      "hours": 2,
+      "status": "Not Started",
+      "start": 1,
+      "end": 1,
+      "branch": "feature/member-d-1.2.2-contracts",
+      "critical": true,
+      "planBranch": "d/1.2.2-contracts"
+    },
+    {
+      "id": "1.3.1",
+      "wp": "1.3",
+      "owner": "A",
+      "name": "Dataset licensing & ethics checklist",
+      "desc": "Confirm which datasets may be used, under what licence, how to cite them, and record the educational/non-diagnostic scope. Blocks any data download.",
+      "steps": [
+        "Read the licence and access terms of m2cai16-tool-locations, m2cai16-tool and Cholec80 (CAMMA research licences, non-commercial).",
+        "Decide tonight (Mon) on the timeline ground truth: Cholec80 only if a team member already has access; otherwise m2cai16-tool presence labels on held-out videos. Record the decision in the doc and tell C.",
+        "List allowed uses (academic project, no redistribution of raw videos in the repo, no commercial use).",
+        "Write the BibTeX citations required by each dataset.",
+        "Write docs/data/LICENSES_AND_ETHICS.md: licences, citations, storage rule (data/ is gitignored), 'educational tool, not diagnostic' statement, PDPL note for any future real-patient data."
+      ],
+      "inputs": [
+        "Dataset web pages / licence texts"
+      ],
+      "outputs": [
+        "docs/data/LICENSES_AND_ETHICS.md"
+      ],
+      "files": [
+        "docs/data/"
+      ],
+      "deps": [],
+      "accept": [
+        "Document lists licence, citation and allowed use for every dataset used.",
+        "Reviewed and approved by D in PR.",
+        "Explicit rule: no raw video or frames committed to Git."
+      ],
+      "priority": "High",
+      "hours": 1,
+      "status": "Not Started",
+      "start": 1,
+      "end": 1,
+      "branch": "feature/member-a-1.3.1-licensing",
+      "planBranch": "a/1.3.1-licensing"
+    },
+    {
+      "id": "2.1.1",
+      "wp": "2.1",
+      "owner": "A",
+      "name": "Download & verify datasets",
+      "desc": "Scripted, reproducible download of m2cai16-tool-locations (frames + VOC XML boxes) and the Cholec80 videos/tool annotations needed for timeline evaluation, with checksums.",
+      "steps": [
+        "Write src/data/download.py: CLI `python -m src.data.download --dataset m2cai16|cholec80 --out data/raw/` (Cholec80 path may be a manual copy if the licence requires manual download; script then only verifies).",
+        "Record SHA-256 of every archive in configs/data.yaml under `checksums:`.",
+        "Write src/data/verify.py: counts images, XML files, videos and tool-annotation files; fails loudly on mismatch.",
+        "Store raw data in data/raw/m2cai16_tool_locations/ and data/raw/cholec80/ (gitignored).",
+        "Put a 20-frame sample + 1 XML in tests/unit/data/sample/ for unit tests (only if the licence allows; otherwise synthetic boxes).",
+        "Upload a team copy to the shared drive so B and C don't re-download."
+      ],
+      "inputs": [
+        "docs/data/LICENSES_AND_ETHICS.md (approved)"
+      ],
+      "outputs": [
+        "src/data/download.py",
+        "src/data/verify.py",
+        "configs/data.yaml",
+        "data/raw/ populated (not in Git)"
+      ],
+      "files": [
+        "src/data/download.py",
+        "src/data/verify.py",
+        "configs/data.yaml",
+        "requirements/data.txt"
+      ],
+      "deps": [
+        "1.3.1",
+        "1.2.1"
+      ],
+      "accept": [
+        "`python -m src.data.verify` passes on a clean machine after download.",
+        "Counts printed match the dataset documentation.",
+        "Nothing under data/ is tracked by Git."
+      ],
+      "priority": "High",
+      "hours": 2,
+      "status": "Not Started",
+      "start": 1,
+      "end": 1,
+      "branch": "feature/member-a-2.1.1-download",
+      "planBranch": "a/2.1.1-download"
+    },
+    {
+      "id": "2.2.1",
+      "wp": "2.2",
+      "owner": "A",
+      "name": "VOC → YOLO conversion & class mapping",
+      "desc": "Convert m2cai16-tool-locations Pascal-VOC boxes into YOLO txt labels using contracts/classes.json, dropping SpecimenBag, with validation and visual spot-checks.",
+      "steps": [
+        "Write src/data/convert_voc_to_yolo.py: parse XML, map names case-insensitively (Grasper→0 … Irrigator→5), skip SpecimenBag, clip boxes to image bounds, write `cls cx cy w h` normalised.",
+        "Log and count: dropped boxes, empty images, malformed XML. Keep images with zero tools as background images (empty .txt).",
+        "Write src/data/visualize.py: draws labels on N random images to data/processed/qa/.",
+        "Manually inspect ≥50 rendered images; note issues in docs/data/qa_notes.md.",
+        "Unit tests tests/unit/data/test_convert.py: known XML → expected txt; out-of-bounds box clipped; SpecimenBag dropped."
+      ],
+      "inputs": [
+        "data/raw/m2cai16_tool_locations/",
+        "contracts/classes.json"
+      ],
+      "outputs": [
+        "data/processed/yolo/images|labels (all)",
+        "src/data/convert_voc_to_yolo.py",
+        "src/data/visualize.py",
+        "docs/data/qa_notes.md"
+      ],
+      "files": [
+        "src/data/convert_voc_to_yolo.py",
+        "src/data/visualize.py",
+        "tests/unit/data/",
+        "docs/data/qa_notes.md"
+      ],
+      "deps": [
+        "2.1.1",
+        "1.2.2"
+      ],
+      "accept": [
+        "Every image has exactly one .txt label file (possibly empty).",
+        "All class ids ∈ {0..5}; all coordinates ∈ [0,1].",
+        "≥50 visual spot-checks recorded with <2% label errors.",
+        "Unit tests pass in CI."
+      ],
+      "priority": "High",
+      "hours": 3,
+      "status": "Not Started",
+      "start": 1,
+      "end": 2,
+      "branch": "feature/member-a-2.2.1-voc-to-yolo",
+      "planBranch": "a/2.2.1-voc-to-yolo"
+    },
+    {
+      "id": "2.2.2",
+      "wp": "2.2",
+      "owner": "A",
+      "name": "Video-level train/val/test split",
+      "desc": "Split by source video (never by frame) so the test set measures generalisation to unseen surgeries, as required by the success measures.",
+      "steps": [
+        "Parse the video ID from each frame filename; build a video → frame count table.",
+        "Write src/data/split.py: deterministic (seed 42) split ≈70/15/15 by video, stratified so each split contains all 6 classes.",
+        "Write data/splits/splits.json and place images/labels into train/val/test folders.",
+        "Generate data/processed/dataset.yaml (Ultralytics format; names from contracts/classes.json).",
+        "Add a leakage test: assert no video ID appears in more than one split.",
+        "Hand off: post split counts (videos, images, boxes per class per split) in the PR and tag B."
+      ],
+      "inputs": [
+        "data/processed/yolo/ (unsplit)"
+      ],
+      "outputs": [
+        "data/splits/splits.json",
+        "data/processed/dataset.yaml",
+        "Split summary table in PR"
+      ],
+      "files": [
+        "src/data/split.py",
+        "data/splits/splits.json"
+      ],
+      "deps": [
+        "2.2.1"
+      ],
+      "accept": [
+        "No video ID shared across splits (test passes).",
+        "Each split contains every class at least 20 times.",
+        "`yolo detect val data=data/processed/dataset.yaml` loads the dataset without errors."
+      ],
+      "priority": "High",
+      "hours": 1,
+      "status": "Not Started",
+      "start": 2,
+      "end": 2,
+      "branch": "feature/member-a-2.2.2-split",
+      "critical": true,
+      "planBranch": "a/2.2.2-split"
+    },
+    {
+      "id": "2.3.1",
+      "wp": "2.3",
+      "owner": "A",
+      "name": "Timeline ground truth from Cholec80 presence labels",
+      "desc": "Prepare a held-out set of full surgery videos with per-second tool-presence labels, used to measure timeline agreement (success measure 2). Videos must not overlap with the detector's training videos. Source is Cholec80 or the m2cai16-tool fallback (decided in 1.3.1).",
+      "steps": [
+        "Select 3 held-out videos for timeline evaluation (1 for tuning, 2 for reporting); document the choice in docs/data/timeline_eval_set.md.",
+        "Check and document that none of these videos are the source of any m2cai16 training frame (compare video identifiers/metadata; if uncertain, record as a risk).",
+        "Write src/data/presence_labels.py: convert the chosen tool-presence annotation files to contract C3 CSV (1 fps, map names to the 6 classes, drop SpecimenBag).",
+        "Write src/data/extract_frames.py (ffmpeg via subprocess): optional 1 fps frame dump for debugging.",
+        "Validate: CSV row count ≈ video duration in seconds (±2 s).",
+        "Hand off the CSVs and the video list to C (task 4.1.3)."
+      ],
+      "inputs": [
+        "data/raw/cholec80/"
+      ],
+      "outputs": [
+        "data/processed/presence/<video_id>.csv",
+        "docs/data/timeline_eval_set.md",
+        "src/data/presence_labels.py",
+        "src/data/extract_frames.py"
+      ],
+      "files": [
+        "src/data/presence_labels.py",
+        "src/data/extract_frames.py",
+        "docs/data/timeline_eval_set.md"
+      ],
+      "deps": [
+        "2.1.1"
+      ],
+      "accept": [
+        "Each CSV matches contract C3 (header + 0/1 values).",
+        "Row counts within ±2 s of video length.",
+        "Overlap check with training videos documented."
+      ],
+      "priority": "High",
+      "hours": 3,
+      "status": "Not Started",
+      "start": 2,
+      "end": 3,
+      "branch": "feature/member-a-2.3.1-presence-gt",
+      "planBranch": "a/2.3.1-presence-gt"
+    },
+    {
+      "id": "2.4.1",
+      "wp": "2.4",
+      "owner": "A",
+      "name": "EDA & class-balance report",
+      "desc": "Quantify the dataset so B can plan augmentation and class weighting, and so the report has a data section.",
+      "steps": [
+        "Write src/data/eda.py producing CSV + PNG charts in docs/data/figures/: boxes per class per split, images per video, box size distribution, co-occurrence matrix.",
+        "Summarise findings in notebooks/eda.ipynb (read-only visual companion).",
+        "Write docs/data/EDA.md: key numbers, imbalance ratio, small-object share, recommendations to B (e.g. oversample scissors/clipper)."
+      ],
+      "inputs": [
+        "data/processed/yolo/",
+        "data/splits/splits.json"
+      ],
+      "outputs": [
+        "docs/data/EDA.md",
+        "docs/data/figures/*.png",
+        "src/data/eda.py",
+        "notebooks/eda.ipynb"
+      ],
+      "files": [
+        "src/data/eda.py",
+        "docs/data/EDA.md",
+        "docs/data/figures/",
+        "notebooks/eda.ipynb"
+      ],
+      "deps": [
+        "2.2.2"
+      ],
+      "accept": [
+        "EDA.md contains per-class counts per split and at least 4 figures.",
+        "Recommendations section addressed to B is present.",
+        "Charts regenerate from `python -m src.data.eda`."
+      ],
+      "priority": "Medium",
+      "hours": 2,
+      "status": "Not Started",
+      "start": 3,
+      "end": 3,
+      "branch": "feature/member-a-2.4.1-eda",
+      "planBranch": "a/2.4.1-eda"
+    },
+    {
+      "id": "3.1.1",
+      "wp": "3.1",
+      "owner": "B",
+      "name": "Baseline YOLO training",
+      "desc": "Fine-tune a COCO-pretrained YOLO (e.g. yolov8s / yolo11s) on the 6-class dataset to establish a baseline and produce first usable weights.",
+      "steps": [
+        "Write configs/train.yaml (yolov8s, imgsz 640, epochs 50, batch 16, patience 10, seed 42, data path). Start the Kaggle/Colab run as early as possible Tue morning; it runs while you work on 3.3.1.",
+        "Write src/models/train.py wrapping Ultralytics: `python -m src.models.train --config configs/train.yaml --name baseline`.",
+        "Train on Colab/Kaggle GPU; log runs to runs/ and record experiment in docs/model/experiments.md (config hash, mAP@0.5, mAP@0.5:0.95, time).",
+        "Save best weights to models/weights/baseline.pt (store in shared drive / GitHub Release, never in Git).",
+        "Smoke test tests/unit/models/test_train_config.py (config loads, class names match contracts/classes.json)."
+      ],
+      "inputs": [
+        "data/processed/dataset.yaml",
+        "contracts/classes.json"
+      ],
+      "outputs": [
+        "models/weights/baseline.pt",
+        "configs/train.yaml",
+        "src/models/train.py",
+        "docs/model/experiments.md"
+      ],
+      "files": [
+        "src/models/train.py",
+        "configs/train.yaml",
+        "requirements/ml.txt",
+        "docs/model/experiments.md",
+        "tests/unit/models/"
+      ],
+      "deps": [
+        "2.2.2"
+      ],
+      "accept": [
+        "Baseline val mAP@0.5 recorded in experiments.md.",
+        "Weights downloadable by the team.",
+        "Training reproducible from the config with the same seed."
+      ],
+      "priority": "High",
+      "hours": 4,
+      "status": "Not Started",
+      "start": 2,
+      "end": 3,
+      "branch": "feature/member-b-3.1.1-baseline",
+      "planBranch": "b/3.1.1-baseline"
+    },
+    {
+      "id": "3.1.2",
+      "wp": "3.1",
+      "owner": "B",
+      "name": "Augmentation & hyper-parameter experiments",
+      "desc": "Improve on the baseline using EDA findings: model size, image size, augmentation (smoke/blur, HSV, mosaic), class imbalance handling. Select the final model on the validation split only.",
+      "steps": [
+        "Plan 2 experiments in docs/model/experiments.md (one change each, chosen from EDA): e.g. imgsz 832 and blur/HSV augmentation or oversampling the rarest class. Launch both in parallel GPU sessions Tue afternoon.",
+        "Write src/models/tune.py to launch a named experiment from a config override file in configs/experiments/.",
+        "Run experiments; record val mAP@0.5 and per-class AP for each.",
+        "Choose the best by val mAP@0.5 (tie-break: per-class min AP, then speed). Do NOT look at the test split.",
+        "Export final weights models/weights/best.pt and optionally ONNX models/weights/best.onnx."
+      ],
+      "inputs": [
+        "models/weights/baseline.pt",
+        "docs/data/EDA.md"
+      ],
+      "outputs": [
+        "models/weights/best.pt",
+        "configs/experiments/*.yaml",
+        "Experiment table in docs/model/experiments.md"
+      ],
+      "files": [
+        "src/models/tune.py",
+        "configs/experiments/",
+        "models/weights/",
+        "notebooks/experiments/"
+      ],
+      "deps": [
+        "3.1.1",
+        "2.4.1"
+      ],
+      "accept": [
+        "2 experiments logged with config and results (plus baseline).",
+        "Final model's val mAP@0.5 ≥ baseline.",
+        "best.pt shared by Tue 23:00; selection rationale written; test split untouched."
+      ],
+      "priority": "High",
+      "hours": 4,
+      "status": "Not Started",
+      "start": 4,
+      "end": 4,
+      "branch": "feature/member-b-3.1.2-tuning",
+      "planBranch": "b/3.1.2-tuning"
+    },
+    {
+      "id": "3.2.1",
+      "wp": "3.2",
+      "owner": "B",
+      "name": "Held-out test evaluation report",
+      "desc": "One-time evaluation of the final model on the video-level test split: mAP@0.5, mAP@0.5:0.95, per-instrument precision/recall, confusion matrix, failure analysis.",
+      "steps": [
+        "Write src/models/evaluate.py: runs Ultralytics val on split=test, saves metrics JSON to docs/model/test_metrics.json.",
+        "Produce per-class P/R table at the chosen confidence threshold and PR curves.",
+        "Collect 20 failure cases (FN/FP) into docs/model/figures/failures/ with short comments (smoke, occlusion, motion blur, partial tools).",
+        "Write docs/model/EVALUATION.md.",
+        "Hand off the recommended confidence threshold to C (timeline params)."
+      ],
+      "inputs": [
+        "models/weights/best.pt",
+        "test split"
+      ],
+      "outputs": [
+        "docs/model/EVALUATION.md",
+        "docs/model/test_metrics.json",
+        "docs/model/figures/"
+      ],
+      "files": [
+        "src/models/evaluate.py",
+        "docs/model/EVALUATION.md",
+        "docs/model/test_metrics.json",
+        "docs/model/figures/"
+      ],
+      "deps": [
+        "3.1.2"
+      ],
+      "accept": [
+        "Report includes mAP@0.5 and P/R for all 6 instruments on the test split.",
+        "Test split evaluated exactly once (stated in report).",
+        "Recommended conf threshold communicated to C in the PR."
+      ],
+      "priority": "High",
+      "hours": 3,
+      "status": "Not Started",
+      "start": 5,
+      "end": 5,
+      "branch": "feature/member-b-3.2.1-eval",
+      "planBranch": "b/3.2.1-eval"
+    },
+    {
+      "id": "3.3.1",
+      "wp": "3.3",
+      "owner": "B",
+      "name": "Video inference module (detections.jsonl)",
+      "desc": "Library + CLI that samples a video at N fps, runs the detector and streams detections in contract C4 format. This is what the API (C) calls.",
+      "steps": [
+        "Mon evening: set up the environment and implement src/inference/detect_video.py with the exact signature in contract C4 using COCO-pretrained yolov8n.pt as a stand-in (no dependency on training); read frames with OpenCV, sample at sample_fps, batch inference. Swap to baseline.pt/best.pt when available.",
+        "Add a progress callback parameter `on_progress(fraction: float)` so the API can report progress.",
+        "CLI: `python -m src.inference.detect_video in.mp4 out.jsonl --fps 5`.",
+        "Fall back to CPU if no GPU; allow ONNX weights.",
+        "Tests tests/unit/inference/: run on tests/fixtures/sample_video.mp4 with baseline weights; output validates against contracts/detections.schema.json.",
+        "Hand off: document usage in src/inference/README.md and notify C."
+      ],
+      "inputs": [
+        "yolov8n.pt (stand-in), later baseline.pt / best.pt",
+        "contracts/detections.schema.json",
+        "tests/fixtures/sample_video.mp4"
+      ],
+      "outputs": [
+        "src/inference/detect_video.py",
+        "src/inference/README.md",
+        "tests/unit/inference/"
+      ],
+      "files": [
+        "src/inference/",
+        "tests/unit/inference/"
+      ],
+      "deps": [
+        "1.2.2"
+      ],
+      "accept": [
+        "Output for the fixture video validates against the schema.",
+        "Progress callback reaches 1.0.",
+        "Processes a 2-min 1080p clip at 5 fps in < 2 min on the target GPU (documented)."
+      ],
+      "priority": "High",
+      "hours": 5,
+      "status": "Not Started",
+      "start": 1,
+      "end": 3,
+      "branch": "feature/member-b-3.3.1-inference",
+      "critical": true,
+      "planBranch": "b/3.3.1-inference"
+    },
+    {
+      "id": "3.3.2",
+      "wp": "3.3",
+      "owner": "B",
+      "name": "Model card & weights release",
+      "desc": "Publish final weights as a GitHub Release asset with a model card describing data, metrics, limits and intended (educational) use.",
+      "steps": [
+        "Write docs/model/MODEL_CARD.md: training data + licence, metrics table, known failure modes, intended use, out-of-scope (diagnosis, other procedures).",
+        "Create GitHub Release `model-v1` with best.pt (and best.onnx) and SHA-256.",
+        "Add src/inference/fetch_weights.py that downloads and verifies the release asset into models/weights/."
+      ],
+      "inputs": [
+        "docs/model/EVALUATION.md",
+        "models/weights/best.pt"
+      ],
+      "outputs": [
+        "docs/model/MODEL_CARD.md",
+        "GitHub Release model-v1",
+        "src/inference/fetch_weights.py"
+      ],
+      "files": [
+        "docs/model/MODEL_CARD.md"
+      ],
+      "deps": [
+        "3.2.1"
+      ],
+      "accept": [
+        "`python -m src.inference.fetch_weights` downloads and verifies best.pt on a clean clone.",
+        "Model card states non-diagnostic, educational scope."
+      ],
+      "priority": "Medium",
+      "hours": 1,
+      "status": "Not Started",
+      "start": 5,
+      "end": 5,
+      "branch": "feature/member-b-3.3.2-model-card",
+      "planBranch": "b/3.3.2-model-card"
+    },
+    {
+      "id": "4.1.1",
+      "wp": "4.1",
+      "owner": "C",
+      "name": "Temporal smoothing",
+      "desc": "Turn noisy per-frame detections into stable per-tool presence signals: confidence threshold, per-tool max-confidence per frame, sliding-window vote / hysteresis.",
+      "steps": [
+        "Implement src/timeline/smoothing.py: `presence_matrix(dets, conf) -> np.ndarray[T, 6]` then `smooth(matrix, fps, window_s, method='majority'|'hysteresis', on=0.6, off=0.4)`.",
+        "Expose parameters in configs/timeline.yaml (conf, window_s, method, on/off thresholds).",
+        "Develop and test only against tests/fixtures/sample_detections.jsonl (no dependency on the real model).",
+        "Unit tests: single-frame flicker removed; real 3-s gap kept; output shape and dtype correct."
+      ],
+      "inputs": [
+        "tests/fixtures/sample_detections.jsonl",
+        "contracts/detections.schema.json"
+      ],
+      "outputs": [
+        "src/timeline/smoothing.py",
+        "configs/timeline.yaml",
+        "tests/unit/timeline/test_smoothing.py"
+      ],
+      "files": [
+        "src/timeline/smoothing.py",
+        "configs/timeline.yaml",
+        "tests/unit/timeline/",
+        "requirements/api.txt"
+      ],
+      "deps": [
+        "1.2.2"
+      ],
+      "accept": [
+        "Unit tests pass.",
+        "On the fixture, number of segments drops by ≥50% versus raw thresholding with no segment >2 s lost."
+      ],
+      "priority": "High",
+      "hours": 3,
+      "status": "Not Started",
+      "start": 1,
+      "end": 1,
+      "branch": "feature/member-c-4.1.1-smoothing",
+      "planBranch": "c/4.1.1-smoothing"
+    },
+    {
+      "id": "4.1.2",
+      "wp": "4.1",
+      "owner": "C",
+      "name": "Interval builder & per-case statistics",
+      "desc": "Convert smoothed presence into contract C5 timeline: intervals per tool (merge small gaps, drop tiny segments), per-tool time, segment counts, tool switches.",
+      "steps": [
+        "Implement src/timeline/builder.py: `build_timeline(dets_path, video_id, params) -> dict` (contract C5).",
+        "Merge gaps < merge_gap_s; drop segments < min_segment_s; compute mean_conf per segment.",
+        "Define 'tool switch' = change in the set of active tools after smoothing; document the definition in the module docstring.",
+        "Compute stats: total_s, per_tool_s, per_tool_segments, switches.",
+        "Validate output against contracts/timeline.schema.json in tests.",
+        "CLI: `python -m src.timeline.builder detections.jsonl timeline.json`."
+      ],
+      "inputs": [
+        "src/timeline/smoothing.py",
+        "contracts/timeline.schema.json"
+      ],
+      "outputs": [
+        "src/timeline/builder.py",
+        "timeline.json (per video)"
+      ],
+      "files": [
+        "src/timeline/builder.py"
+      ],
+      "deps": [
+        "4.1.1"
+      ],
+      "accept": [
+        "Output validates against schema.",
+        "Hand-computed stats for the fixture match the module output.",
+        "Switch definition documented."
+      ],
+      "priority": "High",
+      "hours": 3,
+      "status": "Not Started",
+      "start": 2,
+      "end": 2,
+      "branch": "feature/member-c-4.1.2-builder",
+      "planBranch": "c/4.1.2-builder"
+    },
+    {
+      "id": "4.1.3",
+      "wp": "4.1",
+      "owner": "C",
+      "name": "Timeline evaluation vs ground truth",
+      "desc": "Measure success measure 2: agreement between predicted tool intervals and Cholec80 presence labels on the timeline evaluation videos; tune smoothing params on a subset.",
+      "steps": [
+        "Run src.inference.detect_video (B's module, unchanged) on each timeline-eval video.",
+        "Implement src/timeline/evaluate.py: resample predictions to 1 fps; per-tool frame-level precision/recall/F1, and segment IoU; overall macro-F1.",
+        "Compare raw (no smoothing) vs smoothed; try 3–4 values of window_s and min_segment_s on the 1 tuning video, report on the 2 reporting videos.",
+        "Write docs/timeline/TIMELINE_EVAL.md with tables and one example timeline plot per video.",
+        "Update configs/timeline.yaml defaults to the chosen parameters."
+      ],
+      "inputs": [
+        "data/processed/presence/*.csv (2.3.1)",
+        "src/inference/detect_video.py (3.3.1)",
+        "models/weights/best.pt or baseline.pt"
+      ],
+      "outputs": [
+        "src/timeline/evaluate.py",
+        "docs/timeline/TIMELINE_EVAL.md",
+        "Tuned configs/timeline.yaml"
+      ],
+      "files": [
+        "src/timeline/evaluate.py",
+        "docs/timeline/"
+      ],
+      "deps": [
+        "4.1.2",
+        "2.3.1",
+        "3.3.1"
+      ],
+      "accept": [
+        "Per-tool F1 table for raw vs smoothed on held-out timeline videos.",
+        "Tuning and reporting videos are disjoint (stated).",
+        "Smoothed macro-F1 ≥ raw macro-F1."
+      ],
+      "priority": "High",
+      "hours": 3,
+      "status": "Not Started",
+      "start": 5,
+      "end": 6,
+      "branch": "feature/member-c-4.1.3-timeline-eval",
+      "planBranch": "c/4.1.3-timeline-eval"
+    },
+    {
+      "id": "4.2.1",
+      "wp": "4.2",
+      "owner": "C",
+      "name": "FastAPI service & background processing jobs",
+      "desc": "HTTP service implementing upload, status, video streaming and timeline endpoints from contracts/openapi.yaml, with a background worker that runs inference → timeline.",
+      "steps": [
+        "Scaffold src/api/main.py (FastAPI, CORS for the Vite dev origin), src/api/db.py (SQLite via SQLModel: Video, Note tables).",
+        "Implement src/api/routes/videos.py: POST /api/videos (save to storage/videos/), GET list/status, GET /file with HTTP range support, GET /timeline.",
+        "Implement src/api/jobs.py: background worker (FastAPI BackgroundTasks or a single-thread queue) calling detect_video → build_timeline; update status/progress; store timeline JSON in storage/timelines/.",
+        "Until 3.3.1 lands, use a stub that replays tests/fixtures/sample_detections.jsonl (env INFERENCE_MODE=fixture).",
+        "Tests tests/unit/api/ with FastAPI TestClient: upload → done → timeline matches schema (fixture mode).",
+        "Run `uvicorn src.api.main:app` and verify /docs matches openapi.yaml."
+      ],
+      "inputs": [
+        "contracts/openapi.yaml",
+        "src/timeline/builder.py",
+        "src/inference/detect_video.py (via import)"
+      ],
+      "outputs": [
+        "src/api/main.py",
+        "src/api/db.py",
+        "src/api/jobs.py",
+        "src/api/routes/videos.py",
+        "tests/unit/api/"
+      ],
+      "files": [
+        "src/api/main.py",
+        "src/api/db.py",
+        "src/api/jobs.py",
+        "src/api/routes/videos.py",
+        "tests/unit/api/"
+      ],
+      "deps": [
+        "1.2.2"
+      ],
+      "accept": [
+        "All video endpoints in openapi.yaml implemented; responses validate.",
+        "Fixture-mode upload reaches status done in tests.",
+        "Real mode works with best.pt on the sample video."
+      ],
+      "priority": "High",
+      "hours": 5,
+      "status": "Not Started",
+      "start": 1,
+      "end": 3,
+      "branch": "feature/member-c-4.2.1-api",
+      "critical": true,
+      "planBranch": "c/4.2.1-api"
+    },
+    {
+      "id": "4.2.2",
+      "wp": "4.2",
+      "owner": "C",
+      "name": "Notes, search & analytics endpoints",
+      "desc": "Endpoints for timestamped notes (use case 2), instrument search across the library (use case 3) and per-case stats comparison (use case 5).",
+      "steps": [
+        "src/api/routes/notes.py: CRUD for notes {id, video_id, t_sec, text, author, created_at}.",
+        "src/api/routes/search.py: /api/search?tool=&min_s= scans stored timelines and returns matching segments sorted by video then start.",
+        "src/api/routes/analytics.py: /api/analytics?video_ids= returns stats blocks; include an aggregate (mean per-tool seconds, mean switches).",
+        "Tests for each route with two fixture timelines."
+      ],
+      "inputs": [
+        "src/api/ (4.2.1)",
+        "contracts/openapi.yaml"
+      ],
+      "outputs": [
+        "src/api/routes/notes.py",
+        "src/api/routes/search.py",
+        "src/api/routes/analytics.py"
+      ],
+      "files": [
+        "src/api/routes/notes.py",
+        "src/api/routes/search.py",
+        "src/api/routes/analytics.py"
+      ],
+      "deps": [
+        "4.2.1"
+      ],
+      "accept": [
+        "Searching tool=clipper on fixtures returns exactly the clipper segments.",
+        "Notes persist across server restart.",
+        "Route tests pass in CI."
+      ],
+      "priority": "Medium",
+      "hours": 3,
+      "status": "Not Started",
+      "start": 4,
+      "end": 4,
+      "branch": "feature/member-c-4.2.2-notes-search",
+      "planBranch": "c/4.2.2-notes-search"
+    },
+    {
+      "id": "4.3.1",
+      "wp": "4.3",
+      "owner": "C",
+      "name": "PDF report generator (English & Arabic)",
+      "desc": "Generate a session report: case info, timeline bar chart, per-tool stats, instructor notes with timestamps, disclaimer; in EN or AR (RTL).",
+      "steps": [
+        "Implement src/reports/pdf_report.py with ReportLab: `render_report(timeline, notes, lang, out_path)`.",
+        "Draw the timeline as horizontal coloured bars (colours from contracts/classes.json).",
+        "Arabic: bundle Noto Naskh Arabic in src/reports/fonts/ (OFL licence), shape text with arabic-reshaper + python-bidi; right-align.",
+        "Strings in src/reports/strings.py (en/ar).",
+        "Wire GET /api/videos/{id}/report.pdf?lang= in src/api/routes/reports.py.",
+        "Golden test: generate both languages from fixtures; assert PDF opens and contains note text (pypdf)."
+      ],
+      "inputs": [
+        "contracts/timeline.schema.json",
+        "tests/fixtures/sample_timeline.json"
+      ],
+      "outputs": [
+        "src/reports/pdf_report.py",
+        "src/reports/strings.py",
+        "src/reports/fonts/",
+        "src/api/routes/reports.py"
+      ],
+      "files": [
+        "src/reports/",
+        "src/api/routes/reports.py",
+        "tests/unit/reports/"
+      ],
+      "deps": [
+        "4.1.2",
+        "4.2.2"
+      ],
+      "accept": [
+        "EN and AR PDFs render with correct Arabic shaping and RTL layout (visual check by A).",
+        "Report includes timeline chart, stats, notes and the 'educational, not diagnostic' disclaimer.",
+        "Endpoint returns application/pdf."
+      ],
+      "priority": "Medium",
+      "hours": 4,
+      "status": "Not Started",
+      "start": 4,
+      "end": 5,
+      "branch": "feature/member-c-4.3.1-pdf",
+      "planBranch": "c/4.3.1-pdf"
+    },
+    {
+      "id": "5.1.1",
+      "wp": "5.1",
+      "owner": "D",
+      "name": "Web app shell, API client & upload flow",
+      "desc": "React + Vite + TypeScript shell: routing, layout, typed API client generated from openapi.yaml, i18n loader, upload page with processing status polling.",
+      "steps": [
+        "Create web/ with Vite React-TS; add react-router; set up layout and nav (Upload, Review, Library, Analytics).",
+        "Generate typed client from contracts/openapi.yaml (openapi-typescript) into web/src/api/; add a mock mode using tests/fixtures data.",
+        "Implement web/src/i18n/index.ts + en.json; RTL switch toggles <html dir>. Load locale files with import.meta.glob('./*.json') so Member A can add ar.json without touching index.ts; load styles/rtl.css only if present.",
+        "Upload page web/src/pages/Upload/: drag-and-drop, progress bar from GET status polling every 2 s, redirect to Review when done.",
+        "Auto-register routes with import.meta.glob('../pages/*/index.tsx') so Member A's web/src/pages/Analytics/ appears at /analytics without D editing it and without A editing the router."
+      ],
+      "inputs": [
+        "contracts/openapi.yaml",
+        "tests/fixtures/"
+      ],
+      "outputs": [
+        "web/ app shell",
+        "web/src/api/",
+        "web/src/pages/Upload/",
+        "web/src/i18n/index.ts",
+        "web/src/i18n/en.json"
+      ],
+      "files": [
+        "web/package.json",
+        "web/vite.config.ts",
+        "web/src/app/",
+        "web/src/api/",
+        "web/src/pages/Upload/",
+        "web/src/i18n/index.ts",
+        "web/src/i18n/en.json"
+      ],
+      "deps": [
+        "1.2.2"
+      ],
+      "accept": [
+        "`npm run build` passes in CI.",
+        "Upload in mock mode reaches Review page.",
+        "Adding a new folder under web/src/pages/ or a new locale JSON requires no edit to D's files (verified with a throwaway test page)."
+      ],
+      "priority": "High",
+      "hours": 3,
+      "status": "Not Started",
+      "start": 2,
+      "end": 2,
+      "branch": "feature/member-d-5.1.1-shell",
+      "planBranch": "d/5.1.1-shell"
+    },
+    {
+      "id": "5.1.2",
+      "wp": "5.1",
+      "owner": "D",
+      "name": "Video player + interactive instrument timeline",
+      "desc": "The core review screen: HTML5 video player synced with a colour-coded, zoomable timeline; clicking a bar seeks the video; playhead follows playback.",
+      "steps": [
+        "web/src/components/Timeline/: one lane per tool, bars from timeline.tools, colours from classes.json, time axis with mm:ss ticks.",
+        "Click bar → video.currentTime = start; keyboard: ←/→ previous/next segment of selected tool.",
+        "Playhead synced via timeupdate; zoom (1×–8×) and horizontal scroll for long videos.",
+        "Highlight 'unusual patterns': segments longer than configurable thresholds (e.g. irrigation > 60 s) and dense switching windows.",
+        "web/src/pages/Review/: player + timeline + stats panel (per-tool time, switches).",
+        "Component tests with Vitest + Testing Library using sample_timeline.json."
+      ],
+      "inputs": [
+        "tests/fixtures/sample_timeline.json",
+        "web/src/api/"
+      ],
+      "outputs": [
+        "web/src/components/Timeline/",
+        "web/src/components/VideoPlayer/",
+        "web/src/pages/Review/"
+      ],
+      "files": [
+        "web/src/components/Timeline/",
+        "web/src/components/VideoPlayer/",
+        "web/src/pages/Review/"
+      ],
+      "deps": [
+        "5.1.1"
+      ],
+      "accept": [
+        "Clicking any bar seeks within ±0.5 s of segment start.",
+        "Renders a 90-min timeline at 60 fps scroll without lag (Chrome performance check).",
+        "Component tests pass."
+      ],
+      "priority": "High",
+      "hours": 5,
+      "status": "Not Started",
+      "start": 2,
+      "end": 4,
+      "branch": "feature/member-d-5.1.2-timeline-ui",
+      "critical": true,
+      "planBranch": "d/5.1.2-timeline-ui"
+    },
+    {
+      "id": "5.1.3",
+      "wp": "5.1",
+      "owner": "D",
+      "name": "Timestamped notes panel & report download",
+      "desc": "Instructor notes at the current playhead time, listed and clickable; download PDF report in EN/AR.",
+      "steps": [
+        "web/src/components/NotesPanel/: add note at current time (prefilled mm:ss), list sorted by time, click to seek, delete.",
+        "Show note markers on the timeline.",
+        "Report button: GET /report.pdf?lang= with language selector.",
+        "Tests in mock mode."
+      ],
+      "inputs": [
+        "web/src/pages/Review/",
+        "contracts/openapi.yaml"
+      ],
+      "outputs": [
+        "web/src/components/NotesPanel/"
+      ],
+      "files": [
+        "web/src/components/NotesPanel/"
+      ],
+      "deps": [
+        "5.1.2"
+      ],
+      "accept": [
+        "Note added at 12:34 appears at 12:34 on the timeline and in the list.",
+        "Clicking a note seeks the video.",
+        "PDF downloads in both languages against the real API."
+      ],
+      "priority": "Medium",
+      "hours": 2,
+      "status": "Not Started",
+      "start": 4,
+      "end": 4,
+      "branch": "feature/member-d-5.1.3-notes-ui",
+      "planBranch": "d/5.1.3-notes-ui"
+    },
+    {
+      "id": "5.2.1",
+      "wp": "5.2",
+      "owner": "D",
+      "name": "Library search page",
+      "desc": "Use case 3: list all processed videos and search segments by instrument and minimum duration; each result opens Review at that timestamp.",
+      "steps": [
+        "web/src/pages/Library/: video list (title, duration, status) + search form (tool, min duration).",
+        "Results grouped by video; click → /review/:id?t=start.",
+        "Review page reads ?t= and seeks on load (small change inside D's own Review page)."
+      ],
+      "inputs": [
+        "/api/videos",
+        "/api/search"
+      ],
+      "outputs": [
+        "web/src/pages/Library/"
+      ],
+      "files": [
+        "web/src/pages/Library/"
+      ],
+      "deps": [
+        "5.1.1"
+      ],
+      "accept": [
+        "'clipper' search on fixtures lists exactly the clipper segments.",
+        "Clicking a result opens Review at the right time."
+      ],
+      "priority": "Medium",
+      "hours": 2,
+      "status": "Not Started",
+      "start": 5,
+      "end": 5,
+      "branch": "feature/member-d-5.2.1-library",
+      "planBranch": "d/5.2.1-library"
+    },
+    {
+      "id": "5.2.2",
+      "wp": "5.2",
+      "owner": "A",
+      "name": "Analytics dashboard page",
+      "desc": "Use case 5: compare per-case statistics (time per instrument, total time, switches) across selected videos.",
+      "steps": [
+        "Implement web/src/pages/Analytics/ (stub created by D in 5.1.1): multi-select videos, call /api/analytics (mock mode until 4.2.2 lands).",
+        "Charts: stacked bar of per-tool seconds per case; line of switches across cases ordered by date; table of stats.",
+        "If a chart library is needed, request it in a PR to web/package.json (owned by D) — do not edit package.json directly.",
+        "Export the stats table as CSV.",
+        "Vitest tests for the data transformation functions."
+      ],
+      "inputs": [
+        "contracts/openapi.yaml (analytics)",
+        "tests/fixtures/sample_timeline.json"
+      ],
+      "outputs": [
+        "web/src/pages/Analytics/"
+      ],
+      "files": [
+        "web/src/pages/Analytics/"
+      ],
+      "deps": [
+        "5.1.1"
+      ],
+      "accept": [
+        "Selecting 3 fixture cases shows correct per-tool totals (match API JSON).",
+        "CSV export opens in Excel with correct columns.",
+        "No files outside web/src/pages/Analytics/ changed in the PR."
+      ],
+      "priority": "Medium",
+      "hours": 4,
+      "status": "Not Started",
+      "start": 4,
+      "end": 5,
+      "branch": "feature/member-a-5.2.2-analytics",
+      "planBranch": "a/5.2.2-analytics"
+    },
+    {
+      "id": "5.2.3",
+      "wp": "5.2",
+      "owner": "A",
+      "name": "Arabic localisation & RTL styling",
+      "desc": "Complete Arabic translation of all UI strings and RTL layout fixes, matching the bilingual product promise.",
+      "steps": [
+        "Translate every key in web/src/i18n/en.json into web/src/i18n/ar.json (keep keys identical; CI test checks key parity).",
+        "Write web/src/styles/rtl.css: mirror layout, keep the timeline time axis left-to-right (time always increases to the right) and document this decision.",
+        "Review all pages in AR; log issues for D's components as GitHub issues rather than editing them.",
+        "Visually verify Arabic PDF output from C's generator."
+      ],
+      "inputs": [
+        "web/src/i18n/en.json (D)"
+      ],
+      "outputs": [
+        "web/src/i18n/ar.json",
+        "web/src/styles/rtl.css",
+        "web/src/i18n/parity.test.ts"
+      ],
+      "files": [
+        "web/src/i18n/ar.json",
+        "web/src/styles/rtl.css",
+        "web/src/i18n/parity.test.ts"
+      ],
+      "deps": [
+        "5.1.1"
+      ],
+      "accept": [
+        "Key parity test passes (en ↔ ar).",
+        "All pages usable in Arabic with no clipped or mirrored-wrong elements (screenshots in PR).",
+        "Arabic PDF reviewed and approved."
+      ],
+      "priority": "Medium",
+      "hours": 2,
+      "status": "Not Started",
+      "start": 5,
+      "end": 5,
+      "branch": "feature/member-a-5.2.3-arabic",
+      "planBranch": "a/5.2.3-arabic"
+    },
+    {
+      "id": "6.1.1",
+      "wp": "6.1",
+      "owner": "B",
+      "name": "Inference performance benchmark",
+      "desc": "Measure processing time and resource use for realistic video lengths to set user expectations and choose sample_fps.",
+      "steps": [
+        "Write src/models/benchmark.py: time detect_video on one 10-min clip at 1, 2 and 5 fps on the available GPU (and CPU at 1 fps).",
+        "Optional if time allows: macro-F1 impact of sample_fps using C's evaluate.py (call it, don't modify it).",
+        "Write docs/model/BENCHMARK.md and recommend default sample_fps."
+      ],
+      "inputs": [
+        "models/weights/best.pt",
+        "src/inference/",
+        "src/timeline/evaluate.py"
+      ],
+      "outputs": [
+        "docs/model/BENCHMARK.md",
+        "src/models/benchmark.py"
+      ],
+      "files": [
+        "src/models/benchmark.py",
+        "docs/model/BENCHMARK.md"
+      ],
+      "deps": [
+        "3.3.2",
+        "4.1.3"
+      ],
+      "accept": [
+        "Table of processing seconds per video-minute for each fps setting.",
+        "Recommended default sample_fps stated."
+      ],
+      "priority": "Low",
+      "hours": 1,
+      "status": "Not Started",
+      "start": 6,
+      "end": 6,
+      "branch": "feature/member-b-6.1.1-benchmark",
+      "planBranch": "b/6.1.1-benchmark"
+    },
+    {
+      "id": "6.2.1",
+      "wp": "6.2",
+      "owner": "A",
+      "name": "Usability study: scrubbing vs timeline",
+      "desc": "Success measure 3. Within-subject test: participants find specific moments (e.g. first clipper use) by manual scrubbing vs with the OR Intelligence timeline.",
+      "steps": [
+        "Write protocol docs/usability/PROTOCOL.md on Tue evening (before the app is ready): ≥3 participants (classmates are fine), 3 find-tasks per condition, counterbalanced order, verbal consent, no personal data stored.",
+        "Prepare two comparable videos and the task sheet.",
+        "Run 10-minute sessions on Wed afternoon on the integrated build; record time-to-find and success per task in docs/usability/results.csv (anonymous IDs).",
+        "Analyse: median time per condition and the ratio; state clearly that n is small (pilot study).",
+        "Write docs/usability/RESULTS.md with chart."
+      ],
+      "inputs": [
+        "Running release candidate (7.1.1)"
+      ],
+      "outputs": [
+        "docs/usability/PROTOCOL.md",
+        "docs/usability/results.csv",
+        "docs/usability/RESULTS.md"
+      ],
+      "files": [
+        "docs/usability/"
+      ],
+      "deps": [
+        "7.1.1"
+      ],
+      "accept": [
+        "≥3 participants completed both conditions.",
+        "Median time-to-find reported for both conditions, labelled as a pilot.",
+        "Data anonymous."
+      ],
+      "priority": "High",
+      "hours": 3,
+      "status": "Not Started",
+      "start": 6,
+      "end": 7,
+      "branch": "feature/member-a-6.2.1-usability",
+      "planBranch": "a/6.2.1-usability"
+    },
+    {
+      "id": "6.3.1",
+      "wp": "6.3",
+      "owner": "D",
+      "name": "End-to-end smoke tests (5 use cases)",
+      "desc": "Scripted smoke checklist covering the 5 use cases on the integrated stack, plus one automated Playwright test for the core flow.",
+      "steps": [
+        "Write tests/e2e/SMOKE_CHECKLIST.md: upload → done → timeline visible; click clipper bar seeks; add note → appears in PDF; library search → opens at timestamp; analytics shows 2 cases.",
+        "Automate the core flow (upload → timeline → click bar) in tests/e2e/core.spec.ts with Playwright against the local run script.",
+        "Run the checklist on the integrated build; tick results in the file.",
+        "File bugs as GitHub issues assigned to the owning member (per ownership matrix), each with a fix deadline of Wed 18:00."
+      ],
+      "inputs": [
+        "Integrated local stack (7.1.1)"
+      ],
+      "outputs": [
+        "tests/e2e/SMOKE_CHECKLIST.md (ticked)",
+        "tests/e2e/core.spec.ts"
+      ],
+      "files": [
+        "tests/e2e/"
+      ],
+      "deps": [
+        "7.1.1"
+      ],
+      "accept": [
+        "All 5 checklist scenarios pass on the release candidate.",
+        "Core Playwright test passes.",
+        "Every failure routed to exactly one owner."
+      ],
+      "priority": "High",
+      "hours": 2,
+      "status": "Not Started",
+      "start": 6,
+      "end": 6,
+      "branch": "feature/member-d-6.3.1-e2e",
+      "planBranch": "d/6.3.1-e2e"
+    },
+    {
+      "id": "7.1.1",
+      "wp": "7.1",
+      "owner": "D",
+      "name": "One-command local run & integration",
+      "desc": "Integrate API (with real model), web app and storage into a single local start command. Integration owner merges feature branches into develop (merge windows Mon/Tue 21:00, Wed 12:00) and resolves conflicts. Docker is optional and only if time remains.",
+      "steps": [
+        "scripts/run_local.ps1 and scripts/run_local.sh: fetch weights, start uvicorn on :8000, build web and serve it with Vite preview on :8080 (proxy /api).",
+        "Deployment files (Dockerfiles + docker-compose.yml) are a separate mandatory task: 7.1.2.",
+        "Merge all completed feature PRs into develop; run full unit + contract tests.",
+        "Smoke test with a real 10–30 min video; record results in docs/integration/INTEGRATION_LOG.md."
+      ],
+      "inputs": [
+        "src/api (4.2.x, 4.3.1)",
+        "src/inference (3.3.1)",
+        "web (5.x)",
+        "models/weights/best.pt (3.3.2)"
+      ],
+      "outputs": [
+        "scripts/run_local.ps1",
+        "scripts/run_local.sh",
+        "docs/integration/INTEGRATION_LOG.md"
+      ],
+      "files": [
+        "scripts/",
+        "docs/integration/"
+      ],
+      "deps": [
+        "4.2.2",
+        "4.3.1",
+        "3.3.2",
+        "5.1.3",
+        "5.2.1",
+        "5.2.2",
+        "5.2.3"
+      ],
+      "accept": [
+        "The run script on a clean clone serves the app on http://localhost:8080.",
+        "A real video processes end-to-end; timeline and PDF work.",
+        "develop CI green by Wed 18:00."
+      ],
+      "priority": "High",
+      "hours": 3,
+      "status": "Not Started",
+      "start": 5,
+      "end": 6,
+      "branch": "feature/member-d-7.1.1-compose",
+      "critical": true,
+      "planBranch": "d/7.1.1-compose"
+    },
+    {
+      "id": "7.1.2",
+      "wp": "7.1",
+      "owner": "D",
+      "name": "Deployment files: Dockerfiles & docker-compose",
+      "desc": "Added during repository setup: the course brief (docs/planning/Unit7_Project_brief.pdf) lists \"Deployment Files\" as a mandatory deliverable, while the WBS only had Docker as an optional stretch inside 7.1.1. Finish the starter Dockerfiles so the integrated app (API + web) also starts with `docker compose up`.",
+      "steps": [
+        "Complete docker/Dockerfile.api (python:3.11-slim, requirements/ml.txt + api.txt; mount models/weights/ or fetch weights at start-up).",
+        "Complete docker/Dockerfile.web (Node build stage, then serve the built app; /api proxied to the api service).",
+        "Complete docker-compose.yml (api on :8000, web on :8080, storage/ and models/weights/ as volumes, INFERENCE_MODE env).",
+        "Verify `docker compose up --build` serves http://localhost:8080 and processes the fixture video; record the result in docs/integration/INTEGRATION_LOG.md.",
+        "Document both start options (run script and Docker) in README.md (8.1.4)."
+      ],
+      "inputs": [
+        "scripts/run_local.* (7.1.1)",
+        "requirements/*.txt",
+        "web/"
+      ],
+      "outputs": [
+        "docker/Dockerfile.api",
+        "docker/Dockerfile.web",
+        "docker-compose.yml"
+      ],
+      "files": [
+        "docker/",
+        "docker-compose.yml"
+      ],
+      "deps": [
+        "7.1.1"
+      ],
+      "accept": [
+        "`docker compose up --build` on a clean clone serves the app on http://localhost:8080.",
+        "A video uploaded in the container stack reaches status done.",
+        "No secrets or weights baked into the images."
+      ],
+      "priority": "High",
+      "hours": 1,
+      "status": "Not Started",
+      "start": 6,
+      "end": 6,
+      "branch": "feature/member-d-7.1.2-docker",
+      "planBranch": null,
+      "addedBySetup": true
+    },
+    {
+      "id": "7.2.1",
+      "wp": "7.2",
+      "owner": "D",
+      "name": "Release candidate v1.0.0 & demo freeze",
+      "desc": "Freeze features, merge develop → main, tag v1.0.0, prepare the demo machine.",
+      "steps": [
+        "Confirm E2E, timeline eval and test eval are done; only bug-fix PRs allowed after freeze.",
+        "Merge develop → main via PR; tag v1.0.0; write CHANGELOG.md.",
+        "Prepare demo dataset: 3 processed videos with notes in storage/."
+      ],
+      "inputs": [
+        "6.3.1 results",
+        "4.1.3",
+        "3.2.1"
+      ],
+      "outputs": [
+        "Tag v1.0.0",
+        "CHANGELOG.md",
+        "Demo data"
+      ],
+      "files": [
+        "CHANGELOG.md"
+      ],
+      "deps": [
+        "6.3.1",
+        "4.1.3",
+        "3.2.1",
+        "7.1.2"
+      ],
+      "accept": [
+        "v1.0.0 tag on main; CI green.",
+        "Demo runs offline from the tagged build."
+      ],
+      "priority": "High",
+      "hours": 1,
+      "status": "Not Started",
+      "start": 7,
+      "end": 7,
+      "branch": "feature/member-d-7.2.1-release",
+      "critical": true,
+      "planBranch": "d/7.2.1-release"
+    },
+    {
+      "id": "8.1.1",
+      "wp": "8.1",
+      "owner": "A",
+      "name": "Report section: Data",
+      "desc": "Final report chapter on datasets, licences, preprocessing, split, EDA and timeline ground truth.",
+      "steps": [
+        "Write docs/report/01_data.md (≤4 pages) reusing EDA.md, LICENSES_AND_ETHICS.md, timeline_eval_set.md.",
+        "Include split table and 2–3 figures.",
+        "Add usability results summary (from 6.2.1) as a subsection 01b in the same file."
+      ],
+      "inputs": [
+        "docs/data/*",
+        "docs/usability/RESULTS.md"
+      ],
+      "outputs": [
+        "docs/report/01_data.md"
+      ],
+      "files": [
+        "docs/report/01_data.md"
+      ],
+      "deps": [
+        "2.4.1",
+        "6.2.1"
+      ],
+      "accept": [
+        "Section complete, figures referenced, citations present.",
+        "Reviewed by D."
+      ],
+      "priority": "Medium",
+      "hours": 2,
+      "status": "Not Started",
+      "start": 7,
+      "end": 7,
+      "branch": "feature/member-a-8.1.1-report-data",
+      "planBranch": "a/8.1.1-report-data"
+    },
+    {
+      "id": "8.1.2",
+      "wp": "8.1",
+      "owner": "B",
+      "name": "Report section: Model",
+      "desc": "Chapter on detector choice, training, experiments, test results, failure analysis and benchmark.",
+      "steps": [
+        "Write docs/report/02_model.md from experiments.md, EVALUATION.md, BENCHMARK.md.",
+        "Include metrics table and failure examples."
+      ],
+      "inputs": [
+        "docs/model/*"
+      ],
+      "outputs": [
+        "docs/report/02_model.md"
+      ],
+      "files": [
+        "docs/report/02_model.md"
+      ],
+      "deps": [
+        "3.2.1",
+        "6.1.1"
+      ],
+      "accept": [
+        "mAP@0.5 and per-class P/R table present.",
+        "Reviewed by D."
+      ],
+      "priority": "Medium",
+      "hours": 2,
+      "status": "Not Started",
+      "start": 6,
+      "end": 6,
+      "branch": "feature/member-b-8.1.2-report-model",
+      "planBranch": "b/8.1.2-report-model"
+    },
+    {
+      "id": "8.1.3",
+      "wp": "8.1",
+      "owner": "C",
+      "name": "Report section: Timeline & System",
+      "desc": "Chapter on smoothing method, timeline evaluation, system architecture, API and PDF reporting.",
+      "steps": [
+        "Write docs/report/03_system.md: architecture diagram, data flow, smoothing algorithm, TIMELINE_EVAL results, API summary.",
+        "Include example timeline and PDF screenshot."
+      ],
+      "inputs": [
+        "docs/timeline/TIMELINE_EVAL.md",
+        "contracts/"
+      ],
+      "outputs": [
+        "docs/report/03_system.md"
+      ],
+      "files": [
+        "docs/report/03_system.md"
+      ],
+      "deps": [
+        "4.1.3",
+        "4.3.1"
+      ],
+      "accept": [
+        "Raw vs smoothed table present; architecture diagram present.",
+        "Reviewed by D."
+      ],
+      "priority": "Medium",
+      "hours": 2,
+      "status": "Not Started",
+      "start": 6,
+      "end": 6,
+      "branch": "feature/member-c-8.1.3-report-system",
+      "planBranch": "c/8.1.3-report-system"
+    },
+    {
+      "id": "8.1.4",
+      "wp": "8.1",
+      "owner": "D",
+      "name": "Final report assembly & README",
+      "desc": "Assemble introduction, use cases, sections 01–03, frontend chapter, conclusion and limitations into the final report; write the repository README.",
+      "steps": [
+        "Write docs/report/00_intro.md (problem, use cases from 1.1.1) and 04_frontend_conclusion.md (UI, limits: one procedure, non-commercial data, not diagnostic; future work).",
+        "docs/report/main.md includes all sections; export to PDF with pandoc (docs/report/build.sh).",
+        "README.md: overview, quick start (docker compose), screenshots, team & ownership, licences."
+      ],
+      "inputs": [
+        "docs/report/01–03",
+        "docs/usability/RESULTS.md",
+        "docs/model/BENCHMARK.md"
+      ],
+      "outputs": [
+        "docs/report/main.md",
+        "docs/report/00_intro.md",
+        "docs/report/04_frontend_conclusion.md",
+        "docs/report/build.sh",
+        "Final report PDF",
+        "README.md"
+      ],
+      "files": [
+        "docs/report/main.md",
+        "docs/report/00_intro.md",
+        "docs/report/04_frontend_conclusion.md",
+        "docs/report/build.sh",
+        "README.md"
+      ],
+      "deps": [
+        "8.1.1",
+        "8.1.2",
+        "8.1.3",
+        "6.1.1"
+      ],
+      "accept": [
+        "Report PDF builds from source.",
+        "All 3 success measures reported with numbers.",
+        "README quick start works on a clean clone."
+      ],
+      "priority": "High",
+      "hours": 3,
+      "status": "Not Started",
+      "start": 7,
+      "end": 7,
+      "branch": "feature/member-d-8.1.4-report",
+      "planBranch": "d/8.1.4-report"
+    },
+    {
+      "id": "8.2.1",
+      "wp": "8.2",
+      "owner": "B",
+      "name": "Presentation slide deck",
+      "desc": "10–15 minute presentation: problem, approach, results (3 success measures), demo screenshots, business model, limits.",
+      "steps": [
+        "Wed afternoon: draft outline and get one-line approval from D.",
+        "Build slides in docs/slides/ using figures from EDA, EVALUATION and TIMELINE_EVAL (link, don't copy-edit others' files).",
+        "Wed evening: add the usability numbers from 6.2.1 and demo screenshots; rehearse once with the team."
+      ],
+      "inputs": [
+        "docs/data/EDA.md",
+        "docs/model/EVALUATION.md",
+        "docs/timeline/TIMELINE_EVAL.md",
+        "1.1.1 page"
+      ],
+      "outputs": [
+        "docs/slides/OR_Intelligence.pptx (or PDF)"
+      ],
+      "files": [
+        "docs/slides/"
+      ],
+      "deps": [
+        "2.4.1",
+        "3.2.1",
+        "4.1.3"
+      ],
+      "accept": [
+        "Deck covers problem, solution, 3 success-measure results, demo, business model, limits.",
+        "Rehearsal within time limit."
+      ],
+      "priority": "High",
+      "hours": 4,
+      "status": "Not Started",
+      "start": 6,
+      "end": 7,
+      "branch": "feature/member-b-8.2.1-slides",
+      "planBranch": "b/8.2.1-slides"
+    },
+    {
+      "id": "8.2.2",
+      "wp": "8.2",
+      "owner": "C",
+      "name": "Demo video",
+      "desc": "3–4 minute recorded walkthrough of the 5 use cases on the v1.0.0 build (backup if the live demo fails).",
+      "steps": [
+        "Write a shot list per use case.",
+        "Record on the tagged build with demo data; add captions (EN, optional AR).",
+        "Export to docs/demo/ link (store video in Release/Drive, not Git)."
+      ],
+      "inputs": [
+        "v1.0.0 build",
+        "Demo data"
+      ],
+      "outputs": [
+        "docs/demo/README.md with link",
+        "Demo video file (Release)"
+      ],
+      "files": [
+        "docs/demo/"
+      ],
+      "deps": [
+        "7.2.1"
+      ],
+      "accept": [
+        "Shows all 5 use cases in ≤4 min.",
+        "Plays on the presentation laptop offline."
+      ],
+      "priority": "Medium",
+      "hours": 2,
+      "status": "Not Started",
+      "start": 7,
+      "end": 7,
+      "branch": "feature/member-c-8.2.2-demo",
+      "planBranch": "c/8.2.2-demo"
+    }
+  ],
+  "contracts": [
+    {
+      "id": "C1",
+      "name": "Class map",
+      "file": "contracts/classes.json",
+      "producer": "D (1.2.2)",
+      "consumers": "A, B, C, D",
+      "body": "{\"0\":\"grasper\",\"1\":\"bipolar\",\"2\":\"hook\",\"3\":\"scissors\",\"4\":\"clipper\",\"5\":\"irrigator\"}\n// m2cai16 \"SpecimenBag\" is dropped. Colours for the UI timeline live here too:\n// {\"colors\":{\"grasper\":\"#2563eb\",\"bipolar\":\"#7c3aed\",\"hook\":\"#dc2626\",\"scissors\":\"#16a34a\",\"clipper\":\"#ea580c\",\"irrigator\":\"#0891b2\"}}"
+    },
+    {
+      "id": "C2",
+      "name": "YOLO dataset layout",
+      "file": "data/processed/yolo/ + data/processed/dataset.yaml",
+      "producer": "A (2.2.1, 2.2.2)",
+      "consumers": "B",
+      "body": "data/processed/yolo/images/{train,val,test}/<video>_<frame>.jpg\ndata/processed/yolo/labels/{train,val,test}/<video>_<frame>.txt   # \"cls cx cy w h\" normalised 0-1\ndata/processed/dataset.yaml   # path, train, val, test, names (from contracts/classes.json)\ndata/splits/splits.json        # {\"train\":[\"v01\",...],\"val\":[...],\"test\":[...]}  — video IDs, no frame leakage"
+    },
+    {
+      "id": "C3",
+      "name": "Timeline ground truth",
+      "file": "data/processed/presence/<video_id>.csv",
+      "producer": "A (2.3.1)",
+      "consumers": "C (4.1.3)",
+      "body": "t_sec,grasper,bipolar,hook,scissors,clipper,irrigator\n0,1,0,0,0,0,0\n1,1,0,1,0,0,0          # 1 fps, 0/1 per tool, derived from Cholec80 tool annotations"
+    },
+    {
+      "id": "C4",
+      "name": "Detections (per video)",
+      "file": "contracts/detections.schema.json",
+      "producer": "B (3.3.1)",
+      "consumers": "C (4.1.x, 4.2.1)",
+      "body": "# detections.jsonl — one JSON object per sampled frame\n{\"video_id\":\"abc123\",\"frame\":125,\"t\":5.0,\"w\":1920,\"h\":1080,\n \"dets\":[{\"cls\":2,\"name\":\"hook\",\"conf\":0.91,\"box\":[0.41,0.33,0.62,0.71]}]}\n# box = [x1,y1,x2,y2] normalised. Python API:\n# detect_video(video_path: str, out_path: str, sample_fps: float = 5.0,\n#              conf: float = 0.25, weights: str = \"models/weights/best.pt\") -> dict  # {\"frames\":int,\"seconds\":float}"
+    },
+    {
+      "id": "C5",
+      "name": "Timeline (per video)",
+      "file": "contracts/timeline.schema.json",
+      "producer": "C (4.1.2)",
+      "consumers": "C (4.2, 4.3), D, A (5.2.2)",
+      "body": "{\"video_id\":\"abc123\",\"duration_s\":2712.0,\"sample_fps\":5.0,\n \"tools\":{\"hook\":[{\"start\":190.0,\"end\":585.0,\"mean_conf\":0.83}], \"clipper\":[...]},\n \"stats\":{\"total_s\":2712.0,\"switches\":41,\n          \"per_tool_s\":{\"hook\":1120.4,\"clipper\":96.0,...},\n          \"per_tool_segments\":{\"hook\":7,...}},\n \"params\":{\"conf\":0.4,\"window_s\":2.0,\"min_segment_s\":1.5,\"merge_gap_s\":2.0}}"
+    },
+    {
+      "id": "C6",
+      "name": "HTTP API",
+      "file": "contracts/openapi.yaml",
+      "producer": "D drafts (1.2.2); C implements (4.2.x)",
+      "consumers": "D, A (web)",
+      "body": "POST /api/videos                  multipart file → {\"id\",\"status\":\"queued\"}\nGET  /api/videos                  → [{id,title,status,duration_s,created_at}]\nGET  /api/videos/{id}             → {id,status:\"queued|processing|done|failed\",progress:0-1}\nGET  /api/videos/{id}/file        → video stream (HTTP range requests)\nGET  /api/videos/{id}/timeline    → Timeline (C5)\nGET  /api/videos/{id}/notes       POST {t_sec,text,author} · DELETE /notes/{note_id}\nGET  /api/videos/{id}/report.pdf?lang=en|ar\nGET  /api/search?tool=clipper&min_s=5 → [{video_id,start,end,tool}]\nGET  /api/analytics?video_ids=a,b → [{video_id, stats}]"
+    }
+  ],
+  "sharedRules": [
+    {
+      "path": "contracts/",
+      "owner": "D",
+      "rule": "Change only by PR approved by D + every affected consumer; record in contracts/CHANGELOG.md."
+    },
+    {
+      "path": "web/package.json",
+      "owner": "D",
+      "rule": "Member A requests new dependencies by a PR that touches only package.json + lockfile; D approves."
+    },
+    {
+      "path": "requirements/base.txt",
+      "owner": "D",
+      "rule": "Each owner adds packages only to their own requirements/{data,ml,api}.txt."
+    },
+    {
+      "path": ".github/",
+      "owner": "D",
+      "rule": "CI and CODEOWNERS changes by D only."
+    },
+    {
+      "path": "scripts/, docker/, docker-compose.yml",
+      "owner": "D",
+      "rule": "C requests API runtime/start-up changes by issue; D implements."
+    },
+    {
+      "path": "src/inference/",
+      "owner": "B",
+      "rule": "C imports detect_video(); signature changes require a contract PR first."
+    }
+  ],
+  "resolutions": [
+    {
+      "issue": "Draft plan had 8 weeks / ~270 h of work; the real deadline is Wed 25 Nov 23:59 (≈2.5 days).",
+      "fix": "Re-planned into 7 dated work blocks with an MVP scope: 1 baseline + 2 tuning runs, 3 timeline-eval videos, a pilot usability test (≥3 people), a smoke checklist + 1 Playwright test, and a run script instead of Docker. About 25 h per member."
+    },
+    {
+      "issue": "Inference module (B) originally waited on the first trained weights, which blocked the API (C) until Tuesday afternoon.",
+      "fix": "3.3.1 is built Monday night against COCO-pretrained yolov8n.pt and swaps weights later; the dependency on 3.1.1 was removed."
+    },
+    {
+      "issue": "Cholec80 access needs an approval request that will probably not arrive before the deadline.",
+      "fix": "1.3.1 decides on Monday evening: use Cholec80 only if access already exists, otherwise use presence labels from held-out m2cai16-tool videos."
+    },
+    {
+      "issue": "The web router and i18n loader (D) would have to import A's Analytics page and ar.json, so both would edit the same files.",
+      "fix": "D's shell auto-discovers pages and locale files with import.meta.glob. A adds files only inside their own paths."
+    },
+    {
+      "issue": "A single requirements.txt would be edited by A, B and C at the same time.",
+      "fix": "Split into requirements/{base (D), data (A), ml (B), api (C)}.txt."
+    },
+    {
+      "issue": "A's analytics charts may need a new npm package in web/package.json, which D owns.",
+      "fix": "A opens a PR that touches only package.json + lockfile; D approves it. Listed in shared-file rules."
+    },
+    {
+      "issue": "Everyone writing one shared final report file would cause merge conflicts.",
+      "fix": "One file per section (01_data A, 02_model B, 03_system C, main + 00/04 D). D assembles them by include, not by copy-editing."
+    },
+    {
+      "issue": "The benchmark (B) needs timeline F1 code that C owns.",
+      "fix": "B calls src/timeline/evaluate.py read-only. Signature changes go through C."
+    },
+    {
+      "issue": "The API (C) needs PDF routing inside src/api/, which could collide with D's integration work.",
+      "fix": "C owns all of src/api/ including routes/reports.py. D owns only scripts/, docker/ and the root deployment files."
+    },
+    {
+      "issue": "The slide deck originally depended on report sections that are finished in the last block, which left no time for slides.",
+      "fix": "8.2.1 now depends on EDA, test evaluation and timeline evaluation (ready by Wed afternoon). Usability numbers are added in the final block."
+    },
+    {
+      "issue": "Initial scaffold creates __init__.py stubs in every member's folder.",
+      "fix": "Scaffold exception: after the single scaffold commit by D, each path belongs only to its owner (CODEOWNERS enforces this)."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "M1",
+      "name": "Repo ready & contracts frozen",
+      "desc": "Everyone can work in parallel against fixtures.",
+      "slot": 1,
+      "due": "2026-11-23T23:00:00",
+      "dueLabel": "Mon 23 Nov 23:00",
+      "gate": [
+        "1.2.1",
+        "1.2.2",
+        "1.3.1"
+      ]
+    },
+    {
+      "id": "M2",
+      "name": "Training dataset ready",
+      "desc": "YOLO dataset and video-level split handed to B.",
+      "slot": 2,
+      "due": "2026-11-24T12:00:00",
+      "dueLabel": "Tue 24 Nov 12:00",
+      "gate": [
+        "2.2.2"
+      ]
+    },
+    {
+      "id": "M3",
+      "name": "Pipeline works on fixtures",
+      "desc": "Inference, timeline engine and API each pass their tests independently on fixtures.",
+      "slot": 3,
+      "due": "2026-11-24T18:00:00",
+      "dueLabel": "Tue 24 Nov 18:00",
+      "gate": [
+        "3.3.1",
+        "4.1.2",
+        "4.2.1"
+      ]
+    },
+    {
+      "id": "M4",
+      "name": "Final weights & review UI",
+      "desc": "best.pt shared, API switches to the real model; timeline review screen works.",
+      "slot": 4,
+      "due": "2026-11-24T23:00:00",
+      "dueLabel": "Tue 24 Nov 23:00",
+      "gate": [
+        "3.1.2",
+        "5.1.2"
+      ]
+    },
+    {
+      "id": "M5",
+      "name": "Feature complete & integrated",
+      "desc": "All features merged in develop and running with one command.",
+      "slot": 6,
+      "due": "2026-11-25T18:00:00",
+      "dueLabel": "Wed 25 Nov 18:00",
+      "gate": [
+        "4.3.1",
+        "5.2.2",
+        "5.2.3",
+        "7.1.1",
+        "6.3.1"
+      ]
+    },
+    {
+      "id": "M6",
+      "name": "Release candidate frozen",
+      "desc": "v1.0.0 tagged; only report/slide work after this point.",
+      "slot": 6.4,
+      "due": "2026-11-25T20:00:00",
+      "dueLabel": "Wed 25 Nov 20:00",
+      "gate": [
+        "7.2.1"
+      ]
+    },
+    {
+      "id": "M7",
+      "name": "Final submission",
+      "desc": "Report PDF, slides, demo video and repository link submitted.",
+      "slot": 7,
+      "due": "2026-11-25T23:59:00",
+      "dueLabel": "Wed 25 Nov 23:59",
+      "gate": [
+        "8.1.4",
+        "8.2.1",
+        "8.2.2"
+      ]
+    }
+  ],
+  "repoTree": "or-intelligence/\n├── .github/                  D  CODEOWNERS, ci.yml, PR template\n├── contracts/                D  classes.json, *.schema.json, openapi.yaml, CHANGELOG.md\n├── configs/\n│   ├── data.yaml             A\n│   ├── train.yaml            B\n│   ├── experiments/          B\n│   └── timeline.yaml         C\n├── requirements/\n│   ├── base.txt              D\n│   ├── data.txt              A\n│   ├── ml.txt                B\n│   └── api.txt               C\n├── data/            (gitignored)  A  raw/, processed/yolo/, processed/presence/\n│   └── splits/splits.json    A  (tracked)\n├── models/weights/  (gitignored)  B  baseline.pt, best.pt → GitHub Release\n├── src/\n│   ├── data/                 A  download, verify, convert_voc_to_yolo, split,\n│   │                            presence_labels, extract_frames, eda, visualize\n│   ├── models/               B  train, tune, evaluate, benchmark\n│   ├── inference/            B  detect_video, fetch_weights\n│   ├── timeline/             C  smoothing, builder, evaluate\n│   ├── api/                  C  main, db, jobs, routes/{videos,notes,search,analytics,reports}\n│   └── reports/              C  pdf_report, strings, fonts/\n├── web/                      D  package.json, vite.config.ts\n│   └── src/\n│       ├── app/ api/         D\n│       ├── components/       D  Timeline/, VideoPlayer/, NotesPanel/\n│       ├── pages/            D  Upload/, Review/, Library/\n│       │   └── Analytics/    A\n│       ├── i18n/             D  index.ts, en.json   ·  A  ar.json, parity.test.ts\n│       └── styles/rtl.css    A\n├── tests/\n│   ├── fixtures/ contracts/  D\n│   ├── unit/data/            A\n│   ├── unit/models/ inference/  B\n│   ├── unit/timeline/ api/ reports/  C\n│   └── e2e/                  D\n├── notebooks/  eda.ipynb A · experiments/ B\n├── scripts/                  D  run_local.ps1, run_local.sh\n├── docs/\n│   ├── problem/              D  (1.1.1, done)\n│   ├── data/ usability/      A\n│   ├── model/ slides/        B\n│   ├── timeline/ demo/       C\n│   ├── integration/          D\n│   └── report/  00_intro D · 01_data A · 02_model B · 03_system C · 04 + main D\n├── README.md  CHANGELOG.md   D\n└── docker/ docker-compose.yml  D  (optional stretch)",
+  "gitFlow": "<ul class=\"clean small\">\n<li><b>main</b>: protected, release only. D merges <code>develop → main</code> at the release candidate (Wed 20:00) and tags <code>v1.0.0</code>.</li>\n<li><b>develop</b>: protected integration branch. PRs only, 1 approval + green CI. D merges at merge windows: <b>Mon 23:00, Tue 13:00, Tue 21:00, Wed 12:00, Wed 18:00</b>.</li>\n<li><b>Feature branches</b>: one per WBS task, <code>&lt;member&gt;/&lt;wbs-id&gt;-&lt;slug&gt;</code>, e.g. <code>c/4.1.1-smoothing</code>. Branch from the latest develop and rebase before opening the PR.</li>\n<li><b>PR rules</b>: title <code>[WBS 4.1.1] Temporal smoothing</code>; touches only the owner's paths (CODEOWNERS auto-requests the right reviewer); includes tests and acceptance evidence; under ~400 changed lines where possible.</li>\n<li><b>Contracts</b>: any change to <code>contracts/</code> is its own PR, approved by D and every consumer, and logged in <code>contracts/CHANGELOG.md</code>.</li>\n<li><b>Conflicts</b>: the integration owner (D) resolves merge conflicts on develop. Nobody edits another member's files to make their own PR pass; open an issue for the owner instead.</li>\n<li><b>Never commit</b> data/, frames, videos or *.pt weights. Share them via GitHub Release or the team drive.</li>\n</ul>",
+  "requirements": [
+    {
+      "id": "R1",
+      "text": "Detect 6 instruments per frame (grasper, bipolar, hook, scissors, clipper, irrigator)",
+      "source": "Project objective",
+      "tasks": [
+        "2.2.1",
+        "3.1.1",
+        "3.1.2"
+      ],
+      "deliverable": "D1, D2"
+    },
+    {
+      "id": "R2",
+      "text": "Model metrics: mAP@0.5 and per-instrument precision/recall on a video-level held-out test set",
+      "source": "Success measures",
+      "tasks": [
+        "2.2.2",
+        "3.2.1"
+      ],
+      "deliverable": "D1, D2"
+    },
+    {
+      "id": "R3",
+      "text": "Temporal smoothing to remove flicker",
+      "source": "Proposed solution",
+      "tasks": [
+        "4.1.1"
+      ],
+      "deliverable": "D4"
+    },
+    {
+      "id": "R4",
+      "text": "Colour-coded instrument timeline (e.g. hook 03:10–09:45)",
+      "source": "Proposed solution",
+      "tasks": [
+        "4.1.2",
+        "5.1.2"
+      ],
+      "deliverable": "D4, D6"
+    },
+    {
+      "id": "R5",
+      "text": "Timeline agreement with ground-truth presence labels",
+      "source": "Success measures",
+      "tasks": [
+        "2.3.1",
+        "4.1.3"
+      ],
+      "deliverable": "D4"
+    },
+    {
+      "id": "R6",
+      "text": "Upload a recorded video and process it",
+      "source": "Proposed solution",
+      "tasks": [
+        "3.3.1",
+        "4.2.1",
+        "5.1.1"
+      ],
+      "deliverable": "D3, D5, D6"
+    },
+    {
+      "id": "R7",
+      "text": "Click a timeline bar to jump the video to that moment",
+      "source": "Use case 1, 4",
+      "tasks": [
+        "5.1.2"
+      ],
+      "deliverable": "D6"
+    },
+    {
+      "id": "R8",
+      "text": "Timestamped instructor notes",
+      "source": "Use case 2",
+      "tasks": [
+        "4.2.2",
+        "5.1.3"
+      ],
+      "deliverable": "D5, D6"
+    },
+    {
+      "id": "R9",
+      "text": "PDF report export including instructor notes",
+      "source": "Use case 2",
+      "tasks": [
+        "4.3.1"
+      ],
+      "deliverable": "D5"
+    },
+    {
+      "id": "R10",
+      "text": "Searchable library indexed by instrument (\"show all clipping segments\")",
+      "source": "Use case 3",
+      "tasks": [
+        "4.2.2",
+        "5.2.1"
+      ],
+      "deliverable": "D5, D6"
+    },
+    {
+      "id": "R11",
+      "text": "Find unusual tool patterns / clips quickly (long irrigation, repeated switches)",
+      "source": "Use case 4",
+      "tasks": [
+        "4.1.2",
+        "5.1.2"
+      ],
+      "deliverable": "D4, D6"
+    },
+    {
+      "id": "R12",
+      "text": "Per-case statistics: time per instrument, total time, tool switches; compare across cases",
+      "source": "Use case 5",
+      "tasks": [
+        "4.1.2",
+        "4.2.2",
+        "5.2.2"
+      ],
+      "deliverable": "D4, D5, D6"
+    },
+    {
+      "id": "R13",
+      "text": "Arabic-language interface and reports",
+      "source": "Gap in existing tools / business model",
+      "tasks": [
+        "4.3.1",
+        "5.2.3"
+      ],
+      "deliverable": "D5, D6"
+    },
+    {
+      "id": "R14",
+      "text": "Usability test: time to find a moment, scrubbing vs timeline",
+      "source": "Success measures",
+      "tasks": [
+        "6.2.1"
+      ],
+      "deliverable": "D7"
+    },
+    {
+      "id": "R15",
+      "text": "Public research data only; non-commercial licence; educational, not diagnostic",
+      "source": "Scope & limits",
+      "tasks": [
+        "1.3.1",
+        "3.3.2",
+        "8.1.4"
+      ],
+      "deliverable": "D1, D2, D9"
+    },
+    {
+      "id": "R16",
+      "text": "Problem definition, use cases and business model documented",
+      "source": "Project page",
+      "tasks": [
+        "1.1.1"
+      ],
+      "deliverable": "docs/problem/"
+    },
+    {
+      "id": "R17",
+      "text": "Final project report and presentation",
+      "source": "Final project delivery",
+      "tasks": [
+        "8.1.4",
+        "8.2.1",
+        "8.2.2"
+      ],
+      "deliverable": "D9"
+    },
+    {
+      "id": "P1",
+      "text": "Select a real-world problem that Computer Vision (image/video understanding) can solve",
+      "source": "Course brief · Overview",
+      "tasks": [
+        "1.1.1"
+      ],
+      "deliverable": "docs/problem/"
+    },
+    {
+      "id": "P2",
+      "text": "Design the CV solution as an end-to-end pipeline: problem → data → model → evaluation → deployment → demo",
+      "source": "Course brief · Goal",
+      "tasks": [
+        "1.1.1",
+        "1.2.2"
+      ],
+      "deliverable": "docs/problem/, contracts/"
+    },
+    {
+      "id": "P3",
+      "text": "Data stage of the pipeline",
+      "source": "Course brief · Goal",
+      "tasks": [
+        "1.3.1",
+        "2.1.1",
+        "2.2.1",
+        "2.2.2",
+        "2.3.1",
+        "2.4.1"
+      ],
+      "deliverable": "D1"
+    },
+    {
+      "id": "P4",
+      "text": "Train or fine-tune a CV model",
+      "source": "Course brief · Overview",
+      "tasks": [
+        "3.1.1",
+        "3.1.2"
+      ],
+      "deliverable": "D2"
+    },
+    {
+      "id": "P5",
+      "text": "Evaluate the solution",
+      "source": "Course brief · Overview",
+      "tasks": [
+        "3.2.1",
+        "4.1.3",
+        "6.1.1",
+        "6.2.1",
+        "6.3.1"
+      ],
+      "deliverable": "D2, D4, D7"
+    },
+    {
+      "id": "P6",
+      "text": "Deploy the CV solution",
+      "source": "Course brief · Overview",
+      "tasks": [
+        "7.1.1",
+        "7.1.2"
+      ],
+      "deliverable": "D8"
+    },
+    {
+      "id": "P7",
+      "text": "Present a working live demo",
+      "source": "Course brief · Overview",
+      "tasks": [
+        "7.2.1",
+        "8.2.2"
+      ],
+      "deliverable": "D8, D9"
+    },
+    {
+      "id": "P8",
+      "text": "Deliverable: Presentation",
+      "source": "Course brief · Deliverables",
+      "tasks": [
+        "8.2.1"
+      ],
+      "deliverable": "D9"
+    },
+    {
+      "id": "P9",
+      "text": "Deliverable: Code Repository (GitHub)",
+      "source": "Course brief · Deliverables",
+      "tasks": [
+        "1.2.1",
+        "7.2.1",
+        "8.1.4"
+      ],
+      "deliverable": "this repository, tag v1.0.0"
+    },
+    {
+      "id": "P10",
+      "text": "Deliverable: Deployment Files",
+      "source": "Course brief · Deliverables",
+      "tasks": [
+        "7.1.1",
+        "7.1.2"
+      ],
+      "deliverable": "scripts/, docker/, docker-compose.yml"
+    },
+    {
+      "id": "P11",
+      "text": "Deliverable: Demo",
+      "source": "Course brief · Deliverables",
+      "tasks": [
+        "7.2.1",
+        "8.2.2"
+      ],
+      "deliverable": "D9 demo video + live demo"
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "D1",
+      "name": "Labelled YOLO dataset + video-level split + EDA report",
+      "tasks": [
+        "2.2.1",
+        "2.2.2",
+        "2.4.1"
+      ]
+    },
+    {
+      "id": "D2",
+      "name": "Trained YOLO weights + evaluation report (mAP@0.5, per-class P/R) + model card",
+      "tasks": [
+        "3.1.2",
+        "3.2.1",
+        "3.3.2"
+      ]
+    },
+    {
+      "id": "D3",
+      "name": "Video inference module (detections.jsonl contract)",
+      "tasks": [
+        "3.3.1"
+      ]
+    },
+    {
+      "id": "D4",
+      "name": "Timeline engine (smoothing, intervals, statistics) + timeline evaluation",
+      "tasks": [
+        "4.1.1",
+        "4.1.2",
+        "4.1.3"
+      ]
+    },
+    {
+      "id": "D5",
+      "name": "Backend API + PDF report generator (EN/AR)",
+      "tasks": [
+        "4.2.1",
+        "4.2.2",
+        "4.3.1"
+      ]
+    },
+    {
+      "id": "D6",
+      "name": "Web app: review workspace, notes, library search, analytics, Arabic/RTL",
+      "tasks": [
+        "5.1.1",
+        "5.1.2",
+        "5.1.3",
+        "5.2.1",
+        "5.2.2",
+        "5.2.3"
+      ]
+    },
+    {
+      "id": "D7",
+      "name": "Usability study results (manual scrubbing vs timeline)",
+      "tasks": [
+        "6.2.1"
+      ]
+    },
+    {
+      "id": "D8",
+      "name": "Integrated release candidate (v1.0.0) + deployment files",
+      "tasks": [
+        "7.1.1",
+        "7.1.2",
+        "7.2.1"
+      ]
+    },
+    {
+      "id": "D9",
+      "name": "Final report, README, slide deck, demo video",
+      "tasks": [
+        "8.1.4",
+        "8.2.1",
+        "8.2.2"
+      ]
+    }
+  ],
+  "criticalPoints": [
+    "1.2.2",
+    "2.2.2",
+    "3.3.1",
+    "4.2.1",
+    "5.1.2",
+    "7.1.1",
+    "7.2.1"
+  ],
+  "setupNotes": [
+    "Branch names follow feature/member-<a|b|c|d>-<wbs-id>-<slug>, as requested at repository setup. The plan's original names are kept in planBranch.",
+    "Task 7.1.2 added: the course brief requires Deployment Files, so Docker moved from an optional stretch inside 7.1.1 to its own task (Member D, 1 h, Wed afternoon). 7.2.1 now also depends on 7.1.2.",
+    "src/common/contracts.py (read-only contract helpers) added under Member D, who owns contracts/.",
+    "The scaffold, contract drafts and synthetic fixtures were pre-created at setup. Tasks 1.2.1 and 1.2.2 stay open until their remaining acceptance criteria are met (branch protection check, member test PRs, contract sign-off, sample_video.mp4)."
+  ],
+  "extraOwnership": [
+    [
+      "src/common/",
+      "D"
+    ],
+    [
+      "src/__init__.py",
+      "D"
+    ],
+    [
+      "requirements.txt",
+      "D"
+    ],
+    [
+      ".env.example",
+      "D"
+    ],
+    [
+      ".gitattributes",
+      "D"
+    ],
+    [
+      "/*.md",
+      "D"
+    ],
+    [
+      "docs/planning/",
+      "D"
+    ],
+    [
+      "scripts/github/",
+      "D"
+    ],
+    [
+      "data/README.md",
+      "D"
+    ],
+    [
+      "models/weights/README.md",
+      "B"
+    ],
+    [
+      "web/index.html",
+      "D"
+    ],
+    [
+      "web/tsconfig.json",
+      "D"
+    ],
+    [
+      "web/package-lock.json",
+      "D"
+    ],
+    [
+      "web/src/main.tsx",
+      "D"
+    ],
+    [
+      "src/data/__init__.py",
+      "A"
+    ],
+    [
+      "src/models/__init__.py",
+      "B"
+    ],
+    [
+      "src/inference/__init__.py",
+      "B"
+    ],
+    [
+      "src/timeline/__init__.py",
+      "C"
+    ],
+    [
+      "src/api/__init__.py",
+      "C"
+    ],
+    [
+      "src/api/routes/__init__.py",
+      "C"
+    ],
+    [
+      "src/reports/__init__.py",
+      "C"
+    ],
+    [
+      "docs/model/",
+      "B"
+    ],
+    [
+      "docs/report/",
+      "D"
+    ],
+    [
+      "tests/e2e/",
+      "D"
+    ],
+    [
+      ".dockerignore",
+      "D"
+    ],
+    [
+      "data/splits/",
+      "A"
+    ]
+  ]
+}

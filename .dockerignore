@@ -1,0 +1,12 @@
+.git
+data
+storage
+runs
+models/weights/*.pt
+models/weights/*.onnx
+**/node_modules
+web/dist
+**/__pycache__
+.venv
+venv
+.env

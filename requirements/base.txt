@@ -1,0 +1,6 @@
+# Owner: Member D (1.2.1). Shared runtime + dev tools. Add your own packages to your own file.
+numpy>=1.26
+pyyaml>=6.0
+jsonschema>=4.21
+pytest>=8.0
+ruff>=0.5

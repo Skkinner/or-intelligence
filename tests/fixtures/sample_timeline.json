@@ -1,0 +1,82 @@
+{
+  "video_id": "fixture_case_01",
+  "duration_s": 120.0,
+  "sample_fps": 5.0,
+  "tools": {
+    "grasper": [
+      {
+        "start": 0.0,
+        "end": 48.0,
+        "mean_conf": 0.78
+      },
+      {
+        "start": 70.0,
+        "end": 120.0,
+        "mean_conf": 0.75
+      }
+    ],
+    "hook": [
+      {
+        "start": 10.0,
+        "end": 45.0,
+        "mean_conf": 0.67
+      },
+      {
+        "start": 80.0,
+        "end": 100.0,
+        "mean_conf": 0.65
+      }
+    ],
+    "clipper": [
+      {
+        "start": 50.0,
+        "end": 58.0,
+        "mean_conf": 0.61
+      },
+      {
+        "start": 61.0,
+        "end": 66.0,
+        "mean_conf": 0.67
+      }
+    ],
+    "scissors": [
+      {
+        "start": 66.0,
+        "end": 70.0,
+        "mean_conf": 0.6
+      }
+    ],
+    "irrigator": [
+      {
+        "start": 100.0,
+        "end": 115.0,
+        "mean_conf": 0.65
+      }
+    ]
+  },
+  "stats": {
+    "total_s": 120.0,
+    "switches": 11,
+    "per_tool_s": {
+      "grasper": 98.0,
+      "hook": 55.0,
+      "clipper": 13.0,
+      "scissors": 4.0,
+      "irrigator": 15.0
+    },
+    "per_tool_segments": {
+      "grasper": 2,
+      "hook": 2,
+      "clipper": 2,
+      "scissors": 1,
+      "irrigator": 1
+    }
+  },
+  "params": {
+    "conf": 0.4,
+    "window_s": 2.0,
+    "min_segment_s": 1.5,
+    "merge_gap_s": 2.0,
+    "method": "majority"
+  }
+}

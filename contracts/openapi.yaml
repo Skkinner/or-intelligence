@@ -1,0 +1,313 @@
+# C6 · HTTP API. Drafted by Member D (1.2.2), implemented by Member C (4.2.x), consumed by D and A (web).
+# Changes: PR to contracts/ approved by D + every affected consumer; log it in contracts/CHANGELOG.md.
+openapi: 3.1.0
+info:
+  title: OR Intelligence API
+  version: 1.0.0-draft
+  description: Upload laparoscopic videos, get instrument timelines, notes, search, analytics and PDF reports.
+servers:
+  - url: http://localhost:8000
+paths:
+  /api/videos:
+    post:
+      summary: Upload a video and queue it for processing
+      operationId: uploadVideo
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file: {type: string, format: binary}
+                title: {type: string}
+      responses:
+        "202":
+          description: Queued
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/VideoCreated"}
+        "400": {$ref: "#/components/responses/Error"}
+        "413": {$ref: "#/components/responses/Error"}
+    get:
+      summary: List videos
+      operationId: listVideos
+      responses:
+        "200":
+          description: Videos
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: "#/components/schemas/VideoSummary"}
+  /api/videos/{id}:
+    parameters:
+      - $ref: "#/components/parameters/VideoId"
+    get:
+      summary: Processing status
+      operationId: getVideoStatus
+      responses:
+        "200":
+          description: Status
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/VideoStatus"}
+        "404": {$ref: "#/components/responses/Error"}
+  /api/videos/{id}/file:
+    parameters:
+      - $ref: "#/components/parameters/VideoId"
+    get:
+      summary: Stream the video (supports HTTP Range requests)
+      operationId: getVideoFile
+      responses:
+        "200":
+          description: Full file
+          content:
+            video/mp4:
+              schema: {type: string, format: binary}
+        "206":
+          description: Partial content (Range request)
+          content:
+            video/mp4:
+              schema: {type: string, format: binary}
+        "404": {$ref: "#/components/responses/Error"}
+  /api/videos/{id}/timeline:
+    parameters:
+      - $ref: "#/components/parameters/VideoId"
+    get:
+      summary: Instrument timeline (contract C5, contracts/timeline.schema.json)
+      operationId: getTimeline
+      responses:
+        "200":
+          description: Timeline
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Timeline"}
+        "404": {$ref: "#/components/responses/Error"}
+        "409": {$ref: "#/components/responses/Error"}
+  /api/videos/{id}/notes:
+    parameters:
+      - $ref: "#/components/parameters/VideoId"
+    get:
+      summary: List notes sorted by t_sec
+      operationId: listNotes
+      responses:
+        "200":
+          description: Notes
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: "#/components/schemas/Note"}
+    post:
+      summary: Add a timestamped note
+      operationId: createNote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/NoteCreate"}
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Note"}
+        "404": {$ref: "#/components/responses/Error"}
+        "422": {$ref: "#/components/responses/Error"}
+  /api/videos/{id}/notes/{note_id}:
+    parameters:
+      - $ref: "#/components/parameters/VideoId"
+      - name: note_id
+        in: path
+        required: true
+        schema: {type: integer}
+    delete:
+      summary: Delete a note
+      operationId: deleteNote
+      responses:
+        "204":
+          description: Deleted
+        "404": {$ref: "#/components/responses/Error"}
+  /api/videos/{id}/report.pdf:
+    parameters:
+      - $ref: "#/components/parameters/VideoId"
+    get:
+      summary: PDF session report (timeline chart, stats, notes, disclaimer)
+      operationId: getReport
+      parameters:
+        - name: lang
+          in: query
+          required: false
+          schema: {type: string, enum: [en, ar], default: en}
+      responses:
+        "200":
+          description: PDF
+          content:
+            application/pdf:
+              schema: {type: string, format: binary}
+        "404": {$ref: "#/components/responses/Error"}
+        "409": {$ref: "#/components/responses/Error"}
+  /api/search:
+    get:
+      summary: Find segments of one tool across the library (use case 3)
+      operationId: searchSegments
+      parameters:
+        - name: tool
+          in: query
+          required: true
+          schema: {$ref: "#/components/schemas/ToolName"}
+        - name: min_s
+          in: query
+          required: false
+          schema: {type: number, minimum: 0, default: 0}
+      responses:
+        "200":
+          description: Matching segments sorted by video_id then start
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: "#/components/schemas/SearchHit"}
+        "422": {$ref: "#/components/responses/Error"}
+  /api/analytics:
+    get:
+      summary: Per-case statistics for comparison (use case 5)
+      operationId: getAnalytics
+      parameters:
+        - name: video_ids
+          in: query
+          required: true
+          description: Comma-separated video ids
+          schema: {type: string}
+      responses:
+        "200":
+          description: Stats per video plus aggregate
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/AnalyticsResponse"}
+        "404": {$ref: "#/components/responses/Error"}
+components:
+  parameters:
+    VideoId:
+      name: id
+      in: path
+      required: true
+      schema: {type: string}
+  responses:
+    Error:
+      description: Error
+      content:
+        application/json:
+          schema: {$ref: "#/components/schemas/Error"}
+  schemas:
+    Error:
+      type: object
+      required: [detail]
+      properties:
+        detail: {type: string}
+    ToolName:
+      type: string
+      enum: [grasper, bipolar, hook, scissors, clipper, irrigator]
+    VideoCreated:
+      type: object
+      required: [id, status]
+      properties:
+        id: {type: string}
+        status: {type: string, enum: [queued]}
+    VideoSummary:
+      type: object
+      required: [id, title, status, created_at]
+      properties:
+        id: {type: string}
+        title: {type: string}
+        status: {type: string, enum: [queued, processing, done, failed]}
+        duration_s: {type: [number, "null"]}
+        created_at: {type: string, format: date-time}
+    VideoStatus:
+      type: object
+      required: [id, status, progress]
+      properties:
+        id: {type: string}
+        status: {type: string, enum: [queued, processing, done, failed]}
+        progress: {type: number, minimum: 0, maximum: 1}
+        error: {type: [string, "null"]}
+    Segment:
+      type: object
+      required: [start, end, mean_conf]
+      properties:
+        start: {type: number}
+        end: {type: number}
+        mean_conf: {type: number}
+    Stats:
+      type: object
+      required: [total_s, switches, per_tool_s, per_tool_segments]
+      properties:
+        total_s: {type: number}
+        switches: {type: integer}
+        per_tool_s:
+          type: object
+          additionalProperties: {type: number}
+        per_tool_segments:
+          type: object
+          additionalProperties: {type: integer}
+    Timeline:
+      description: Mirrors contracts/timeline.schema.json (C5)
+      type: object
+      required: [video_id, duration_s, sample_fps, tools, stats, params]
+      properties:
+        video_id: {type: string}
+        duration_s: {type: number}
+        sample_fps: {type: number}
+        tools:
+          type: object
+          additionalProperties:
+            type: array
+            items: {$ref: "#/components/schemas/Segment"}
+        stats: {$ref: "#/components/schemas/Stats"}
+        params: {type: object}
+    NoteCreate:
+      type: object
+      required: [t_sec, text]
+      properties:
+        t_sec: {type: number, minimum: 0}
+        text: {type: string, minLength: 1, maxLength: 2000}
+        author: {type: string, default: instructor}
+    Note:
+      type: object
+      required: [id, video_id, t_sec, text, author, created_at]
+      properties:
+        id: {type: integer}
+        video_id: {type: string}
+        t_sec: {type: number}
+        text: {type: string}
+        author: {type: string}
+        created_at: {type: string, format: date-time}
+    SearchHit:
+      type: object
+      required: [video_id, start, end, tool]
+      properties:
+        video_id: {type: string}
+        start: {type: number}
+        end: {type: number}
+        tool: {$ref: "#/components/schemas/ToolName"}
+    AnalyticsResponse:
+      type: object
+      required: [cases, aggregate]
+      properties:
+        cases:
+          type: array
+          items:
+            type: object
+            required: [video_id, stats]
+            properties:
+              video_id: {type: string}
+              stats: {$ref: "#/components/schemas/Stats"}
+        aggregate:
+          type: object
+          properties:
+            mean_per_tool_s:
+              type: object
+              additionalProperties: {type: number}
+            mean_switches: {type: number}

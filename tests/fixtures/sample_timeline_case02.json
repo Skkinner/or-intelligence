@@ -1,0 +1,67 @@
+{
+  "video_id": "fixture_case_02",
+  "duration_s": 120.0,
+  "sample_fps": 5.0,
+  "tools": {
+    "grasper": [
+      {
+        "start": 0.0,
+        "end": 120.0,
+        "mean_conf": 0.9
+      }
+    ],
+    "bipolar": [
+      {
+        "start": 20.0,
+        "end": 30.0,
+        "mean_conf": 0.83
+      }
+    ],
+    "hook": [
+      {
+        "start": 30.0,
+        "end": 75.0,
+        "mean_conf": 0.71
+      }
+    ],
+    "clipper": [
+      {
+        "start": 76.0,
+        "end": 90.0,
+        "mean_conf": 0.72
+      }
+    ],
+    "irrigator": [
+      {
+        "start": 95.0,
+        "end": 110.0,
+        "mean_conf": 0.78
+      }
+    ]
+  },
+  "stats": {
+    "total_s": 120.0,
+    "switches": 7,
+    "per_tool_s": {
+      "grasper": 120.0,
+      "bipolar": 10.0,
+      "hook": 45.0,
+      "clipper": 14.0,
+      "irrigator": 15.0
+    },
+    "per_tool_segments": {
+      "grasper": 1,
+      "bipolar": 1,
+      "hook": 1,
+      "clipper": 1,
+      "irrigator": 1
+    }
+  },
+  "params": {
+    "conf": 0.4,
+    "window_s": 2.0,
+    "min_segment_s": 1.5,
+    "merge_gap_s": 2.0,
+    "method": "majority"
+  }
+}

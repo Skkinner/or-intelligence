@@ -1,0 +1,34 @@
+# Owner: Member A (WBS 2.1.1). Dataset sources, checksums, expected counts.
+# Licences and citations: docs/data/LICENSES_AND_ETHICS.md (WBS 1.3.1).
+
+raw_dir: data/raw
+processed_dir: data/processed
+
+datasets:
+  m2cai16:
+    description: m2cai16-tool-locations (frames + Pascal-VOC bounding boxes)
+    url: ""                 # TODO(A, 2.1.1): official download URL
+    archive: ""             # TODO(A, 2.1.1): archive file name
+    folder: m2cai16_tool_locations
+    manual: false
+  cholec80:
+    description: Cholec80 videos + tool-presence annotations (only if the team already has access; see 1.3.1)
+    url: ""
+    archive: ""
+    folder: cholec80
+    manual: true            # licence requires a request form; script only verifies a manual copy
+
+checksums: {}               # TODO(A, 2.1.1): <archive>: <sha256>
+
+expected_counts:            # TODO(A, 2.1.1): fill from the dataset documentation; verify.py compares
+  m2cai16:
+    images: null
+    xml: null
+  cholec80:
+    videos: null
+    tool_annotations: null
+
+timeline_ground_truth:
+  source: undecided         # TODO(A, 1.3.1): cholec80 | m2cai16_tool  (decide Mon evening, tell C)
+  tuning_videos: []         # 1 video (WBS 2.3.1)
+  reporting_videos: []      # 2 videos, disjoint from tuning and from detector training videos

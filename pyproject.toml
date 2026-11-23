@@ -1,0 +1,26 @@
+# Owner: Member D (WBS 1.2.1). Others: propose changes by PR.
+[project]
+name = "or-intelligence"
+version = "0.1.0"
+description = "Laparoscopic instrument detection -> clickable instrument timeline for surgical education"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+extend-exclude = ["notebooks", "web"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "B"]
+ignore = ["E501"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.File", "fastapi.Query", "fastapi.Depends", "fastapi.Form"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit", "tests/contracts"]
+pythonpath = ["."]
+markers = [
+  "gpu: needs a GPU / real weights (skipped in CI)",
+  "data: needs downloaded datasets under data/ (skipped in CI)",
+]

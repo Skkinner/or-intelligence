@@ -1,0 +1,29 @@
+name: Bug
+description: Something is broken. Route it to the member who owns the file (see .github/CODEOWNERS).
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: input
+    id: where
+    attributes:
+      label: File / component (owner path)
+      placeholder: "e.g. src/timeline/builder.py (Member C)"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual
+    validations:
+      required: true
+  - type: input
+    id: deadline
+    attributes:
+      label: Fix deadline
+      value: "Wed 25 Nov 18:00 (feature freeze)"

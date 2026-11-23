@@ -1,0 +1,8 @@
+# Owner: Member C (WBS 4.1.1; defaults re-tuned in 4.1.3). Values copied into every timeline's "params".
+conf: 0.40            # detection confidence threshold (B recommends a value in 3.2.1)
+method: majority      # majority | hysteresis | none
+window_s: 2.0
+on: 0.6               # hysteresis only
+off: 0.4              # hysteresis only
+min_segment_s: 1.5
+merge_gap_s: 2.0

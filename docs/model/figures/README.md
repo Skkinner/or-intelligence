@@ -1,0 +1,1 @@
+Owner: Member B (3.2.1). PR curves, confusion matrix; `failures/` holds 20 FN/FP examples (images not committed if the licence forbids it).

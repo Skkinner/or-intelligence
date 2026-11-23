@@ -1,0 +1,49 @@
+# --- Data, weights, outputs: NEVER commit (see docs/data/LICENSES_AND_ETHICS.md) ---
+data/*
+!data/README.md
+!data/splits/
+data/splits/*
+!data/splits/splits.json
+!data/splits/.gitkeep
+models/weights/*
+!models/weights/README.md
+*.pt
+*.onnx
+*.mp4
+*.avi
+*.mov
+!tests/fixtures/sample_video.mp4
+runs/
+storage/
+docs/model/figures/failures/*.jpg
+
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+kaggle.json
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+*.egg-info/
+
+# --- Node / web ---
+node_modules/
+web/dist/
+test-results/
+playwright-report/
+
+# --- OS / editors ---
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/

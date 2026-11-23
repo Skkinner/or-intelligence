@@ -1,0 +1,42 @@
+name: WBS task
+description: A new work item. All planned WBS tasks already exist as issues; use this only for agreed additions.
+title: "[WBS x.y.z] "
+labels: []
+body:
+  - type: input
+    id: wbs
+    attributes:
+      label: WBS ID
+      placeholder: "e.g. 4.2.3"
+    validations:
+      required: true
+  - type: dropdown
+    id: owner
+    attributes:
+      label: Owner (exactly one)
+      options: [Member A, Member B, Member C, Member D]
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description and steps
+    validations:
+      required: true
+  - type: textarea
+    id: files
+    attributes:
+      label: Files to modify (must be paths the owner already owns)
+    validations:
+      required: true
+  - type: textarea
+    id: deps
+    attributes:
+      label: Depends on / hands off to
+  - type: textarea
+    id: accept
+    attributes:
+      label: Acceptance criteria
+      value: "- [ ] "
+    validations:
+      required: true

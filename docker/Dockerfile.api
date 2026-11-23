@@ -1,0 +1,21 @@
+# Owner: Member D (WBS 7.1.2). API + inference image.
+# TODO(D, 7.1.2): verify on a clean clone; decide whether weights are mounted (default) or fetched at start-up.
+FROM python:3.11-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg libgl1 libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY requirements/ requirements/
+# CPU-only torch keeps the image small; switch the index URL for a CUDA build if a GPU host is used.
+RUN pip install --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cpu \
+    -r requirements/api.txt -r requirements/ml.txt
+
+COPY contracts/ contracts/
+COPY configs/ configs/
+COPY src/ src/
+COPY tests/fixtures/ tests/fixtures/
+
+ENV INFERENCE_MODE=fixture STORAGE_DIR=/data/storage WEIGHTS_PATH=/app/models/weights/best.pt
+EXPOSE 8000
+CMD ["python", "-m", "uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]

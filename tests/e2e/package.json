@@ -1,0 +1,12 @@
+{
+  "name": "or-intelligence-e2e",
+  "private": true,
+  "description": "Owner: Member D (WBS 6.3.1). Run against the local stack started by scripts/run_local.*",
+  "scripts": {
+    "test": "playwright test",
+    "install-browsers": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.48.0"
+  }
+}

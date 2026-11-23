@@ -1,0 +1,10 @@
+{
+  "_comment": "Owner: Member D. Fill in real names and GitHub usernames, then run: node scripts/github/generate.mjs. Member names are placeholders until the team provides them.",
+  "defaultOwner": "",
+  "members": {
+    "A": {"name": "Member A", "github": ""},
+    "B": {"name": "Member B", "github": ""},
+    "C": {"name": "Member C", "github": ""},
+    "D": {"name": "Member D", "github": ""}
+  }
+}

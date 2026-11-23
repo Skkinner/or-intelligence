@@ -1,0 +1,54 @@
+# Owner: Member D (WBS 1.2.1). Runs on every PR to develop/main and on pushes to them.
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: Python (ruff + pytest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      # ml.txt (ultralytics/torch) is NOT installed in CI: GPU tests are marked and skipped.
+      - run: pip install -r requirements/data.txt -r requirements/api.txt
+      - run: ruff check .
+      - run: pytest -m "not gpu and not data" -q
+
+  web:
+    name: Web (build + vitest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+
+  hygiene:
+    name: Repo hygiene (no data, weights or secrets)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Block datasets, weights, videos and secrets
+        run: |
+          bad=$(git ls-files | grep -E '^data/(raw|processed)/|\.pt$|\.onnx$|(^|/)\.env$|kaggle\.json$|\.(mp4|avi|mov)$' | grep -v '^tests/fixtures/sample_video.mp4$' || true)
+          if [ -n "$bad" ]; then echo "Forbidden files tracked:"; echo "$bad"; exit 1; fi

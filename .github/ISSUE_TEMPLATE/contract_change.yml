@@ -1,0 +1,33 @@
+name: Contract change request
+description: Propose a change to contracts/ (needs Member D + every affected consumer).
+title: "[Contract] "
+labels: [contract-change]
+body:
+  - type: dropdown
+    id: contract
+    attributes:
+      label: Contract
+      options: ["C1 classes.json", "C2 dataset layout", "C3 presence CSV", "C4 detections", "C5 timeline", "C6 openapi.yaml"]
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Proposed change (field, type, example)
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it is needed
+    validations:
+      required: true
+  - type: checkboxes
+    id: consumers
+    attributes:
+      label: Consumers who must approve
+      options:
+        - label: Member A
+        - label: Member B
+        - label: Member C
+        - label: Member D

@@ -1,0 +1,5 @@
+# Convenience: full local install (everything). Owner: Member D.
+# Each member only edits their own file in requirements/.
+-r requirements/data.txt
+-r requirements/ml.txt
+-r requirements/api.txt

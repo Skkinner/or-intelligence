@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://or-intelligence/contracts/timeline.schema.json",
+  "title": "C5 Timeline (one per video)",
+  "description": "Producer: Member C (4.1.2, src/timeline/builder.py). Consumers: C (4.2, 4.3), D (web), A (5.2.2 analytics).",
+  "type": "object",
+  "required": ["video_id", "duration_s", "sample_fps", "tools", "stats", "params"],
+  "additionalProperties": false,
+  "$defs": {
+    "toolName": {"enum": ["grasper", "bipolar", "hook", "scissors", "clipper", "irrigator"]},
+    "segment": {
+      "type": "object",
+      "required": ["start", "end", "mean_conf"],
+      "additionalProperties": false,
+      "properties": {
+        "start": {"type": "number", "minimum": 0},
+        "end": {"type": "number", "minimum": 0},
+        "mean_conf": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    }
+  },
+  "properties": {
+    "video_id": {"type": "string", "minLength": 1},
+    "duration_s": {"type": "number", "minimum": 0},
+    "sample_fps": {"type": "number", "exclusiveMinimum": 0},
+    "tools": {
+      "type": "object",
+      "propertyNames": {"$ref": "#/$defs/toolName"},
+      "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/segment"}}
+    },
+    "stats": {
+      "type": "object",
+      "required": ["total_s", "switches", "per_tool_s", "per_tool_segments"],
+      "additionalProperties": false,
+      "properties": {
+        "total_s": {"type": "number", "minimum": 0},
+        "switches": {"type": "integer", "minimum": 0},
+        "per_tool_s": {
+          "type": "object",
+          "propertyNames": {"$ref": "#/$defs/toolName"},
+          "additionalProperties": {"type": "number", "minimum": 0}
+        },
+        "per_tool_segments": {
+          "type": "object",
+          "propertyNames": {"$ref": "#/$defs/toolName"},
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "params": {
+      "type": "object",
+      "required": ["conf", "window_s", "min_segment_s", "merge_gap_s"],
+      "properties": {
+        "conf": {"type": "number", "minimum": 0, "maximum": 1},
+        "window_s": {"type": "number", "minimum": 0},
+        "min_segment_s": {"type": "number", "minimum": 0},
+        "merge_gap_s": {"type": "number", "minimum": 0},
+        "method": {"enum": ["majority", "hysteresis", "none"]}
+      }
+    }
+  }
+}

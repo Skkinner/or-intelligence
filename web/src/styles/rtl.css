@@ -1,0 +1,15 @@
+/* Owner: Member A (WBS 5.2.3). Loaded automatically by web/src/i18n/index.ts.
+ *
+ * Decision (document in the PR): the layout mirrors in Arabic, but the timeline time axis stays
+ * left-to-right — time always increases to the right.
+ *
+ * TODO(A, 5.2.3):
+ *  - mirror the top bar, panels and tables under [dir="rtl"]
+ *  - keep .timeline and .video-player direction: ltr
+ *  - load an Arabic-capable font (e.g. Noto Naskh Arabic) for [lang="ar"]
+ *  - screenshot every page in Arabic for the PR
+ */
+[dir="rtl"] .timeline,
+[dir="rtl"] .video-player {
+  direction: ltr;
+}

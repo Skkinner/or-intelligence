@@ -1,0 +1,14 @@
+# Owner: Member D (WBS 7.1.2). Builds the web app and serves it with Vite preview (proxies /api to the api service).
+# TODO(D, 7.1.2): verify; optionally replace the runtime stage with nginx.
+FROM node:20-alpine
+WORKDIR /repo
+COPY contracts/ contracts/
+COPY tests/fixtures/ tests/fixtures/
+COPY web/package.json web/package-lock.json web/
+RUN cd web && npm ci
+COPY web/ web/
+WORKDIR /repo/web
+ENV VITE_API_MOCK=0 API_URL=http://api:8000
+RUN npm run build
+EXPOSE 8080
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0"]

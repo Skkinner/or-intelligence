@@ -1,0 +1,22 @@
+# Owner: Member D (WBS 7.1.2). Alternative to scripts/run_local.*:  docker compose up --build  ->  http://localhost:8080
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    environment:
+      INFERENCE_MODE: ${INFERENCE_MODE:-fixture}   # set to "real" once models/weights/best.pt exists (M4)
+      SAMPLE_FPS: ${SAMPLE_FPS:-5.0}
+    volumes:
+      - ./storage:/data/storage
+      - ./models/weights:/app/models/weights:ro
+    ports:
+      - "8000:8000"
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+    depends_on:
+      - api
+    ports:
+      - "8080:8080"

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://or-intelligence/contracts/detections.schema.json",
+  "title": "C4 Detections record (one line of detections.jsonl = one sampled frame)",
+  "description": "Producer: Member B (3.3.1, src/inference/detect_video.py). Consumers: Member C (4.1.x, 4.2.1). box = [x1, y1, x2, y2] normalised to 0-1.",
+  "type": "object",
+  "required": ["video_id", "frame", "t", "w", "h", "dets"],
+  "additionalProperties": false,
+  "properties": {
+    "video_id": {"type": "string", "minLength": 1},
+    "frame": {"type": "integer", "minimum": 0, "description": "Index of the frame in the source video"},
+    "t": {"type": "number", "minimum": 0, "description": "Timestamp in seconds"},
+    "w": {"type": "integer", "minimum": 1},
+    "h": {"type": "integer", "minimum": 1},
+    "dets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["cls", "name", "conf", "box"],
+        "additionalProperties": false,
+        "properties": {
+          "cls": {"type": "integer", "minimum": 0, "maximum": 5},
+          "name": {"enum": ["grasper", "bipolar", "hook", "scissors", "clipper", "irrigator"]},
+          "conf": {"type": "number", "minimum": 0, "maximum": 1},
+          "box": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        }
+      }
+    }
+  }
+}
