@@ -15,7 +15,7 @@ Rules
 
 - File stem = `<video_id>_<frame_index>`. `video_id()` in `01_Data.ipynb` step 5 must recover `video_id`.
 - Images with no tool keep an **empty** `.txt` (background image).
-- Class ids are 0–5 only (C1); m2cai16 `SpecimenBag` is dropped.
+- Class ids are 0–5 only (C1); CholecInstanceSeg `Snare` (and m2cai16 `SpecimenBag`) is dropped. Boxes come from the instance polygons; video groups are by surgery number (`VID07`), see `01_Data.ipynb` step 5.
 - `dataset.yaml` example:
 
 ```yaml

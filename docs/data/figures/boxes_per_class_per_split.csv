@@ -1,0 +1,7 @@
+,train,val,test,total
+grasper,25698,4017,8701,38416
+bipolar,1762,270,526,2558
+hook,12675,1759,4848,19282
+scissors,450,113,149,712
+clipper,899,99,326,1324
+irrigator,1189,122,1109,2420

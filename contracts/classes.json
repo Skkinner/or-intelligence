@@ -1,7 +1,7 @@
 {
   "version": "1.0.0-draft",
   "classes": {"0": "grasper", "1": "bipolar", "2": "hook", "3": "scissors", "4": "clipper", "5": "irrigator"},
-  "dropped_source_classes": ["SpecimenBag"],
+  "dropped_source_classes": ["SpecimenBag", "Snare"],
   "colors": {
     "grasper": "#2563eb",
     "bipolar": "#7c3aed",
