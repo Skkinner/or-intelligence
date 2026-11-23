@@ -36,8 +36,8 @@ data: src/data (A) ──► YOLO dataset (C2) ──► src/models (B) ──�
 
 | Member | Role | Owns | Tasks |
 |---|---|---|---|
-| Member A | Data Engineer & UX Research | `src/data/`, `configs/data.yaml`, `docs/data/`, `docs/usability/`, Analytics page, `ar.json`, `rtl.css` | 10 |
-| Member B | ML Engineer | `src/models/`, `src/inference/`, `configs/train.yaml`, `docs/model/`, `docs/slides/` | 8 |
+| Member A | Data Engineer & UX Research | `notebooks/01_Data.ipynb`, `src/data/` (presence labels), `docs/data/`, `docs/usability/`, Analytics page, `ar.json`, `rtl.css` | 10 |
+| Member B | ML Engineer | `notebooks/02_Model.ipynb`, `src/inference/`, `src/models/benchmark.py`, `docs/model/`, `docs/slides/` | 8 |
 | Member C | Backend & Timeline Engineer | `src/timeline/`, `src/api/`, `src/reports/`, `configs/timeline.yaml`, `docs/timeline/`, `docs/demo/` | 8 |
 | Member D | Frontend Lead & Integration Owner | `contracts/`, `tests/fixtures/`, `web/` (except A's files), `scripts/`, `docker/`, `.github/`, root docs | 12 |
 
@@ -55,24 +55,27 @@ Names are placeholders until the team fills in `.github/team.json`. Full list pe
 | [contracts/](contracts/README.md) | The shared interfaces C1–C6 |
 | [docs/planning/](docs/planning/) | Original plan: dashboard HTML, WBS data, validation, course brief |
 
-## Training the model (Google Colab, no setup needed)
+## Data and model (Google Colab, no setup needed)
 
-All modeling happens in **one notebook**: [`notebooks/OR_Intelligence_Model.ipynb`](notebooks/OR_Intelligence_Model.ipynb).
+Two notebooks, one per owner. Run them in order; they pass files through the shared Google Drive folder
+`MyDrive/or-intelligence/`.
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Skkinner/or-intelligence/blob/main/notebooks/OR_Intelligence_Model.ipynb)
+| Notebook | Owner | WBS | Open | Produces (in Drive) |
+|---|---|---|---|---|
+| [`notebooks/01_Data.ipynb`](notebooks/01_Data.ipynb) | Member A | 2.1.1, 2.2.1, 2.2.2, 2.4.1 | [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Skkinner/or-intelligence/blob/main/notebooks/01_Data.ipynb) | `data/yolo_dataset.zip`, `data/splits.json`, `results/eda/` |
+| [`notebooks/02_Model.ipynb`](notebooks/02_Model.ipynb) | Member B | 3.1.1, 3.1.2, 3.2.1, 3.3.1, 3.3.2 | [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Skkinner/or-intelligence/blob/main/notebooks/02_Model.ipynb) | `weights/best.pt`, `results/test_metrics.json`, `*_detections.jsonl` |
 
-1. Open the notebook in Colab (badge above, or *File → Open notebook → GitHub*; allow access to private repos).
-2. *Runtime → Change runtime type → T4 GPU*.
-3. Upload the dataset zip to Google Drive once: `MyDrive/or-intelligence/data/m2cai16-tool-locations.zip`.
-4. *Runtime → Run all*.
+1. Upload the dataset zip once: `MyDrive/or-intelligence/data/m2cai16-tool-locations.zip`, and share the folder with the team.
+2. Member A: open `01_Data` in Colab → *Runtime → Run all*.
+3. Member B: open `02_Model` in Colab → *Runtime → Change runtime type → T4 GPU* → *Run all*.
 
-The notebook converts the data, splits it by video, trains, picks the best model on the validation split,
-evaluates the test split once, and saves `best.pt` + results to `MyDrive/or-intelligence/`.
-Model weights stay in Drive; they are never committed to GitHub.
+To open a notebook from this private repo in Colab: *File → Open notebook → GitHub*, tick *Include private repos*.
+Weights and data stay in Drive; they are never committed to GitHub. The app uses the same inference code from
+`src/inference/detect_video.py` with `best.pt` copied to `models/weights/`.
 
 ## Installation (only for the app: API and web)
 
-Requirements: Python 3.11+, Node 20+, Git. A GPU is only needed for training (Colab/Kaggle).
+Requirements: Python 3.11+, Node 20+, Git. Training happens in Colab, not here.
 
 ```bash
 git clone https://github.com/<owner>/or-intelligence.git
@@ -108,21 +111,21 @@ docker compose up --build               # alternative; app on http://localhost:8
 or-intelligence/
 ├── .github/            D   CI, CODEOWNERS, PR/issue templates, team.json, issues/manifest.json
 ├── contracts/          D   C1 classes · C2 dataset layout · C3 presence CSV · C4 detections · C5 timeline · C6 openapi
-├── configs/            A data.yaml · B train.yaml, experiments/ · C timeline.yaml
+├── configs/            C   timeline.yaml
 ├── requirements/       D base · A data · B ml · C api
 ├── data/               A   gitignored (only splits/splits.json is tracked)
 ├── models/weights/     B   gitignored (GitHub Release model-v1)
 ├── src/
 │   ├── common/         D   read-only contract helpers
-│   ├── data/           A   download, verify, convert, split, presence labels, EDA
-│   ├── models/         B   train, tune, evaluate, benchmark
+│   ├── data/           A   presence labels + frame extraction (timeline ground truth, 2.3.1)
+│   ├── models/         B   benchmark (6.1.1)
 │   ├── inference/      B   detect_video, fetch_weights
 │   ├── timeline/       C   smoothing, builder, evaluate
 │   ├── api/            C   FastAPI app, db, jobs, routes/
 │   └── reports/        C   PDF report EN/AR
 ├── web/                D   React + Vite + TS (pages/Analytics, i18n/ar.json, styles/rtl.css → A)
 ├── tests/              fixtures/ contracts/ e2e/ (D) · unit/<area>/ (owner of the area)
-├── notebooks/          A eda.ipynb · B experiments/
+├── notebooks/          A 01_Data.ipynb · B 02_Model.ipynb (Colab)
 ├── scripts/            D   run_local.*, github/ (generate + setup)
 ├── docker/ docker-compose.yml   D
 └── docs/               problem · data · usability · model · slides · timeline · demo · integration · report · planning

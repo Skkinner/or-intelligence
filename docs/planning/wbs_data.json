@@ -691,28 +691,23 @@
       "wp": "2.1",
       "owner": "A",
       "name": "Download & verify datasets",
-      "desc": "Scripted, reproducible download of m2cai16-tool-locations (frames + VOC XML boxes) and the Cholec80 videos/tool annotations needed for timeline evaluation, with checksums.",
+      "desc": "Get the m2cai16-tool-locations dataset (frames + VOC XML boxes) into the team Google Drive and check it in notebooks/01_Data.ipynb (step 3). Cholec80 only if access already exists (decided in 1.3.1).",
       "steps": [
-        "Write src/data/download.py: CLI `python -m src.data.download --dataset m2cai16|cholec80 --out data/raw/` (Cholec80 path may be a manual copy if the licence requires manual download; script then only verifies).",
-        "Record SHA-256 of every archive in configs/data.yaml under `checksums:`.",
-        "Write src/data/verify.py: counts images, XML files, videos and tool-annotation files; fails loudly on mismatch.",
-        "Store raw data in data/raw/m2cai16_tool_locations/ and data/raw/cholec80/ (gitignored).",
-        "Put a 20-frame sample + 1 XML in tests/unit/data/sample/ for unit tests (only if the licence allows; otherwise synthetic boxes).",
-        "Upload a team copy to the shared drive so B and C don't re-download."
+        "Download the m2cai16-tool-locations zip from the official page (licence from 1.3.1) and upload it to MyDrive/or-intelligence/data/m2cai16-tool-locations.zip in the shared team folder.",
+        "If Cholec80 access exists, upload the timeline-evaluation videos + tool annotations to MyDrive/or-intelligence/data/cholec80/.",
+        "Run 01_Data.ipynb steps 1–3: it unzips the data and prints image/XML counts and the zip's SHA-256.",
+        "Compare the counts with the dataset documentation; record counts + SHA-256 in docs/data/LICENSES_AND_ETHICS.md.",
+        "Share the Drive folder with B, C and D so nobody downloads it again."
       ],
       "inputs": [
         "docs/data/LICENSES_AND_ETHICS.md (approved)"
       ],
       "outputs": [
-        "src/data/download.py",
-        "src/data/verify.py",
-        "configs/data.yaml",
-        "data/raw/ populated (not in Git)"
+        "Dataset zip in the shared Drive folder",
+        "Counts + SHA-256 recorded in docs/data/LICENSES_AND_ETHICS.md"
       ],
       "files": [
-        "src/data/download.py",
-        "src/data/verify.py",
-        "configs/data.yaml",
+        "notebooks/01_Data.ipynb",
         "requirements/data.txt"
       ],
       "deps": [
@@ -720,8 +715,8 @@
         "1.2.1"
       ],
       "accept": [
-        "`python -m src.data.verify` passes on a clean machine after download.",
-        "Counts printed match the dataset documentation.",
+        "01_Data.ipynb step 3 runs and the printed counts match the dataset documentation.",
+        "The whole team can open the shared Drive folder.",
         "Nothing under data/ is tracked by Git."
       ],
       "priority": "High",
@@ -737,28 +732,22 @@
       "wp": "2.2",
       "owner": "A",
       "name": "VOC → YOLO conversion & class mapping",
-      "desc": "Convert m2cai16-tool-locations Pascal-VOC boxes into YOLO txt labels using contracts/classes.json, dropping SpecimenBag, with validation and visual spot-checks.",
+      "desc": "Convert the Pascal-VOC boxes into YOLO labels for the 6 instruments (drop SpecimenBag) with visual spot-checks, in notebooks/01_Data.ipynb (step 4).",
       "steps": [
-        "Write src/data/convert_voc_to_yolo.py: parse XML, map names case-insensitively (Grasper→0 … Irrigator→5), skip SpecimenBag, clip boxes to image bounds, write `cls cx cy w h` normalised.",
-        "Log and count: dropped boxes, empty images, malformed XML. Keep images with zero tools as background images (empty .txt).",
-        "Write src/data/visualize.py: draws labels on N random images to data/processed/qa/.",
-        "Manually inspect ≥50 rendered images; note issues in docs/data/qa_notes.md.",
-        "Unit tests tests/unit/data/test_convert.py: known XML → expected txt; out-of-bounds box clipped; SpecimenBag dropped."
+        "Run 01_Data.ipynb step 4: VOC → YOLO `cls cx cy w h`, names mapped case-insensitively to contracts/classes.json, SpecimenBag dropped, boxes clipped, empty label for images without tools.",
+        "Read the printed counts (dropped boxes, empty images, malformed XML); the cell checks class ids ∈ 0..5 and coordinates ∈ [0,1].",
+        "Look at the 50 QA images saved to MyDrive/or-intelligence/results/qa/ and note problems in docs/data/qa_notes.md."
       ],
       "inputs": [
-        "data/raw/m2cai16_tool_locations/",
+        "Dataset zip in Drive (2.1.1)",
         "contracts/classes.json"
       ],
       "outputs": [
-        "data/processed/yolo/images|labels (all)",
-        "src/data/convert_voc_to_yolo.py",
-        "src/data/visualize.py",
+        "YOLO labels (inside the notebook run)",
         "docs/data/qa_notes.md"
       ],
       "files": [
-        "src/data/convert_voc_to_yolo.py",
-        "src/data/visualize.py",
-        "tests/unit/data/",
+        "notebooks/01_Data.ipynb",
         "docs/data/qa_notes.md"
       ],
       "deps": [
@@ -766,10 +755,9 @@
         "1.2.2"
       ],
       "accept": [
-        "Every image has exactly one .txt label file (possibly empty).",
-        "All class ids ∈ {0..5}; all coordinates ∈ [0,1].",
-        "≥50 visual spot-checks recorded with <2% label errors.",
-        "Unit tests pass in CI."
+        "Every image has exactly one label (possibly empty).",
+        "The notebook's checks pass: class ids ∈ {0..5}, coordinates ∈ [0,1].",
+        "≥50 visual spot-checks recorded in qa_notes.md with <2% label errors."
       ],
       "priority": "High",
       "hours": 3,
@@ -784,34 +772,33 @@
       "wp": "2.2",
       "owner": "A",
       "name": "Video-level train/val/test split",
-      "desc": "Split by source video (never by frame) so the test set measures generalisation to unseen surgeries, as required by the success measures.",
+      "desc": "Split by source video (never by frame) so the test set measures generalisation to unseen surgeries, then hand the ready dataset to B through Drive (01_Data.ipynb steps 5 and 7).",
       "steps": [
-        "Parse the video ID from each frame filename; build a video → frame count table.",
-        "Write src/data/split.py: deterministic (seed 42) split ≈70/15/15 by video, stratified so each split contains all 6 classes.",
-        "Write data/splits/splits.json and place images/labels into train/val/test folders.",
-        "Generate data/processed/dataset.yaml (Ultralytics format; names from contracts/classes.json).",
-        "Add a leakage test: assert no video ID appears in more than one split.",
-        "Hand off: post split counts (videos, images, boxes per class per split) in the PR and tag B."
+        "Run 01_Data.ipynb step 5; check that the printed video IDs are real surgery IDs (adjust video_id() if not).",
+        "The cell makes a seeded (42) ~70/15/15 split by video where every split contains all 6 classes, and checks for leakage.",
+        "Run step 7: saves MyDrive/or-intelligence/data/yolo_dataset.zip (images, labels, dataset.yaml) and data/splits.json.",
+        "Copy splits.json to data/splits/splits.json in the repo.",
+        "Hand off: post the split table (videos, images, boxes per class per split) in the PR and tag B."
       ],
       "inputs": [
-        "data/processed/yolo/ (unsplit)"
+        "Converted labels (2.2.1)"
       ],
       "outputs": [
+        "MyDrive/or-intelligence/data/yolo_dataset.zip",
         "data/splits/splits.json",
-        "data/processed/dataset.yaml",
         "Split summary table in PR"
       ],
       "files": [
-        "src/data/split.py",
+        "notebooks/01_Data.ipynb",
         "data/splits/splits.json"
       ],
       "deps": [
         "2.2.1"
       ],
       "accept": [
-        "No video ID shared across splits (test passes).",
+        "Leakage check in the notebook passes (no video in two splits).",
         "Each split contains every class at least 20 times.",
-        "`yolo detect val data=data/processed/dataset.yaml` loads the dataset without errors."
+        "02_Model.ipynb step 3 loads yolo_dataset.zip without errors."
       ],
       "priority": "High",
       "hours": 1,
@@ -871,27 +858,23 @@
       "wp": "2.4",
       "owner": "A",
       "name": "EDA & class-balance report",
-      "desc": "Quantify the dataset so B can plan augmentation and class weighting, and so the report has a data section.",
+      "desc": "Quantify the dataset so B can plan augmentation and class weighting, and so the report has a data section (01_Data.ipynb step 6).",
       "steps": [
-        "Write src/data/eda.py producing CSV + PNG charts in docs/data/figures/: boxes per class per split, images per video, box size distribution, co-occurrence matrix.",
-        "Summarise findings in notebooks/eda.ipynb (read-only visual companion).",
+        "Run 01_Data.ipynb step 6: boxes per class per split, images per video, box sizes, co-occurrence (PNG + CSV in MyDrive/or-intelligence/results/eda/).",
+        "Copy the figures to docs/data/figures/.",
         "Write docs/data/EDA.md: key numbers, imbalance ratio, small-object share, recommendations to B (e.g. oversample scissors/clipper)."
       ],
       "inputs": [
-        "data/processed/yolo/",
-        "data/splits/splits.json"
+        "Split dataset (2.2.2)"
       ],
       "outputs": [
         "docs/data/EDA.md",
-        "docs/data/figures/*.png",
-        "src/data/eda.py",
-        "notebooks/eda.ipynb"
+        "docs/data/figures/*.png"
       ],
       "files": [
-        "src/data/eda.py",
+        "notebooks/01_Data.ipynb",
         "docs/data/EDA.md",
-        "docs/data/figures/",
-        "notebooks/eda.ipynb"
+        "docs/data/figures/"
       ],
       "deps": [
         "2.2.2"
@@ -899,7 +882,7 @@
       "accept": [
         "EDA.md contains per-class counts per split and at least 4 figures.",
         "Recommendations section addressed to B is present.",
-        "Charts regenerate from `python -m src.data.eda`."
+        "Figures regenerate by re-running 01_Data.ipynb."
       ],
       "priority": "Medium",
       "hours": 2,
@@ -914,38 +897,33 @@
       "wp": "3.1",
       "owner": "B",
       "name": "Baseline YOLO training",
-      "desc": "Fine-tune a COCO-pretrained YOLO (e.g. yolov8s / yolo11s) on the 6-class dataset to establish a baseline and produce first usable weights.",
+      "desc": "Fine-tune a COCO-pretrained YOLO (yolov8s) on the 6-class dataset in notebooks/02_Model.ipynb (steps 1–4) to establish a baseline.",
       "steps": [
-        "Write configs/train.yaml (yolov8s, imgsz 640, epochs 50, batch 16, patience 10, seed 42, data path). Start the Kaggle/Colab run as early as possible Tue morning; it runs while you work on 3.3.1.",
-        "Write src/models/train.py wrapping Ultralytics: `python -m src.models.train --config configs/train.yaml --name baseline`.",
-        "Train on Colab/Kaggle GPU; log runs to runs/ and record experiment in docs/model/experiments.md (config hash, mAP@0.5, mAP@0.5:0.95, time).",
-        "Save best weights to models/weights/baseline.pt (store in shared drive / GitHub Release, never in Git).",
-        "Smoke test tests/unit/models/test_train_config.py (config loads, class names match contracts/classes.json)."
+        "Open 02_Model.ipynb in Colab with a T4 GPU; set EPOCHS/IMGSZ/BATCH in step 1 (defaults: yolov8s, 640, 50 epochs, batch 16, patience 10, seed 42).",
+        "Run steps 2–4 as soon as yolo_dataset.zip is in Drive (Tue morning). Runs save to MyDrive/or-intelligence/runs/baseline with a checkpoint every epoch.",
+        "If Colab disconnects, re-run steps 1–3 and the resume cell.",
+        "Record the run in docs/model/experiments.md (settings, val mAP@0.5, mAP@0.5:0.95, training time)."
       ],
       "inputs": [
-        "data/processed/dataset.yaml",
+        "MyDrive/or-intelligence/data/yolo_dataset.zip (2.2.2)",
         "contracts/classes.json"
       ],
       "outputs": [
-        "models/weights/baseline.pt",
-        "configs/train.yaml",
-        "src/models/train.py",
+        "MyDrive/or-intelligence/runs/baseline/weights/best.pt",
         "docs/model/experiments.md"
       ],
       "files": [
-        "src/models/train.py",
-        "configs/train.yaml",
+        "notebooks/02_Model.ipynb",
         "requirements/ml.txt",
-        "docs/model/experiments.md",
-        "tests/unit/models/"
+        "docs/model/experiments.md"
       ],
       "deps": [
         "2.2.2"
       ],
       "accept": [
         "Baseline val mAP@0.5 recorded in experiments.md.",
-        "Weights downloadable by the team.",
-        "Training reproducible from the config with the same seed."
+        "Weights are in the shared Drive folder.",
+        "Re-running the notebook with the same settings reproduces the run (seed 42)."
       ],
       "priority": "High",
       "hours": 4,
@@ -960,37 +938,32 @@
       "wp": "3.1",
       "owner": "B",
       "name": "Augmentation & hyper-parameter experiments",
-      "desc": "Improve on the baseline using EDA findings: model size, image size, augmentation (smoke/blur, HSV, mosaic), class imbalance handling. Select the final model on the validation split only.",
+      "desc": "Improve on the baseline using A's EDA (02_Model.ipynb steps 5–6). Select the final model on the validation split only.",
       "steps": [
-        "Plan 2 experiments in docs/model/experiments.md (one change each, chosen from EDA): e.g. imgsz 832 and blur/HSV augmentation or oversampling the rarest class. Launch both in parallel GPU sessions Tue afternoon.",
-        "Write src/models/tune.py to launch a named experiment from a config override file in configs/experiments/.",
-        "Run experiments; record val mAP@0.5 and per-class AP for each.",
-        "Choose the best by val mAP@0.5 (tie-break: per-class min AP, then speed). Do NOT look at the test split.",
-        "Export final weights models/weights/best.pt and optionally ONNX models/weights/best.onnx."
+        "Pick one change from docs/data/EDA.md (e.g. imgsz 832) and set it in step 5; set RUN_EXPERIMENT = True. Add a second experiment the same way if time allows.",
+        "Run step 6: compares val mAP@0.5 of all runs and picks the best; saves results/model_selection.json. The test split is not used.",
+        "Record each run and the selection rationale in docs/model/experiments.md."
       ],
       "inputs": [
-        "models/weights/baseline.pt",
+        "Baseline run (3.1.1)",
         "docs/data/EDA.md"
       ],
       "outputs": [
-        "models/weights/best.pt",
-        "configs/experiments/*.yaml",
+        "Chosen model (results/model_selection.json in Drive)",
         "Experiment table in docs/model/experiments.md"
       ],
       "files": [
-        "src/models/tune.py",
-        "configs/experiments/",
-        "models/weights/",
-        "notebooks/experiments/"
+        "notebooks/02_Model.ipynb",
+        "models/weights/"
       ],
       "deps": [
         "3.1.1",
         "2.4.1"
       ],
       "accept": [
-        "2 experiments logged with config and results (plus baseline).",
+        "Baseline + at least 1 experiment logged with settings and results.",
         "Final model's val mAP@0.5 ≥ baseline.",
-        "best.pt shared by Tue 23:00; selection rationale written; test split untouched."
+        "Chosen by Tue 23:00; selection rationale written; test split untouched."
       ],
       "priority": "High",
       "hours": 4,
@@ -1005,17 +978,17 @@
       "wp": "3.2",
       "owner": "B",
       "name": "Held-out test evaluation report",
-      "desc": "One-time evaluation of the final model on the video-level test split: mAP@0.5, mAP@0.5:0.95, per-instrument precision/recall, confusion matrix, failure analysis.",
+      "desc": "One-time evaluation of the chosen model on the video-level test split (02_Model.ipynb step 7): mAP@0.5, mAP@0.5:0.95, per-instrument precision/recall, failure analysis.",
       "steps": [
-        "Write src/models/evaluate.py: runs Ultralytics val on split=test, saves metrics JSON to docs/model/test_metrics.json.",
-        "Produce per-class P/R table at the chosen confidence threshold and PR curves.",
-        "Collect 20 failure cases (FN/FP) into docs/model/figures/failures/ with short comments (smoke, occlusion, motion blur, partial tools).",
+        "Run 02_Model.ipynb step 7. It writes results/test_metrics.json and refuses to run the test split a second time.",
+        "Copy test_metrics.json to docs/model/test_metrics.json and the plots from runs/test_eval/ to docs/model/figures/.",
+        "Collect ~20 failure cases (FN/FP) with short comments (smoke, occlusion, motion blur, partial tools).",
         "Write docs/model/EVALUATION.md.",
-        "Hand off the recommended confidence threshold to C (timeline params)."
+        "Hand off the CONF threshold used to C (timeline params)."
       ],
       "inputs": [
-        "models/weights/best.pt",
-        "test split"
+        "Chosen model (3.1.2)",
+        "Test split in yolo_dataset.zip"
       ],
       "outputs": [
         "docs/model/EVALUATION.md",
@@ -1023,7 +996,6 @@
         "docs/model/figures/"
       ],
       "files": [
-        "src/models/evaluate.py",
         "docs/model/EVALUATION.md",
         "docs/model/test_metrics.json",
         "docs/model/figures/"
@@ -1049,17 +1021,15 @@
       "wp": "3.3",
       "owner": "B",
       "name": "Video inference module (detections.jsonl)",
-      "desc": "Library + CLI that samples a video at N fps, runs the detector and streams detections in contract C4 format. This is what the API (C) calls.",
+      "desc": "detect_video(): samples a video at N fps, runs the detector and writes detections in contract C4 format. Implemented in src/inference/detect_video.py (used by the app) and in 02_Model.ipynb step 9 (for Colab).",
       "steps": [
-        "Mon evening: set up the environment and implement src/inference/detect_video.py with the exact signature in contract C4 using COCO-pretrained yolov8n.pt as a stand-in (no dependency on training); read frames with OpenCV, sample at sample_fps, batch inference. Swap to baseline.pt/best.pt when available.",
-        "Add a progress callback parameter `on_progress(fraction: float)` so the API can report progress.",
-        "CLI: `python -m src.inference.detect_video in.mp4 out.jsonl --fps 5`.",
-        "Fall back to CPU if no GPU; allow ONNX weights.",
-        "Tests tests/unit/inference/: run on tests/fixtures/sample_video.mp4 with baseline weights; output validates against contracts/detections.schema.json.",
-        "Hand off: document usage in src/inference/README.md and notify C."
+        "src/inference/detect_video.py is implemented with the contract C4 signature (incl. on_progress); keep it identical to 02_Model.ipynb step 9.",
+        "Test it in Colab on a short video with the COCO stand-in yolov8n.pt (Mon evening), then with baseline/best weights.",
+        "Create or get tests/fixtures/sample_video.mp4 with D; make tests/unit/inference pass where ultralytics is installed.",
+        "Document usage and the measured speed in src/inference/README.md and notify C."
       ],
       "inputs": [
-        "yolov8n.pt (stand-in), later baseline.pt / best.pt",
+        "yolov8n.pt (stand-in), later best.pt",
         "contracts/detections.schema.json",
         "tests/fixtures/sample_video.mp4"
       ],
@@ -1094,20 +1064,19 @@
       "wp": "3.3",
       "owner": "B",
       "name": "Model card & weights release",
-      "desc": "Publish final weights as a GitHub Release asset with a model card describing data, metrics, limits and intended (educational) use.",
+      "desc": "Publish the final weights to the team (Drive + optionally a GitHub Release) with a model card describing data, metrics, limits and intended (educational) use.",
       "steps": [
-        "Write docs/model/MODEL_CARD.md: training data + licence, metrics table, known failure modes, intended use, out-of-scope (diagnosis, other procedures).",
-        "Create GitHub Release `model-v1` with best.pt (and best.onnx) and SHA-256.",
-        "Add src/inference/fetch_weights.py that downloads and verifies the release asset into models/weights/."
+        "Run 02_Model.ipynb step 8: saves best.pt, best.onnx and best.pt.sha256 to MyDrive/or-intelligence/weights/.",
+        "Optional: attach best.pt to a GitHub Release `model-v1` and fill RELEASE_URL/SHA256 in src/inference/fetch_weights.py.",
+        "Write docs/model/MODEL_CARD.md: training data + licence, metrics table, known failure modes, intended use, out-of-scope (diagnosis, other procedures)."
       ],
       "inputs": [
         "docs/model/EVALUATION.md",
-        "models/weights/best.pt"
+        "Chosen model (3.1.2)"
       ],
       "outputs": [
-        "docs/model/MODEL_CARD.md",
-        "GitHub Release model-v1",
-        "src/inference/fetch_weights.py"
+        "MyDrive/or-intelligence/weights/best.pt (+ .onnx, .sha256)",
+        "docs/model/MODEL_CARD.md"
       ],
       "files": [
         "docs/model/MODEL_CARD.md"
@@ -1116,7 +1085,7 @@
         "3.2.1"
       ],
       "accept": [
-        "`python -m src.inference.fetch_weights` downloads and verifies best.pt on a clean clone.",
+        "best.pt and its SHA-256 are in the shared Drive folder and C can load it.",
         "Model card states non-diagnostic, educational scope."
       ],
       "priority": "Medium",
@@ -2736,7 +2705,7 @@
     "Task 7.1.2 added: the course brief requires Deployment Files, so Docker moved from an optional stretch inside 7.1.1 to its own task (Member D, 1 h, Wed afternoon). 7.2.1 now also depends on 7.1.2.",
     "src/common/contracts.py (read-only contract helpers) added under Member D, who owns contracts/.",
     "The scaffold, contract drafts and synthetic fixtures were pre-created at setup. Tasks 1.2.1 and 1.2.2 stay open until their remaining acceptance criteria are met (branch protection check, member test PRs, contract sign-off, sample_video.mp4).",
-    "Modeling is done in one Colab notebook, notebooks/OR_Intelligence_Model.ipynb (Member B): data conversion, video-level split, training, validation-only model choice, one-time test evaluation, saving best.pt to Google Drive and producing detections.jsonl. The src/data and src/models scripts are optional; src/inference is still what the API imports."
+    "Data and model work happens in two Colab notebooks that follow the WBS owners: notebooks/01_Data.ipynb (Member A: 2.1.1, 2.2.1, 2.2.2, 2.4.1) and notebooks/02_Model.ipynb (Member B: 3.1.1, 3.1.2, 3.2.1, 3.3.2). A hands the ready dataset to B as MyDrive/or-intelligence/data/yolo_dataset.zip. The command-line starter scripts for these tasks were removed; src/inference/detect_video.py (3.3.1) stays because the app imports it."
   ],
   "extraOwnership": [
     [
@@ -2842,10 +2811,6 @@
     [
       "data/splits/",
       "A"
-    ],
-    [
-      "notebooks/OR_Intelligence_Model.ipynb",
-      "B"
     ]
   ]
 }

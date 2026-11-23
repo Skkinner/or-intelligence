@@ -2,7 +2,7 @@
 
 > **TODO(A, 2.4.1)** — template only. Replace every TODO with real content; do not invent numbers.
 
-Regenerate figures: `python -m src.data.eda`
+Regenerate figures: re-run `notebooks/01_Data.ipynb` step 6 (saved to `MyDrive/or-intelligence/results/eda/`, copy into `figures/`).
 
 ## Split summary
 

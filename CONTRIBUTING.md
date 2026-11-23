@@ -52,7 +52,7 @@ cd web && npm run build && npm test && cd ..      # only if you changed web/
 ## 4. Commit and push
 
 ```bash
-git add src/data/convert_voc_to_yolo.py tests/unit/data/test_convert.py
+git add docs/data/qa_notes.md notebooks/01_Data.ipynb
 git commit -m "[WBS 2.2.1] Convert VOC boxes to YOLO labels"
 git push -u origin feature/member-a-2.2.1-voc-to-yolo
 ```

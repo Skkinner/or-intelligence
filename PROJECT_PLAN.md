@@ -13,7 +13,7 @@ A web-based surgical video review platform. A reviewer uploads a recorded laparo
 - Task 7.1.2 added: the course brief requires Deployment Files, so Docker moved from an optional stretch inside 7.1.1 to its own task (Member D, 1 h, Wed afternoon). 7.2.1 now also depends on 7.1.2.
 - src/common/contracts.py (read-only contract helpers) added under Member D, who owns contracts/.
 - The scaffold, contract drafts and synthetic fixtures were pre-created at setup. Tasks 1.2.1 and 1.2.2 stay open until their remaining acceptance criteria are met (branch protection check, member test PRs, contract sign-off, sample_video.mp4).
-- Modeling is done in one Colab notebook, notebooks/OR_Intelligence_Model.ipynb (Member B): data conversion, video-level split, training, validation-only model choice, one-time test evaluation, saving best.pt to Google Drive and producing detections.jsonl. The src/data and src/models scripts are optional; src/inference is still what the API imports.
+- Data and model work happens in two Colab notebooks that follow the WBS owners: notebooks/01_Data.ipynb (Member A: 2.1.1, 2.2.1, 2.2.2, 2.4.1) and notebooks/02_Model.ipynb (Member B: 3.1.1, 3.1.2, 3.2.1, 3.3.2). A hands the ready dataset to B as MyDrive/or-intelligence/data/yolo_dataset.zip. The command-line starter scripts for these tasks were removed; src/inference/detect_video.py (3.3.1) stays because the app imports it.
 
 ## Schedule (work blocks)
 

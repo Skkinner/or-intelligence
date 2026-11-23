@@ -35,7 +35,6 @@ git switch -c feature/member-a-1.3.1-licensing
 
 ### Your files (edit only these)
 
-- `configs/data.yaml`
 - `data/splits/splits.json`
 - `docs/data/`
 - `docs/data/EDA.md`
@@ -44,17 +43,10 @@ git switch -c feature/member-a-1.3.1-licensing
 - `docs/data/timeline_eval_set.md`
 - `docs/report/01_data.md`
 - `docs/usability/`
-- `notebooks/eda.ipynb`
+- `notebooks/01_Data.ipynb`
 - `requirements/data.txt`
-- `src/data/convert_voc_to_yolo.py`
-- `src/data/download.py`
-- `src/data/eda.py`
 - `src/data/extract_frames.py`
 - `src/data/presence_labels.py`
-- `src/data/split.py`
-- `src/data/verify.py`
-- `src/data/visualize.py`
-- `tests/unit/data/`
 - `web/src/i18n/ar.json`
 - `web/src/i18n/parity.test.ts`
 - `web/src/pages/Analytics/`
@@ -108,45 +100,44 @@ Completion checklist:
 
 #### 2.1.1 Download & verify datasets
 
-Scripted, reproducible download of m2cai16-tool-locations (frames + VOC XML boxes) and the Cholec80 videos/tool annotations needed for timeline evaluation, with checksums.
+Get the m2cai16-tool-locations dataset (frames + VOC XML boxes) into the team Google Drive and check it in notebooks/01_Data.ipynb (step 3). Cholec80 only if access already exists (decided in 1.3.1).
 
-**Files:** `src/data/download.py`, `src/data/verify.py`, `configs/data.yaml`, `requirements/data.txt`  
-**Deliverables:** src/data/download.py; src/data/verify.py; configs/data.yaml; data/raw/ populated (not in Git)  
+**Files:** `notebooks/01_Data.ipynb`, `requirements/data.txt`  
+**Deliverables:** Dataset zip in the shared Drive folder; Counts + SHA-256 recorded in docs/data/LICENSES_AND_ETHICS.md  
 **Inputs:** docs/data/LICENSES_AND_ETHICS.md (approved)
 
 Completion checklist:
-- [ ] `python -m src.data.verify` passes on a clean machine after download.
-- [ ] Counts printed match the dataset documentation.
+- [ ] 01_Data.ipynb step 3 runs and the printed counts match the dataset documentation.
+- [ ] The whole team can open the shared Drive folder.
 - [ ] Nothing under data/ is tracked by Git.
 - [ ] PR merged into `develop`; issue closed
 
 #### 2.2.1 VOC → YOLO conversion & class mapping
 
-Convert m2cai16-tool-locations Pascal-VOC boxes into YOLO txt labels using contracts/classes.json, dropping SpecimenBag, with validation and visual spot-checks.
+Convert the Pascal-VOC boxes into YOLO labels for the 6 instruments (drop SpecimenBag) with visual spot-checks, in notebooks/01_Data.ipynb (step 4).
 
-**Files:** `src/data/convert_voc_to_yolo.py`, `src/data/visualize.py`, `tests/unit/data/`, `docs/data/qa_notes.md`  
-**Deliverables:** data/processed/yolo/images|labels (all); src/data/convert_voc_to_yolo.py; src/data/visualize.py; docs/data/qa_notes.md  
-**Inputs:** data/raw/m2cai16_tool_locations/; contracts/classes.json
+**Files:** `notebooks/01_Data.ipynb`, `docs/data/qa_notes.md`  
+**Deliverables:** YOLO labels (inside the notebook run); docs/data/qa_notes.md  
+**Inputs:** Dataset zip in Drive (2.1.1); contracts/classes.json
 
 Completion checklist:
-- [ ] Every image has exactly one .txt label file (possibly empty).
-- [ ] All class ids ∈ {0..5}; all coordinates ∈ [0,1].
-- [ ] ≥50 visual spot-checks recorded with <2% label errors.
-- [ ] Unit tests pass in CI.
+- [ ] Every image has exactly one label (possibly empty).
+- [ ] The notebook's checks pass: class ids ∈ {0..5}, coordinates ∈ [0,1].
+- [ ] ≥50 visual spot-checks recorded in qa_notes.md with <2% label errors.
 - [ ] PR merged into `develop`; issue closed
 
 #### 2.2.2 Video-level train/val/test split
 
-Split by source video (never by frame) so the test set measures generalisation to unseen surgeries, as required by the success measures.
+Split by source video (never by frame) so the test set measures generalisation to unseen surgeries, then hand the ready dataset to B through Drive (01_Data.ipynb steps 5 and 7).
 
-**Files:** `src/data/split.py`, `data/splits/splits.json`  
-**Deliverables:** data/splits/splits.json; data/processed/dataset.yaml; Split summary table in PR  
-**Inputs:** data/processed/yolo/ (unsplit)
+**Files:** `notebooks/01_Data.ipynb`, `data/splits/splits.json`  
+**Deliverables:** MyDrive/or-intelligence/data/yolo_dataset.zip; data/splits/splits.json; Split summary table in PR  
+**Inputs:** Converted labels (2.2.1)
 
 Completion checklist:
-- [ ] No video ID shared across splits (test passes).
+- [ ] Leakage check in the notebook passes (no video in two splits).
 - [ ] Each split contains every class at least 20 times.
-- [ ] `yolo detect val data=data/processed/dataset.yaml` loads the dataset without errors.
+- [ ] 02_Model.ipynb step 3 loads yolo_dataset.zip without errors.
 - [ ] PR merged into `develop`; issue closed
 
 Hand-off: tag Member B in the PR (needed for 3.1.1).
@@ -169,16 +160,16 @@ Hand-off: tag Member C in the PR (needed for 4.1.3).
 
 #### 2.4.1 EDA & class-balance report
 
-Quantify the dataset so B can plan augmentation and class weighting, and so the report has a data section.
+Quantify the dataset so B can plan augmentation and class weighting, and so the report has a data section (01_Data.ipynb step 6).
 
-**Files:** `src/data/eda.py`, `docs/data/EDA.md`, `docs/data/figures/`, `notebooks/eda.ipynb`  
-**Deliverables:** docs/data/EDA.md; docs/data/figures/*.png; src/data/eda.py; notebooks/eda.ipynb  
-**Inputs:** data/processed/yolo/; data/splits/splits.json
+**Files:** `notebooks/01_Data.ipynb`, `docs/data/EDA.md`, `docs/data/figures/`  
+**Deliverables:** docs/data/EDA.md; docs/data/figures/*.png  
+**Inputs:** Split dataset (2.2.2)
 
 Completion checklist:
 - [ ] EDA.md contains per-class counts per split and at least 4 figures.
 - [ ] Recommendations section addressed to B is present.
-- [ ] Charts regenerate from `python -m src.data.eda`.
+- [ ] Figures regenerate by re-running 01_Data.ipynb.
 - [ ] PR merged into `develop`; issue closed
 
 Hand-off: tag Member B in the PR (needed for 3.1.2, 8.2.1).
@@ -262,8 +253,6 @@ git switch -c feature/member-b-3.1.1-baseline
 
 ### Your files (edit only these)
 
-- `configs/experiments/`
-- `configs/train.yaml`
 - `docs/model/BENCHMARK.md`
 - `docs/model/EVALUATION.md`
 - `docs/model/MODEL_CARD.md`
@@ -273,15 +262,11 @@ git switch -c feature/member-b-3.1.1-baseline
 - `docs/report/02_model.md`
 - `docs/slides/`
 - `models/weights/`
-- `notebooks/experiments/`
+- `notebooks/02_Model.ipynb`
 - `requirements/ml.txt`
 - `src/inference/`
 - `src/models/benchmark.py`
-- `src/models/evaluate.py`
-- `src/models/train.py`
-- `src/models/tune.py`
 - `tests/unit/inference/`
-- `tests/unit/models/`
 
 ### Do not modify
 
@@ -314,39 +299,39 @@ git switch -c feature/member-b-3.1.1-baseline
 
 #### 3.1.1 Baseline YOLO training
 
-Fine-tune a COCO-pretrained YOLO (e.g. yolov8s / yolo11s) on the 6-class dataset to establish a baseline and produce first usable weights.
+Fine-tune a COCO-pretrained YOLO (yolov8s) on the 6-class dataset in notebooks/02_Model.ipynb (steps 1–4) to establish a baseline.
 
-**Files:** `src/models/train.py`, `configs/train.yaml`, `requirements/ml.txt`, `docs/model/experiments.md`, `tests/unit/models/`  
-**Deliverables:** models/weights/baseline.pt; configs/train.yaml; src/models/train.py; docs/model/experiments.md  
-**Inputs:** data/processed/dataset.yaml; contracts/classes.json
+**Files:** `notebooks/02_Model.ipynb`, `requirements/ml.txt`, `docs/model/experiments.md`  
+**Deliverables:** MyDrive/or-intelligence/runs/baseline/weights/best.pt; docs/model/experiments.md  
+**Inputs:** MyDrive/or-intelligence/data/yolo_dataset.zip (2.2.2); contracts/classes.json
 
 Completion checklist:
 - [ ] Baseline val mAP@0.5 recorded in experiments.md.
-- [ ] Weights downloadable by the team.
-- [ ] Training reproducible from the config with the same seed.
+- [ ] Weights are in the shared Drive folder.
+- [ ] Re-running the notebook with the same settings reproduces the run (seed 42).
 - [ ] PR merged into `develop`; issue closed
 
 #### 3.1.2 Augmentation & hyper-parameter experiments
 
-Improve on the baseline using EDA findings: model size, image size, augmentation (smoke/blur, HSV, mosaic), class imbalance handling. Select the final model on the validation split only.
+Improve on the baseline using A's EDA (02_Model.ipynb steps 5–6). Select the final model on the validation split only.
 
-**Files:** `src/models/tune.py`, `configs/experiments/`, `models/weights/`, `notebooks/experiments/`  
-**Deliverables:** models/weights/best.pt; configs/experiments/*.yaml; Experiment table in docs/model/experiments.md  
-**Inputs:** models/weights/baseline.pt; docs/data/EDA.md
+**Files:** `notebooks/02_Model.ipynb`, `models/weights/`  
+**Deliverables:** Chosen model (results/model_selection.json in Drive); Experiment table in docs/model/experiments.md  
+**Inputs:** Baseline run (3.1.1); docs/data/EDA.md
 
 Completion checklist:
-- [ ] 2 experiments logged with config and results (plus baseline).
+- [ ] Baseline + at least 1 experiment logged with settings and results.
 - [ ] Final model's val mAP@0.5 ≥ baseline.
-- [ ] best.pt shared by Tue 23:00; selection rationale written; test split untouched.
+- [ ] Chosen by Tue 23:00; selection rationale written; test split untouched.
 - [ ] PR merged into `develop`; issue closed
 
 #### 3.2.1 Held-out test evaluation report
 
-One-time evaluation of the final model on the video-level test split: mAP@0.5, mAP@0.5:0.95, per-instrument precision/recall, confusion matrix, failure analysis.
+One-time evaluation of the chosen model on the video-level test split (02_Model.ipynb step 7): mAP@0.5, mAP@0.5:0.95, per-instrument precision/recall, failure analysis.
 
-**Files:** `src/models/evaluate.py`, `docs/model/EVALUATION.md`, `docs/model/test_metrics.json`, `docs/model/figures/`  
+**Files:** `docs/model/EVALUATION.md`, `docs/model/test_metrics.json`, `docs/model/figures/`  
 **Deliverables:** docs/model/EVALUATION.md; docs/model/test_metrics.json; docs/model/figures/  
-**Inputs:** models/weights/best.pt; test split
+**Inputs:** Chosen model (3.1.2); Test split in yolo_dataset.zip
 
 Completion checklist:
 - [ ] Report includes mAP@0.5 and P/R for all 6 instruments on the test split.
@@ -358,11 +343,11 @@ Hand-off: tag Member D in the PR (needed for 7.2.1).
 
 #### 3.3.1 Video inference module (detections.jsonl)
 
-Library + CLI that samples a video at N fps, runs the detector and streams detections in contract C4 format. This is what the API (C) calls.
+detect_video(): samples a video at N fps, runs the detector and writes detections in contract C4 format. Implemented in src/inference/detect_video.py (used by the app) and in 02_Model.ipynb step 9 (for Colab).
 
 **Files:** `src/inference/`, `tests/unit/inference/`  
 **Deliverables:** src/inference/detect_video.py; src/inference/README.md; tests/unit/inference/  
-**Inputs:** yolov8n.pt (stand-in), later baseline.pt / best.pt; contracts/detections.schema.json; tests/fixtures/sample_video.mp4
+**Inputs:** yolov8n.pt (stand-in), later best.pt; contracts/detections.schema.json; tests/fixtures/sample_video.mp4
 
 Completion checklist:
 - [ ] Output for the fixture video validates against the schema.
@@ -374,14 +359,14 @@ Hand-off: tag Member C in the PR (needed for 4.1.3).
 
 #### 3.3.2 Model card & weights release
 
-Publish final weights as a GitHub Release asset with a model card describing data, metrics, limits and intended (educational) use.
+Publish the final weights to the team (Drive + optionally a GitHub Release) with a model card describing data, metrics, limits and intended (educational) use.
 
 **Files:** `docs/model/MODEL_CARD.md`  
-**Deliverables:** docs/model/MODEL_CARD.md; GitHub Release model-v1; src/inference/fetch_weights.py  
-**Inputs:** docs/model/EVALUATION.md; models/weights/best.pt
+**Deliverables:** MyDrive/or-intelligence/weights/best.pt (+ .onnx, .sha256); docs/model/MODEL_CARD.md  
+**Inputs:** docs/model/EVALUATION.md; Chosen model (3.1.2)
 
 Completion checklist:
-- [ ] `python -m src.inference.fetch_weights` downloads and verifies best.pt on a clean clone.
+- [ ] best.pt and its SHA-256 are in the shared Drive folder and C can load it.
 - [ ] Model card states non-diagnostic, educational scope.
 - [ ] PR merged into `develop`; issue closed
 

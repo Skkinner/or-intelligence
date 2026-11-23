@@ -13,10 +13,10 @@ contracts plus the synthetic data in `tests/fixtures/`, so nobody waits for anyb
 | # | Producer → Consumer | Contract | Interface | Fixture until ready | Real producer ready |
 |---|---|---|---|---|---|
 | 1 | D → all | C1 `contracts/classes.json` | `src.common.contracts.class_names()`, `class_colors()` | — | now (draft) |
-| 2 | A → B | C2 `contracts/dataset_layout.md` | `data/processed/dataset.yaml`, `data/splits/splits.json` | — | 2.2.2, M2 Tue 12:00 |
+| 2 | A → B | C2 `contracts/dataset_layout.md` | `MyDrive/or-intelligence/data/yolo_dataset.zip` from `01_Data.ipynb` (+ `data/splits/splits.json` in the repo) | — | 2.2.2, M2 Tue 12:00 |
 | 3 | A → C | C3 `contracts/presence.schema.md` | `data/processed/presence/<video>.csv` | `tests/fixtures/sample_presence.csv` | 2.3.1, Tue afternoon |
 | 4 | B → C | C4 `contracts/detections.schema.json` | `detect_video(video_path, out_path, sample_fps, conf, weights, on_progress) -> dict` | `tests/fixtures/sample_detections.jsonl` | 3.3.1, M3 Tue 18:00 |
-| 5 | B → C, D | weights | `models/weights/best.pt` via `python -m src.inference.fetch_weights` | COCO `yolov8n.pt` stand-in | 3.1.2, M4 Tue 23:00 |
+| 5 | B → C, D | weights | `MyDrive/or-intelligence/weights/best.pt` from `02_Model.ipynb`; copy to `models/weights/best.pt` for the app | COCO `yolov8n.pt` stand-in | 3.1.2, M4 Tue 23:00 |
 | 6 | C → C, D, A | C5 `contracts/timeline.schema.json` | `build_timeline(dets_path, video_id, params) -> dict` | `tests/fixtures/sample_timeline*.json` | 4.1.2, Tue morning |
 | 7 | C → D, A | C6 `contracts/openapi.yaml` | HTTP on `:8000`, prefix `/api` | web mock mode (`VITE_API_MOCK=1`) | 4.2.1 / 4.2.2, Tue |
 | 8 | C → D | PDF | `GET /api/videos/{id}/report.pdf?lang=en\|ar` | — | 4.3.1, Wed morning |
@@ -33,7 +33,7 @@ contracts plus the synthetic data in `tests/fixtures/`, so nobody waits for anyb
 | Times | seconds as float, from video start; UI shows `mm:ss` |
 | Boxes | detections: `[x1, y1, x2, y2]` normalised 0–1 · YOLO labels: `cls cx cy w h` normalised 0–1 |
 | Storage (API) | `$STORAGE_DIR/videos/<id>.mp4`, `detections/<id>.jsonl`, `timelines/<id>.json`, `app.db` |
-| Config | `configs/data.yaml` (A), `configs/train.yaml` + `experiments/` (B), `configs/timeline.yaml` (C) |
+| Config | settings cell of `01_Data.ipynb` (A) and `02_Model.ipynb` (B), `configs/timeline.yaml` (C) |
 | Env | `.env.example`: `INFERENCE_MODE`, `WEIGHTS_PATH`, `STORAGE_DIR`, `SAMPLE_FPS`, `VITE_API_MOCK` |
 | Python imports | always from repo root: `from src.timeline.builder import build_timeline` |
 | Web extension points | new page = new folder `web/src/pages/<Name>/index.tsx` exporting `route` + default component; new language = `web/src/i18n/<lang>.json` |
@@ -42,7 +42,7 @@ contracts plus the synthetic data in `tests/fixtures/`, so nobody waits for anyb
 
 1. **M3 (Tue 18:00):** C's API runs end-to-end in fixture mode; D switches the web from mock mode to the real API
    (`VITE_API_MOCK=0`, Vite proxies `/api` to `:8000`).
-2. **M4 (Tue 23:00):** B shares `best.pt`; C sets `INFERENCE_MODE=real` and verifies on the fixture video.
+2. **M4 (Tue 23:00):** B shares `best.pt` in the Drive `weights/` folder; D/C copy it to `models/weights/best.pt`; C sets `INFERENCE_MODE=real` and verifies on the fixture video.
 3. **Wed morning:** B posts the recommended confidence threshold (3.2.1); C updates `configs/timeline.yaml` (4.1.3).
 4. **M5 (Wed 18:00):** everything merged into `develop`, one-command run works, smoke checklist passes.
 

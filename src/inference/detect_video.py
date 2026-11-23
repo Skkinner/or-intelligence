@@ -1,9 +1,9 @@
-"""Video inference: sample a video at N fps, run YOLO, stream detections.jsonl (contract C4).
+"""Video inference: sample a video at N fps, run YOLO, write detections.jsonl (contract C4).
 
-WBS 3.3.1 · Owner: Member B · Branch: feature/member-b-3.3.1-inference   ⚠ critical integration point
-Depends on: 1.2.2 (contracts) only. Build it Monday night with COCO-pretrained ``yolov8n.pt`` as a
-stand-in, then swap to models/weights/baseline.pt / best.pt.
-Hands off to: Member C (4.1.3, 4.2.1 imports ``detect_video``). Signature changes need a contract PR first.
+WBS 3.3.1 · Owner: Member B   ⚠ critical integration point
+Same logic as step 9 of notebooks/02_Model.ipynb. This copy is the one the app uses:
+Member C's API (src/api/jobs.py) and timeline evaluation import ``detect_video`` from here.
+Signature changes need a contract PR first (contracts/README.md).
 
 CLI:
     python -m src.inference.detect_video in.mp4 out.jsonl --fps 5 [--conf 0.25] [--weights models/weights/best.pt]
@@ -12,20 +12,21 @@ Each output line (validates against contracts/detections.schema.json):
     {"video_id": "abc123", "frame": 125, "t": 5.0, "w": 1920, "h": 1080,
      "dets": [{"cls": 2, "name": "hook", "conf": 0.91, "box": [0.41, 0.33, 0.62, 0.71]}]}
 
-Acceptance:
-    - Output for tests/fixtures/sample_video.mp4 validates against the schema.
-    - Progress callback reaches 1.0.
-    - 2-min 1080p clip at 5 fps processes in < 2 min on the target GPU (documented in README.md).
+Remaining TODO(B, 3.3.1): run it on tests/fixtures/sample_video.mp4 with best.pt (test in tests/unit/inference),
+and record the processing time of a 2-min 1080p clip at 5 fps in src/inference/README.md.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 from collections.abc import Callable
 from pathlib import Path
 
-DEFAULT_WEIGHTS = "models/weights/best.pt"
-STAND_IN_WEIGHTS = "yolov8n.pt"   # COCO-pretrained; class ids will NOT match C1 — for plumbing only
+from src.common.contracts import class_names
+
+DEFAULT_WEIGHTS = "models/weights/best.pt"   # copy weights/best.pt from the team Drive folder here
+STAND_IN_WEIGHTS = "yolov8n.pt"              # COCO-pretrained; class ids will NOT match C1 — plumbing tests only
 
 
 def detect_video(
@@ -39,18 +40,53 @@ def detect_video(
     """Run detection on ``video_path`` and write one JSON line per sampled frame to ``out_path``.
 
     Returns ``{"frames": <sampled frames written>, "seconds": <video duration>}``.
-
-    TODO(B, 3.3.1):
-      1. Open the video with cv2.VideoCapture; read native fps, frame count, w, h.
-      2. Keep every round(native_fps / sample_fps)-th frame; t = frame_index / native_fps.
-      3. Batch frames (e.g. 16) through ultralytics.YOLO(weights).predict(conf=conf, device=auto: GPU else CPU).
-      4. Convert boxes to normalised [x1, y1, x2, y2]; names via src.common.contracts.class_names().
-      5. video_id = Path(video_path).stem unless the caller passes one (keep the signature stable).
-      6. Write lines incrementally; call on_progress(fraction) after each batch and on_progress(1.0) at the end.
-      7. Accept .onnx weights too (ultralytics handles both).
+    Uses the GPU if available, otherwise the CPU. Accepts ``.pt`` or ``.onnx`` weights.
     """
-    # Heavy imports stay inside the function so CI (no torch) can import this module.
-    raise NotImplementedError("WBS 3.3.1 (Member B): implement video inference")
+    # Heavy imports stay inside the function so CI (no torch/opencv) can import this module.
+    import cv2
+    from ultralytics import YOLO
+
+    names = class_names()
+    model = YOLO(weights)
+    cap = cv2.VideoCapture(str(video_path))
+    if not cap.isOpened():
+        raise FileNotFoundError(f"cannot open video: {video_path}")
+    fps = cap.get(cv2.CAP_PROP_FPS) or 25.0
+    total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    width, height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    step = max(1, round(fps / sample_fps))
+    video_id = Path(video_path).stem
+
+    written, idx = 0, 0
+    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as fh:
+        while cap.grab():
+            if idx % step == 0:
+                ok, frame = cap.retrieve()
+                if not ok:
+                    break
+                result = model.predict(frame, conf=conf, verbose=False)[0]
+                dets = [
+                    {
+                        "cls": int(c),
+                        "name": names[int(c)],
+                        "conf": round(float(s), 4),
+                        "box": [round(min(max(float(v), 0.0), 1.0), 4) for v in box],
+                    }
+                    for c, s, box in zip(result.boxes.cls, result.boxes.conf, result.boxes.xyxyn, strict=True)
+                    if int(c) < len(names)
+                ]
+                record = {"video_id": video_id, "frame": idx, "t": round(idx / fps, 3),
+                          "w": width, "h": height, "dets": dets}
+                fh.write(json.dumps(record) + "\n")
+                written += 1
+                if on_progress and total:
+                    on_progress(min(idx / total, 1.0))
+            idx += 1
+    cap.release()
+    if on_progress:
+        on_progress(1.0)
+    return {"frames": written, "seconds": (total or idx) / fps}
 
 
 def main() -> None:
