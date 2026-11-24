@@ -1,15 +1,83 @@
 /* Owner: Member A (WBS 5.2.3). Loaded automatically by web/src/i18n/index.ts.
  *
- * Decision (document in the PR): the layout mirrors in Arabic, but the timeline time axis stays
- * left-to-right — time always increases to the right.
- *
- * TODO(A, 5.2.3):
- *  - mirror the top bar, panels and tables under [dir="rtl"]
- *  - keep .timeline and .video-player direction: ltr
- *  - load an Arabic-capable font (e.g. Noto Naskh Arabic) for [lang="ar"]
- *  - screenshot every page in Arabic for the PR
+ * RTL Architecture & Timeline Direction Decision:
+ *  - When Arabic is active (<html lang="ar" dir="rtl">), the overall page layout, top navigation bar,
+ *    side panels, forms, and statistics tables mirror naturally from right to left.
+ *  - DESIGN DECISION: The interactive instrument timeline (.timeline) and HTML5 video player (.video-player)
+ *    explicitly keep `direction: ltr` even in Arabic mode. In video editing and medical review interfaces,
+ *    temporal progression universally flows left-to-right (t = 00:00 on the left, increasing to the right)
+ *    to match standard HTML5 media scrubbers and avoid disorienting timestamp jumps.
  */
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap");
+
+:root[lang="ar"],
+[dir="rtl"] {
+  font-family: "Noto Naskh Arabic", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+  line-height: 1.65;
+}
+
+/* Mirror page layout, header, navigation, and panels */
+[dir="rtl"] body {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .topbar {
+  flex-direction: row;
+  direction: rtl;
+}
+
+[dir="rtl"] .topbar nav {
+  direction: rtl;
+  justify-content: flex-start;
+}
+
+[dir="rtl"] .topbar button {
+  margin-right: auto;
+  margin-left: 0;
+}
+
+/* Tables, lists, and form controls in RTL */
+[dir="rtl"] table {
+  direction: rtl;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td {
+  text-align: right;
+}
+
+[dir="rtl"] th[style*="text-align: end"],
+[dir="rtl"] td[style*="text-align: end"],
+[dir="rtl"] td.num,
+[dir="rtl"] th.num {
+  text-align: left !important;
+  font-variant-numeric: tabular-nums;
+}
+
+[dir="rtl"] input,
+[dir="rtl"] select,
+[dir="rtl"] textarea {
+  text-align: right;
+}
+
+[dir="rtl"] ul,
+[dir="rtl"] ol {
+  padding-right: 1.25rem;
+  padding-left: 0;
+}
+
+/* Keep the timeline time axis and video player strictly left-to-right (time always increases to the right) */
 [dir="rtl"] .timeline,
 [dir="rtl"] .video-player {
   direction: ltr;
+  text-align: left;
 }
+
+/* Keep tool label text readable inside the LTR timeline lane */
+[dir="rtl"] .timeline > div > span:first-child {
+  text-align: right;
+  unicode-bidi: plaintext;
+}
+
