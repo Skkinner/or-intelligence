@@ -1,0 +1,30 @@
+# PUBLIC mode on this PC (reached from the internet through a tunnel + Vercel). Separate from the local demo:
+# no demo login, no demo accounts, its own empty database.
+#   docker compose -f docker-compose.public.yml up -d --build   ->  http://127.0.0.1:8090 (tunnel points here)
+# Needs in .env: ORI_API_SECRET and ORI_INSTRUCTOR_PASSWORD (+ optional ORI_ADMIN_PASSWORD, ORI_TRAINEE_PASSWORD).
+name: mibda-public
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    env_file: .env
+    environment:
+      ORI_SEED_DEMO: "0"                   # never the demo accounts in public mode
+      ORI_DEMO_MODE: "0"                   # never one-click login in public mode
+    volumes:
+      - public-data:/data
+      - ./models/best.pt:/home/app/mibda/models/best.pt:ro
+    restart: unless-stopped
+
+  web:
+    build: ./web
+    ports:
+      - "127.0.0.1:8090:80"                # this PC only; the tunnel connects here
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  public-data:

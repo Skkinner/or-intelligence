@@ -4,7 +4,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://HF-USERNAME-SPACE-NAME.hf.space/api/:path*" },
+    { "source": "/api/:path*", "destination": "https://hill-proof-careful-locks.trycloudflare.com/api/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
