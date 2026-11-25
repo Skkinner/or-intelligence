@@ -1,7 +1,7 @@
 # OR Intelligence
 
 **Laparoscopic instrument detection → clickable instrument timeline for surgical education.**
-Computer Vision Final Project · Deadline **Wednesday 25 Nov 2026, 23:59**
+Computer Vision Final Project · Version **v1.0.0** (submitted 25 Nov 2026)
 
 A reviewer uploads a recorded laparoscopic cholecystectomy. A fine-tuned YOLO detector finds 6 instruments
 (grasper, bipolar, hook, scissors, clipper, irrigator) in sampled frames. Temporal smoothing removes flicker,
@@ -39,18 +39,32 @@ team scaffold** (contracts, fixtures and starter files with `TODO` markers). The
 
 ## Run the application
 
-See [`mibda-platform/README.md`](mibda-platform/README.md) for the full guide. In short (Windows PowerShell, from
-inside `mibda-platform/`):
+All commands run from inside `mibda-platform/`. Before either option, put the trained detector at
+`mibda-platform/models/best.pt` (never committed) and copy `.env.example` to `.env`. The optional AI case report
+uses the Claude API: set `ANTHROPIC_API_KEY` and `ORI_ALLOW_EXTERNAL_AI=1` in `.env`.
+
+**Option A: Docker (React web app + FastAPI + detector)** → <http://localhost:8080>
+
+```bash
+docker compose up -d --build
+```
+
+Local demo accounts and one-click demo login are on in this mode (local use only). Stop with `docker compose down`.
+
+**Option B: Streamlit app (Python on your machine)** → <http://localhost:8501>
 
 ```powershell
 pip install -r requirements.txt
-python scripts/seed_demo.py --cholect50 "C:\path\to\cholect50-challenge-val"
+python scripts/seed_demo.py
 streamlit run app/main.py
 ```
 
-The trained detector `best.pt` goes in `mibda-platform/models/` (never committed). The optional AI case report uses
-the Claude API: set `ANTHROPIC_API_KEY` and `ORI_ALLOW_EXTERNAL_AI=1` in `mibda-platform/.env`
-(see `mibda-platform/.env.example`).
+On Windows, use `py` instead of `python` if `python` opens the Microsoft Store. Add
+`--cholect50 "<folder>"` to `seed_demo.py` to import demo cases from the CholecT50 challenge-validation set.
+Full guide: [`mibda-platform/README.md`](mibda-platform/README.md).
+
+**Online:** React on Vercel with the FastAPI backend in Docker, in a public mode with no demo login. See
+[`mibda-platform/deploy/DEPLOY.md`](mibda-platform/deploy/DEPLOY.md).
 
 ## Original scaffold (reference)
 

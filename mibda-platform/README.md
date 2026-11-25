@@ -14,20 +14,21 @@ per-trainee progress, procedure library, English/Arabic UI and PDF reports, role
 | Part | State |
 |---|---|
 | Streamlit platform | Built and running. Every view renders without errors in a headless Streamlit test; Dashboard, Operation tracker (live playback), Review, Library, Compare, Progress, Model & data and Settings (Arabic) were also opened in a real browser. |
-| Visual design | New theme (hero header, KPI cards, phase stepper, case cards with thumbnails). I could not take a proper full-page screenshot in this environment, so **judge the look yourself** and tell me what to change. |
+| Visual design | MIBDA' theme (hero header, KPI cards, phase stepper, case cards with thumbnails), shared by the Streamlit and React apps. |
 | **Operation tracker** | Works. Phases come from the dataset annotations (demo) or from the **phase estimator** (below). |
 | **Phase estimator** | Small logistic-regression + left-to-right Viterbi model on the instrument timeline. **Leave-one-video-out accuracy about 70% (majority-class baseline 36%), ranging from 43% to 98% by video.** Trained on only 5 videos; offline use only. |
 | Procedure library | **Per-procedure engine**: each procedure (procedures.yaml) defines its own phases and instruments. 1 procedure ready (cholecystectomy), **Cataract surgery adapter verified on the real Cataract-101 files**, 6 planned. Phases of planned procedures are left empty on purpose, not guessed. |
 | **Cataract-101 adapter** | Run on the real release (101 videos, one `annotations.csv` with phase start frames, `phases.csv`): phase ids match the page order, 5 cases imported and all main views render in EN/AR. Parsing and rendering are checked; **the look and long-video playback in a real browser are not**. Phase estimator and YOLO ids remain cholecystectomy-only. |
 | Dataset merge | `scripts/merge_datasets.py` is unit-tested on synthetic data. Not run on real merged datasets. |
-| Tests | `python -m pytest`: 38 tests pass (including the real dataset when `ORI_TEST_CHOLECT50` is set). |
+| Tests | `python -m pytest` runs the suite in `tests/` (timeline, phase estimator, datasets, i18n, API, platform, AI features); the real-dataset tests run only when `ORI_TEST_CHOLECT50` is set. |
 | **Instrument detector (YOLOv8s)** | Trained by the team on the CholecInstanceSeg boxes (85 surgeries, split by surgery): **test mAP@0.5 0.881** (scissors weakest at 0.711, 149 test boxes). Independent check on CholecT45 labels of 4 held-out videos (presence per frame): precision/recall grasper 0.96/0.85, bipolar 0.86/0.88, hook 0.95/0.97, scissors 0.67/0.67 (21 positives), clipper 0.82/0.88, irrigator 0.90/0.82. About 130 ms per frame on a CPU. Weights: `models/best.pt` (never committed). |
 | **Live analysis page** | Runs the detector on a video frame by frame and shows boxes, instruments in view and an approximate live phase (online forward filter, weaker than the offline decode: 57-91% on the 5 labelled videos it was trained on). Saving a case recomputes phases offline. Tested end to end on a 240-frame clip; not tested on long videos or on a GPU. |
-| Docker image | Written, not built. |
+| Docker (React + FastAPI) | Built and tested: `docker compose up -d --build` → <http://localhost:8080> (`Dockerfile.api`, `web/Dockerfile`). Public mode without demo login: `docker-compose.public.yml`; online deployment: [`deploy/DEPLOY.md`](deploy/DEPLOY.md). The older `Dockerfile` (Streamlit only, without the detector) is not built. |
 | Timeline interaction | In this Streamlit version a single click on the chart does not select; **drag a small box** to jump (the phase list's Go buttons and the time slider also jump). |
 
-Until a detector is trained, demo cases **replay the dataset's own annotations**. The UI labels them
-"Ground-truth annotation replay (demo, not model output)". Do not present them as model results.
+Demo cases imported with `seed_demo.py` **replay the dataset's own annotations**, not the detector's output. The UI
+labels them "Ground-truth annotation replay (demo, not model output)": do not present them as model results. Model
+results come from Live analysis (or "Run trained model on this case") with `models/best.pt`.
 
 ## Quick start (Windows PowerShell)
 
