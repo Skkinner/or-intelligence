@@ -22,8 +22,13 @@ python -m src.inference.fetch_weights
 
 ## Status (fill in as you go — Member B)
 
-- [ ] Works with stand-in `yolov8n.pt` (Mon)
-- [ ] Works with `baseline.pt` (Tue)
-- [ ] Works with `best.pt` (Tue 23:00, milestone M4)
-- [ ] Speed on target GPU for a 2-min 1080p clip at 5 fps: `TODO s`
-- [ ] CPU fallback tested
+- [x] Works with `best.pt` (sha256 `02ac6525…3741`, Drive `weights/best.pt`): 2-min 1080p clip at 5 fps →
+      600 records, **all valid against `contracts/detections.schema.json`**, progress callback reaches 1.0 (2026-11-25).
+- [x] CPU tested (Intel i7-1165G7 laptop): 2-min 1080p clip at 5 fps in **71 s** (35.7 s per video-minute);
+      at 1 fps in 12 s. Full table: `docs/model/BENCHMARK.md`.
+- [ ] End-to-end GPU timing: not run. Model time on an NVIDIA L4 is 3.1 ms per frame (test evaluation), so a
+      2-min clip at 5 fps needs ≈ 2 s of model time plus video decoding.
+- [ ] `tests/fixtures/sample_video.mp4` does not exist yet (Member D, 1.2.2), so `tests/unit/inference` still skips.
+
+Use: copy `best.pt` from the team Drive to `models/weights/best.pt` (gitignored). Recommended `sample_fps`:
+5 on a GPU, 1 on a CPU-only laptop. Confidence threshold: 0.25 (see `docs/model/EVALUATION.md`).
