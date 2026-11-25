@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+/data/
+/datasets/
+/runs/
+models/*.pt
+models/metrics.json
+*.db
+.env
+
+web/node_modules/
+web/dist/

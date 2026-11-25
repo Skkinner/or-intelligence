@@ -1,0 +1,16 @@
+[server]
+maxUploadSize = 1024
+enableXsrfProtection = true
+
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "minimal"
+
+[theme]
+base = "light"
+primaryColor = "#5C061C"
+backgroundColor = "#F2E9E1"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#2A0A12"

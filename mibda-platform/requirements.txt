@@ -1,0 +1,14 @@
+streamlit>=1.40
+pandas>=2.0
+numpy>=1.26
+plotly>=5.20
+pillow>=10.0
+opencv-python-headless>=4.9
+reportlab>=4.0
+pyyaml>=6.0
+arabic-reshaper>=3.0
+python-bidi>=0.4.2
+anthropic>=0.40
+requests>=2.31
+fastapi>=0.110
+uvicorn>=0.29

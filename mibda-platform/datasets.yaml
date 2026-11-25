@@ -1,0 +1,100 @@
+# Dataset registry shown in the app's Model & Data page.
+# access/adapter statuses reflect what was checked on 2026-11; always re-check terms before use.
+# adapter: implemented = code in or_intelligence/data/ ; generic-masks = scripts/masks_to_yolo.py ; planned = not written yet.
+datasets:
+  - id: cholect50-challenge-val
+    name: CholecT50 (challenge validation)
+    procedure: Laparoscopic cholecystectomy
+    contents: 5 videos, 1,318 frames, instrument boxes + verbs/targets + phases
+    license: CC BY-NC-SA 4.0 (non-commercial)
+    access: Direct download
+    adapter: implemented
+    url: https://github.com/CAMMA-public/cholect50/blob/master/docs/README-Downloads.md
+  - id: cholect50
+    name: CholecT50 (full)
+    procedure: Laparoscopic cholecystectomy
+    contents: 50 videos, triplet / phase labels
+    license: CC BY-NC-SA 4.0 (non-commercial)
+    access: Request form
+    adapter: planned
+    url: https://github.com/CAMMA-public/cholect50
+  - id: cholecinstanceseg
+    name: CholecInstanceSeg
+    procedure: Laparoscopic cholecystectomy
+    contents: 41,933 polygon annotations, 6 instruments (annotations only, no images)
+    license: Check dataset terms
+    access: Annotations public; frames from Cholec80 / CholecT50 / CholecSeg8k
+    adapter: implemented
+    url: https://arxiv.org/abs/2406.16039
+  - id: cholec80
+    name: Cholec80 / m2cai16 / MultiBypass140 (CAMMA)
+    procedure: Cholecystectomy / gastric bypass
+    contents: Phase and tool labels
+    license: CC BY-NC-SA 4.0 (Cholec80)
+    access: Request form
+    adapter: planned
+    url: https://camma.unistra.fr/?p=641
+  - id: heichole
+    name: HeiChole benchmark
+    procedure: Laparoscopic cholecystectomy
+    contents: Workflow and skill analysis videos (about 156 GB bundle)
+    license: CC BY-NC-SA 4.0
+    access: Download (large)
+    adapter: planned
+    url: https://opara.zih.tu-dresden.de/items/08b68dbb-47a1-49fc-bc87-a241136682f6/full
+  - id: autolaparo
+    name: AutoLaparo
+    procedure: Laparoscopic hysterectomy
+    contents: 21 videos, workflow, instrument and anatomy segmentation
+    license: Academic research only
+    access: Request form
+    adapter: planned
+    url: https://autolaparo.github.io
+  - id: sar-rarp50
+    name: SAR-RARP50
+    procedure: Robotic prostatectomy (suturing)
+    contents: 50 segments, instrument segmentation + actions
+    license: CC BY-NC-SA 4.0 (test set)
+    access: Download
+    adapter: planned
+    url: https://arxiv.org/abs/2401.00496
+  - id: cataract101
+    name: Cataract-101
+    procedure: Cataract surgery
+    contents: 101 surgery videos, 10 labelled phases (zip about 8.3 GB). No instrument labels.
+    license: CC BY-NC 4.0 (cite Schoeffmann et al., MMSys 2018)
+    access: Download after accepting the terms on the ITEC page
+    adapter: "implemented (checked on the real release: annotations.csv, phases.csv, videos/case_ID.mp4)"
+    url: https://ftp.itec.aau.at/datasets/ovid/cat-101
+  - id: jigsaws
+    name: JIGSAWS
+    procedure: Suturing / knot tying (bench-top)
+    contents: Video, kinematics, gesture and skill labels
+    license: Academic research only
+    access: Request form
+    adapter: planned
+    url: https://cirl.lcsr.jhu.edu/research/hmm/datasets/jigsaws_release/
+  - id: kvasir-instrument
+    name: Kvasir-Instrument
+    procedure: GI endoscopy
+    contents: 590 tool images with masks (about 170 MB)
+    license: Research and education only
+    access: Direct download
+    adapter: generic-masks
+    url: https://datasets.simula.no/kvasir-instrument
+  - id: hyperkvasir
+    name: HyperKvasir
+    procedure: GI endoscopy
+    contents: Labelled images / videos / segmentation
+    license: CC BY 4.0
+    access: Direct download
+    adapter: generic-masks
+    url: https://datasets.simula.no/hyper-kvasir/
+  - id: endovis
+    name: EndoVis 2017 / 2018
+    procedure: Robotic surgery
+    contents: Instrument segmentation
+    license: Check dataset terms
+    access: Challenge portal
+    adapter: generic-masks
+    url: https://doi.org/10.57702/4r7ipxpu
