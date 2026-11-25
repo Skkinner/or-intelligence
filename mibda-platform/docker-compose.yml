@@ -1,0 +1,26 @@
+# Local run of the React + FastAPI platform:  docker compose up --build   ->  http://localhost:8080
+# Run from inside mibda-platform/. Needs models/best.pt and .env (copy .env.example) next to this file.
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    env_file: .env                         # ANTHROPIC_API_KEY, ORI_ALLOW_EXTERNAL_AI, ... (never baked into the image)
+    environment:
+      ORI_SEED_DEMO: "1"                   # demo accounts, local use only
+      ORI_DEMO_MODE: "1"                   # one-click demo login, local use only
+    volumes:
+      - mibda-data:/data                   # database, cases, notes: kept between restarts
+      - ./models/best.pt:/home/app/mibda/models/best.pt:ro
+    restart: unless-stopped
+
+  web:
+    build: ./web
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  mibda-data:

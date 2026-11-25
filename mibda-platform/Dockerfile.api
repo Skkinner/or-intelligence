@@ -1,0 +1,38 @@
+# FastAPI backend of the MIBDA' platform: API + YOLO detector (CPU) + PDF reports.
+# Secrets (.env), model weights (models/best.pt) and data are NOT baked in: they are supplied at run time.
+FROM python:3.11-slim
+
+# DejaVu: Arabic glyphs for Arabic PDF reports. libglib2.0-0: needed by OpenCV.
+RUN apt-get update && apt-get install -y --no-install-recommends fonts-dejavu-core libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m -u 1000 app
+WORKDIR /home/app/mibda
+
+# CPU-only PyTorch first (much smaller than the default CUDA build), then the app and the detector.
+RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch torchvision
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt "ultralytics>=8.3" "huggingface_hub>=0.24" \
+    # ultralytics pulls the desktop OpenCV (needs X11/GL libs): keep only the headless build.
+    && pip uninstall -y opencv-python \
+    && pip install --no-cache-dir --force-reinstall --no-deps "opencv-python-headless>=4.9" \
+    && python -c "import cv2, ultralytics; print('cv2', cv2.__version__)"
+
+COPY --chown=app:app or_intelligence/ or_intelligence/
+COPY --chown=app:app api/ api/
+COPY --chown=app:app scripts/ scripts/
+COPY --chown=app:app models/ models/
+COPY --chown=app:app datasets.yaml procedures.yaml ./
+
+RUN mkdir -p /data && chown app:app /data
+USER app
+
+ENV ORI_DATA_DIR=/data \
+    YOLO_CONFIG_DIR=/tmp/ultralytics \
+    PYTHONUNBUFFERED=1 \
+    PORT=8000
+EXPOSE 8000
+
+# Local: ORI_SEED_DEMO=1 creates the demo accounts. Online: ORI_*_PASSWORD secrets create the accounts
+# and ORI_WEIGHTS_REPO + HF_TOKEN download best.pt (see scripts/start_api.sh).
+CMD ["sh", "scripts/start_api.sh"]

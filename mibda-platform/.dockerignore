@@ -1,0 +1,20 @@
+# Never send secrets, data or weights into an image: they are mounted at run time.
+.env
+.env.*
+!.env.example
+data/
+datasets/
+runs/
+models/*.pt
+models/metrics.json
+*.db
+
+# Not needed inside the images
+web/node_modules/
+web/dist/
+notebooks/
+tests/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.git

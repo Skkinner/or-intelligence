@@ -11,3 +11,6 @@ models/metrics.json
 
 web/node_modules/
 web/dist/
+
+# Assembled deployment folders
+/deploy/out/
