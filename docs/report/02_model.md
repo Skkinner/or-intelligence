@@ -81,7 +81,10 @@ may appear as grasper; short grasper gaps are filled by the smoothing step.
 frame and writes one JSON line per frame (Contract C4). The API (Section 4) imports this function.
 
 On an NVIDIA L4, the model needs about **3.1 ms per frame** (1.9 ms inference + 1.2 ms pre/post-processing,
-measured during test evaluation). See `docs/model/BENCHMARK.md` for the full benchmark.
+measured during test evaluation). On a CPU-only laptop (Intel i7-1165G7) the full pipeline, including 1080p
+video decoding, needs **6 s per video-minute at 1 fps** and 36 s at 5 fps, so a 30-minute surgery is ready in about
+3 minutes at 1 fps. The output for a 1080p test clip validated against the Contract C4 schema. We recommend 5 fps on
+a GPU and 1 fps on a CPU (`docs/model/BENCHMARK.md`).
 
 ## 3.6 Limitations and Future Work
 
