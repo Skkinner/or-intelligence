@@ -13,7 +13,7 @@ Deck: [`OR_Intelligence.pptx`](OR_Intelligence.pptx), 12 slides, about 12–15 m
 | 7 | Failure analysis (confusion matrix) | B | `docs/model/EVALUATION.md` |
 | 8 | Result 2: timeline agreement | C | `docs/timeline/TIMELINE_EVAL.md` |
 | 9 | Result 3: usability, 7.6× faster | A | `docs/usability/RESULTS.md` |
-| 10 | Live demo script | D / C | v1.0.0 build, demo video (8.2.2) |
+| 10 | Live demo script | D / C | v1.0.0 build, live demo script (`docs/demo/README.md`) |
 | 11 | Business model | D | problem page (1.1.1) |
 | 12 | Limits and next steps | all | |
 
