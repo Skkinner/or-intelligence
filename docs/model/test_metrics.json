@@ -1,0 +1,26 @@
+{
+  "model": "baseline",
+  "architecture": "yolov8s (COCO-pretrained, fine-tuned)",
+  "weights_sha256": "02ac6525516efda1c628edf4c2dd1677cb7d79ff0aed52e31aaf9de1c3ed3741",
+  "split": "test",
+  "images": 10819,
+  "instances": 15659,
+  "imgsz": 640,
+  "conf": 0.25,
+  "precision": 0.927,
+  "recall": 0.857,
+  "map50": 0.881,
+  "map50_95": 0.786,
+  "per_class": {
+    "grasper":   {"images": 6728, "instances": 8701, "precision": 0.923, "recall": 0.858, "ap50": 0.885, "ap50_95": 0.743},
+    "bipolar":   {"images": 526,  "instances": 526,  "precision": 0.926, "recall": 0.897, "ap50": 0.918, "ap50_95": 0.779},
+    "hook":      {"images": 4847, "instances": 4848, "precision": 0.990, "recall": 0.973, "ap50": 0.983, "ap50_95": 0.886},
+    "scissors":  {"images": 149,  "instances": 149,  "precision": 0.787, "recall": 0.711, "ap50": 0.711, "ap50_95": 0.655},
+    "clipper":   {"images": 326,  "instances": 326,  "precision": 0.965, "recall": 0.855, "ap50": 0.908, "ap50_95": 0.846},
+    "irrigator": {"images": 1109, "instances": 1109, "precision": 0.974, "recall": 0.849, "ap50": 0.881, "ap50_95": 0.806}
+  },
+  "speed_ms_per_image_L4": {"preprocess": 0.4, "inference": 1.9, "postprocess": 0.8},
+  "evaluated_at": "2026-11-24",
+  "evaluated_times": 1,
+  "source": "Transcribed (3 decimals) from the step 7 output of notebooks/02_Model.ipynb; the full-precision original is results/test_metrics.json in the team Drive folder."
+}
