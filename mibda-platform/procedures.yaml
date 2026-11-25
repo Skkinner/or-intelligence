@@ -1,0 +1,81 @@
+# Procedure library: what the platform can cover. Only procedures with status "ready" have working data + adapters here.
+# Phase lists for the other procedures are left empty on purpose: they are defined from each dataset's own documentation
+# when its adapter is written (not guessed). Dataset ids refer to datasets.yaml.
+procedures:
+  - id: lap-chole
+    status: ready
+    name: {en: Laparoscopic cholecystectomy, ar: استئصال المرارة بالمنظار}
+    specialty: {en: General surgery, ar: الجراحة العامة}
+    datasets: [cholect50-challenge-val, cholecinstanceseg, cholect50, cholec80, heichole]
+    capabilities:
+      tool_detection: Needs a trained model (scripts/train.py)
+      phase_tracking: Estimator trained on 5 videos (about 70% leave-one-video-out)
+      action_triplets: Annotation replay only (no model)
+      tool_segmentation: Labels converted; frames needed from Cholec80/CholecT50
+  - id: lap-hysterectomy
+    status: planned
+    name: {en: Laparoscopic hysterectomy, ar: استئصال الرحم بالمنظار}
+    specialty: {en: Gynecology, ar: النساء والولادة}
+    datasets: [autolaparo]
+    capabilities:
+      workflow: Dataset has workflow labels; adapter not written
+      tool_segmentation: Dataset has instrument and anatomy segmentation; adapter not written
+  - id: robotic-prostatectomy
+    status: planned
+    name: {en: Robotic prostatectomy (suturing), ar: استئصال البروستاتا الروبوتي (الخياطة)}
+    specialty: {en: Urology, ar: المسالك البولية}
+    datasets: [sar-rarp50]
+    capabilities:
+      tool_segmentation: Dataset has instrument segmentation; adapter not written
+      actions: Dataset has action labels; adapter not written
+  - id: gastric-bypass
+    status: planned
+    name: {en: Laparoscopic gastric bypass, ar: تحويل مسار المعدة بالمنظار}
+    specialty: {en: Bariatric surgery, ar: جراحة السمنة}
+    datasets: [cholec80]
+    capabilities:
+      activity_recognition: MultiBypass140 is listed on the CAMMA page; access and adapter pending
+  - id: cataract
+    status: ready
+    name: {en: Cataract surgery, ar: عملية إعتام عدسة العين}
+    specialty: {en: Ophthalmology, ar: طب العيون}
+    datasets: [cataract101]
+    capabilities:
+      phase_tracking: "Phase starts from annotations.csv (frame-level, about 1 s accuracy per the dataset README)"
+      real_video: Full-length surgical videos (about 8.3 GB zip), so playback is continuous
+      tool_detection: No instrument labels in this dataset
+    # The 10 phases named on the Cataract-101 page (https://ftp.itec.aau.at/datasets/ovid/cat-101). Ids 1-10 in the real
+    # annotation files follow this order (checked against phases.csv). Arabic names are my translation.
+    phases:
+      - {en: Incision, ar: الشق}
+      - {en: Viscous Agent Injection, ar: حقن المادة اللزجة}
+      - {en: Rhexis, ar: شق المحفظة الدائري}
+      - {en: Hydrodissection, ar: الفصل المائي}
+      - {en: Phacoemulsification, ar: استحلاب العدسة}
+      - {en: Irrigation/Aspiration, ar: الري والشفط}
+      - {en: Capsule Polishing, ar: تلميع المحفظة}
+      - {en: Lens Implant, ar: زرع العدسة}
+      - {en: Viscous Agent Removal, ar: إزالة المادة اللزجة}
+      - {en: Tonifying and Antibiotics, ar: التقوية والمضاد الحيوي}
+    instruments: []
+  - id: suturing-training
+    status: planned
+    name: {en: Suturing and knot tying (bench-top), ar: الخياطة وعقد الغرز (تدريب)}
+    specialty: {en: Surgical skills training, ar: تدريب المهارات الجراحية}
+    datasets: [jigsaws]
+    capabilities:
+      gestures_and_skill: Dataset has gesture and skill labels; adapter not written
+  - id: gi-endoscopy
+    status: planned
+    name: {en: GI endoscopy, ar: منظار الجهاز الهضمي}
+    specialty: {en: Gastroenterology, ar: أمراض الجهاز الهضمي}
+    datasets: [kvasir-instrument, hyperkvasir]
+    capabilities:
+      tool_segmentation: Image and mask pairs; use scripts/masks_to_yolo.py after checking the folder layout
+  - id: robotic-general
+    status: planned
+    name: {en: Robotic surgery (instrument segmentation), ar: الجراحة الروبوتية (تقسيم الأدوات)}
+    specialty: {en: Robotic surgery, ar: الجراحة الروبوتية}
+    datasets: [endovis]
+    capabilities:
+      tool_segmentation: Challenge data; use scripts/masks_to_yolo.py after checking the folder layout

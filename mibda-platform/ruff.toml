@@ -1,0 +1,9 @@
+# MIBDA' platform lives in its own folder with its own conventions (Streamlit + React over a FastAPI layer).
+# This nested config replaces the repo-level ruff rules for this folder only, so the team's CI keeps passing
+# without touching pyproject.toml: only real errors (syntax, undefined names) are enforced here.
+line-length = 130
+target-version = "py311"
+extend-exclude = ["web"]
+
+[lint]
+select = ["E9", "F63", "F7", "F82"]

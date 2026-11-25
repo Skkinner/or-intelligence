@@ -1,0 +1,153 @@
+{
+  "clean": {
+    "per_video": [
+      {
+        "video": "VID68",
+        "frames": 243,
+        "accuracy": 0.9794238683127572,
+        "phases_in_truth": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "video": "VID70",
+        "frames": 164,
+        "accuracy": 0.7804878048780488,
+        "phases_in_truth": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "video": "VID73",
+        "frames": 160,
+        "accuracy": 0.63125,
+        "phases_in_truth": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "video": "VID74",
+        "frames": 441,
+        "accuracy": 0.4308390022675737,
+        "phases_in_truth": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "video": "VID75",
+        "frames": 120,
+        "accuracy": 0.6916666666666667,
+        "phases_in_truth": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          6
+        ]
+      }
+    ],
+    "mean_accuracy": 0.7027334684250093
+  },
+  "noisy": {
+    "per_video": [
+      {
+        "video": "VID68",
+        "frames": 243,
+        "accuracy": 0.8395061728395061,
+        "phases_in_truth": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "video": "VID70",
+        "frames": 164,
+        "accuracy": 0.7804878048780488,
+        "phases_in_truth": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "video": "VID73",
+        "frames": 160,
+        "accuracy": 0.63125,
+        "phases_in_truth": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "video": "VID74",
+        "frames": 441,
+        "accuracy": 0.41723356009070295,
+        "phases_in_truth": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "video": "VID75",
+        "frames": 120,
+        "accuracy": 0.9333333333333333,
+        "phases_in_truth": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          6
+        ]
+      }
+    ],
+    "mean_accuracy": 0.7203621742283183
+  },
+  "noise_rate_for_noisy_check": 0.15,
+  "majority_class_baseline": 0.35561200165100665,
+  "note": "Leave-one-video-out on the training videos; tiny dataset, offline use only."
+}
